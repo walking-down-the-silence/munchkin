@@ -1,0 +1,33 @@
+using Munchkin.Core.Model;
+using Munchkin.Core.Model.Actions;
+using Munchkin.Core.Model.Requests;
+using System.Threading.Tasks;
+
+namespace Munchkin.Engine.Original.Actions
+{
+    internal class WizardFleeMonsterAction : DynamicAction
+    {
+        public WizardFleeMonsterAction() : base("Flee Monster", "")
+        {
+        }
+
+        public override bool CanExecute(Table state)
+        {
+            return state.Players.Current.YourHand.Count >= 3;
+        }
+
+        public override async Task<Table> ExecuteAsync(Table state)
+        {
+            var selectCardFromHandRequest = new SelectCardRequest(state.Players.Current, state, state.Players.Current.YourHand);
+            await state.Mediator.Send(selectCardFromHandRequest).ContinueWith(x => x.Result.Discard(state));
+            await state.Mediator.Send(selectCardFromHandRequest).ContinueWith(x => x.Result.Discard(state));
+            await state.Mediator.Send(selectCardFromHandRequest).ContinueWith(x => x.Result.Discard(state));
+
+            // TODO: do not actually discard, but remove reward levels and leave the treasures until combat is resolved
+            var selectMonsterInPlayRequest = new SelectCardRequest(state.Players.Current, state, state.Dungeon.Combat.Monsters);
+            await state.Mediator.Send(selectMonsterInPlayRequest).ContinueWith(x => x.Result.Discard(state));
+
+            return state;
+        }
+    }
+}

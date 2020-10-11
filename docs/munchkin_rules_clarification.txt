@@ -1,0 +1,28 @@
+If you kick down the door and get:
+
+- A monster - You fight it. If you win, you get treasure. Lose or run away, you get nothing. You do not loot the room.
+
+- A trap/curse - the curse/trap hits you and you suffer the effects. You may either look for trouble or loot the room, not both.
+
+- A special card (race/class/other) - the card goes into your hand. You may either look for trouble or loot the room, not both.
+
+Source: https://www.reddit.com/r/Munchkin/comments/2tq7hq/question_about_looting/
+
+
+
+
+If you use Annihilation card it takes no effect.
+If someone used Annihilation card agains you then the card is canceled as if it was never played and the card that is being canceled has no effect. You may not loot the room or look for troubles.
+
+Source: http://forums.sjgames.com/showthread.php?t=69859
+
+
+
+
+In Play: These are the cards on the table in front of you, showing your Race and Class (if any) and the Items you are carrying.
+All Items you have in play are considered “carried.” Items that are actually 
+giving you a bonus are “equipped".
+Anyone can carry any Item (except for extra Big items), but you may equip only one Headgear, one suit of Armor, one pair of Footgear, and two “1 Hand” Items (or one “2 Hands” Item) . . . unless you have a card that lets you ignore these limits, such as 
+Hireling or Cheat.
+
+Source: https://www.reddit.com/r/Munchkin/comments/1dwshk/some_basic_questions_from_a_munchkin_newbie/

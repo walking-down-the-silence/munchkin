@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30002.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{55AAE376-7F20-4323-9439-822B879D18BD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{BDF876A2-B5A1-42A3-90C0-7D0A7F4B4E91}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Munchkin.Core", "src\Munchkin.Core\Munchkin.Core.csproj", "{B0C54DB6-CA0B-41BF-93D5-458F04E60057}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Munchkin.Core.Cards", "src\Munchkin.Core.Cards\Munchkin.Core.Cards.csproj", "{B456A31C-0A39-44E0-BD9C-4F25755AC282}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Munchkin.Expansions", "src\Munchkin.Expansions\Munchkin.Expansions.csproj", "{A798E478-81A2-46EA-B060-B072250FFC7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Munchkin.Core.Tests", "tests\Munchkin.Core.Tests\Munchkin.Core.Tests.csproj", "{92E6611C-9D80-4B5D-9CB8-085AAA9F5FBF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Munchkin.Core.Cards.Tests", "tests\Munchkin.Core.Cards.Tests\Munchkin.Core.Cards.Tests.csproj", "{9AA8C335-665E-4455-B60C-1EA273442714}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B0C54DB6-CA0B-41BF-93D5-458F04E60057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0C54DB6-CA0B-41BF-93D5-458F04E60057}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0C54DB6-CA0B-41BF-93D5-458F04E60057}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0C54DB6-CA0B-41BF-93D5-458F04E60057}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B456A31C-0A39-44E0-BD9C-4F25755AC282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B456A31C-0A39-44E0-BD9C-4F25755AC282}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B456A31C-0A39-44E0-BD9C-4F25755AC282}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B456A31C-0A39-44E0-BD9C-4F25755AC282}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A798E478-81A2-46EA-B060-B072250FFC7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A798E478-81A2-46EA-B060-B072250FFC7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A798E478-81A2-46EA-B060-B072250FFC7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A798E478-81A2-46EA-B060-B072250FFC7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92E6611C-9D80-4B5D-9CB8-085AAA9F5FBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92E6611C-9D80-4B5D-9CB8-085AAA9F5FBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92E6611C-9D80-4B5D-9CB8-085AAA9F5FBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92E6611C-9D80-4B5D-9CB8-085AAA9F5FBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AA8C335-665E-4455-B60C-1EA273442714}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AA8C335-665E-4455-B60C-1EA273442714}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AA8C335-665E-4455-B60C-1EA273442714}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AA8C335-665E-4455-B60C-1EA273442714}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B0C54DB6-CA0B-41BF-93D5-458F04E60057} = {55AAE376-7F20-4323-9439-822B879D18BD}
+		{B456A31C-0A39-44E0-BD9C-4F25755AC282} = {55AAE376-7F20-4323-9439-822B879D18BD}
+		{A798E478-81A2-46EA-B060-B072250FFC7B} = {55AAE376-7F20-4323-9439-822B879D18BD}
+		{92E6611C-9D80-4B5D-9CB8-085AAA9F5FBF} = {BDF876A2-B5A1-42A3-90C0-7D0A7F4B4E91}
+		{9AA8C335-665E-4455-B60C-1EA273442714} = {BDF876A2-B5A1-42A3-90C0-7D0A7F4B4E91}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D6ACC538-B9BF-4082-867E-BF1D08CB949D}
+	EndGlobalSection
+EndGlobal
