@@ -1,31 +1,30 @@
 ﻿using Munchkin.Core.Model.Cards;
 using Munchkin.Core.Model.Properties;
+using Munchkin.Core.Model.States;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model
 {
-    public class CombatStage : State
+    public class CombatStage : State, IStage
     {
+        private readonly Table _table;
+        private readonly MonsterCard _monsterCard;
         private readonly List<MonsterCard> _monsters;
 
-        private CombatStage(Dungeon dungeon, MonsterCard monster)
+        public CombatStage(Table table, MonsterCard monsterCard)
         {
-            Dungeon = dungeon ?? throw new System.ArgumentNullException(nameof(dungeon));
-            LastCardPlayed = monster ?? throw new System.ArgumentNullException(nameof(monster));
-            _monsters = new List<MonsterCard> { monster };
+            _table = table ?? throw new System.ArgumentNullException(nameof(table));
+            _monsters = new List<MonsterCard> { monsterCard };
+            _monsterCard = monsterCard ?? throw new System.ArgumentNullException(nameof(monsterCard));
 
             // TODO: calculate and set the hero strength and other properties
             AddProperty(new PlayerStrengthBonusAttribute(0));
-            AddProperty(new MonsterStrengthBonusAttribute(monster.Level));
+            AddProperty(new MonsterStrengthBonusAttribute(monsterCard.Level));
             AddProperty(new RunAwayBonusAttribute(0));
-            AddProperty(new RewardLevelsAttribute(monster.RewardLevels));
-            AddProperty(new RewardTreasuresAttribute(monster.RewardTreasures));
-        }
-
-        public static CombatStage EnterCombat(Dungeon dungeon, MonsterCard monster)
-        {
-            return new CombatStage(dungeon, monster);
+            AddProperty(new RewardLevelsAttribute(monsterCard.RewardLevels));
+            AddProperty(new RewardTreasuresAttribute(monsterCard.RewardTreasures));
         }
 
         #region Attribute Bonuses
@@ -58,11 +57,6 @@ namespace Munchkin.Core.Model
         #endregion
 
         /// <summary>
-        /// The dungeon in hich current combat takes place.
-        /// </summary>
-        public Dungeon Dungeon { get; }
-
-        /// <summary>
         /// A collection of monsters in combat.
         /// </summary>
         public IReadOnlyCollection<MonsterCard> Monsters => _monsters;
@@ -72,12 +66,26 @@ namespace Munchkin.Core.Model
         /// </summary>
         public Player HelpingPlayer { get; private set; }
 
-        public Card LastCardPlayed { get; private set; }
+        public bool IsTerminal => false;
+
+        public async Task<IStage> Resolve()
+        {
+            // TODO: prompt the player if they want to run away or take bad stuff
+            bool isRunningAway = false;
+
+            if (isRunningAway)
+            {
+                return new RunAwayStage(_table);
+            }
+
+            // TODO: take bad stuff
+            return new EndStage(_table);
+        }
 
         public void HelpPlayer(Player helpingPlayer)
         {
             var playerActions = helpingPlayer.Actions.Select(action => action.Create()).ToList();
-            Dungeon.SetPlayerActions(helpingPlayer, playerActions);
+            _table.Dungeon.SetPlayerActions(helpingPlayer, playerActions);
             HelpingPlayer = helpingPlayer;
         }
 

@@ -18,13 +18,14 @@ namespace Munchkin.Engine.Original.Doors
             var currentHero = gameContext.Players.Current;
             var currentHeroIsCleric = currentHero.Equipped.OfType<ClericClass>().Any();
 
-            var helpingHero = gameContext.Dungeon.Combat.HelpingPlayer;
-            var helpingHeroIsCleric = helpingHero?.Equipped.OfType<ClericClass>().Any();
+            // TODO: check if current stage actually is a combat
+            //var helpingHero = gameContext.Dungeon.Combat.HelpingPlayer;
+            //var helpingHeroIsCleric = helpingHero?.Equipped.OfType<ClericClass>().Any();
 
-            if (currentHeroIsCleric || helpingHeroIsCleric != null && helpingHeroIsCleric.Value)
-            {
-                gameContext.Dungeon.Combat.AddProperty(new MonsterStrengthBonusAttribute(4));
-            }
+            //if (currentHeroIsCleric || helpingHeroIsCleric != null && helpingHeroIsCleric.Value)
+            //{
+            //    gameContext.Dungeon.Combat.AddProperty(new MonsterStrengthBonusAttribute(4));
+            //}
 
             return base.Play(gameContext);
         }

@@ -15,7 +15,8 @@ namespace Munchkin.Core.Cards.Effects
 
         public Table Apply(Table state)
         {
-            state.Dungeon.Combat.AddProperty(new MonsterStrengthBonusAttribute(BonusStrength));
+            // TODO: check if current stage actually is a combat
+            //state.Dungeon.Combat.AddProperty(new MonsterStrengthBonusAttribute(BonusStrength));
             return state;
         }
     }

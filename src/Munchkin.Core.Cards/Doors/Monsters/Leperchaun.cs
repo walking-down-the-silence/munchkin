@@ -17,8 +17,9 @@ namespace Munchkin.Engine.Original.Doors
             var currentHero = gameContext.Players.Current;
             var currentHeroIsElf = currentHero.Equipped.OfType<ElfRace>().Any();
 
-            var helpingHero = gameContext.Dungeon.Combat.HelpingPlayer;
-            var helpingHeroIsElf = helpingHero?.Equipped.OfType<ElfRace>().Any();
+            // TODO: check if current stage actually is a combat
+            //var helpingHero = gameContext.Dungeon.Combat.HelpingPlayer;
+            //var helpingHeroIsElf = helpingHero?.Equipped.OfType<ElfRace>().Any();
 
             return base.Play(gameContext);
         }

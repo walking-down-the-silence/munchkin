@@ -23,7 +23,7 @@ namespace Munchkin.Core.Model.Actions
             // loot the room by drawing a door card
             DoorsCard card = state.DoorsCardDeck.Take();
             state.Players.Current.TakeInHand(card);
-            state.Dungeon.ExitTheDungeon();
+            //state.Dungeon.ExitTheDungeon();
             return state;
         }
     }

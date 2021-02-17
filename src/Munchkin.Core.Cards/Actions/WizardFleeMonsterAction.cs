@@ -23,9 +23,10 @@ namespace Munchkin.Engine.Original.Actions
             await state.Mediator.Send(selectCardFromHandRequest).ContinueWith(x => x.Result.Discard(state));
             await state.Mediator.Send(selectCardFromHandRequest).ContinueWith(x => x.Result.Discard(state));
 
+            // TODO: check if current stage actually is a combat
             // TODO: do not actually discard, but remove reward levels and leave the treasures until combat is resolved
-            var selectMonsterInPlayRequest = new SelectCardRequest(state.Players.Current, state, state.Dungeon.Combat.Monsters);
-            await state.Mediator.Send(selectMonsterInPlayRequest).ContinueWith(x => x.Result.Discard(state));
+            //var selectMonsterInPlayRequest = new SelectCardRequest(state.Players.Current, state, state.Dungeon.Combat.Monsters);
+            //await state.Mediator.Send(selectMonsterInPlayRequest).ContinueWith(x => x.Result.Discard(state));
 
             return state;
         }

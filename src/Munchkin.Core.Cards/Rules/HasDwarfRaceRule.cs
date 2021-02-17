@@ -9,8 +9,9 @@ namespace Munchkin.Core.Cards.Rules
     {
         public bool Satisfies(Table state)
         {
-            return state.Players.Current.Equipped.OfType<DwarfRace>().FirstOrDefault() != null
-                || state.Dungeon.Combat.HelpingPlayer?.Equipped.OfType<DwarfRace>().FirstOrDefault() != null;
+            // TODO: check if current stage actually is a combat
+            return state.Players.Current.Equipped.OfType<DwarfRace>().FirstOrDefault() != null;
+                //|| state.Dungeon.CurrentStage.HelpingPlayer?.Equipped.OfType<DwarfRace>().FirstOrDefault() != null;
         }
     }
 }

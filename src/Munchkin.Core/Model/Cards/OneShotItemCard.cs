@@ -13,11 +13,12 @@ namespace Munchkin.Core.Model.Cards
 
         public override Task Play(Table context)
         {
+            // TODO: check if current stage actually is a combat
             BonusAttribute strength = BoundTo is null
                 ? (BonusAttribute) new PlayerStrengthBonusAttribute(StrengthBonus)
                 : (BonusAttribute) new MonsterStrengthBonusAttribute(StrengthBonus);
-            context.Dungeon.Combat.AddProperty(strength);
-            context.Dungeon.Combat.AddProperty(new RunAwayBonusAttribute(RunAwayBonus));
+            context.Dungeon.CurrentStage.AddProperty(strength);
+            context.Dungeon.CurrentStage.AddProperty(new RunAwayBonusAttribute(RunAwayBonus));
 
             return Task.CompletedTask;
         }

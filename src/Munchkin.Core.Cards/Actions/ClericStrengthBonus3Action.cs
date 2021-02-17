@@ -21,8 +21,9 @@ namespace Munchkin.Engine.Original.Actions
 
         public override bool CanExecute(Table state)
         {
+            // TODO: check if current stage actually is a combat
             return _shotsLeft > 0
-                && state.Dungeon.Combat.Monsters.Any(monster => monster.IsUndead)
+                //&& state.Dungeon.Combat.Monsters.Any(monster => monster.IsUndead)
                 && (state.Players.Current.Equipped.Any()
                 || state.Players.Current.Backpack.Any()
                 || state.Players.Current.YourHand.Any());

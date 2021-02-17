@@ -18,7 +18,7 @@ namespace Munchkin.Core.Model
             {
                 var dungeonFlow = new DungeonFlowFactory().Create().Build();
 
-                dungeonFlow.Invoke(table.KickOpenTheDoor());
+                dungeonFlow.Invoke(table.Dungeon);
                 table.Players.Next();
 
                 await NextTurn(history, table);

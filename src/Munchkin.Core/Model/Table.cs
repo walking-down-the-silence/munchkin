@@ -18,6 +18,7 @@ namespace Munchkin.Core.Model
             Players = players ?? throw new System.ArgumentNullException(nameof(players));
             RequestSink = new AsyncRequestSink<Card>();
             WinningLevel = winningLevel;
+            Dungeon = new Dungeon(this);
 
             // initialize and shuffle the decks
             TreasureCardDeck = new CardDeck<TreasureCard>();
@@ -85,14 +86,6 @@ namespace Munchkin.Core.Model
         public int WinningLevel { get; }
 
         public bool IsGameWon => Players.Any(x => x.Level >= WinningLevel);
-
-        public Dungeon KickOpenTheDoor()
-        {
-            var door = DoorsCardDeck.Take();
-            var dungeon = Dungeon.KickOpenTheDoor(door, this);
-            Dungeon = dungeon;
-            return dungeon;
-        }
 
         public void PlayFromHand(Player player, Card card)
         {

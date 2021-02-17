@@ -1,5 +1,6 @@
 ﻿using Munchkin.Core.Contracts;
 using Munchkin.Core.Model.Cards;
+using Munchkin.Core.Model.States;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,17 +14,11 @@ namespace Munchkin.Core.Model
         private readonly List<Card> _cardsPlayed;
         private readonly Dictionary<Player, List<IAction<Table>>> _playerActions = new Dictionary<Player, List<IAction<Table>>>();
 
-        private Dungeon(DoorsCard door, Table table)
+        public Dungeon(Table table)
         {
-            Door = door ?? throw new System.ArgumentNullException(nameof(door));
-            Table = table ?? throw new System.ArgumentNullException(nameof(table));
-
             // TODO: intiailize each stage with a proper card
-            Combat = CombatStage.EnterCombat(this, door as MonsterCard);
-            RunAway = new RunAwayStage(this, table);
-            Curse = CurseStage.FromCurse(this, door as CurseCard);
-
-            _cardsPlayed = new List<Card> { door };
+            _cardsPlayed = new List<Card>();
+            Table = table ?? throw new System.ArgumentNullException(nameof(table));
         }
 
         /// <summary>
@@ -31,23 +26,19 @@ namespace Munchkin.Core.Model
         /// </summary>
         /// <param name="door"> Doors, in which hero should enter the dungeon. </param>
         /// <param name="table"> Table state when entering the dungeon. </param>
-        public static Dungeon KickOpenTheDoor(DoorsCard door, Table table)
+        public RoomStage KickOpenTheDoor(DoorsCard door, Table table)
         {
             var playerActions = table.Players.Current.Actions.Select(action => action.Create()).ToList();
-            var dungeon = new Dungeon(door, table);
-            dungeon.SetPlayerActions(table.Players.Current, playerActions);
-            return dungeon;
+            SetPlayerActions(table.Players.Current, playerActions);
+
+            var roomStage = new RoomStage(table, door);
+            CurrentStage = roomStage;
+            return roomStage;
         }
 
         public Table Table { get; }
 
-        public DoorsCard Door { get; private set; }
-
-        public CombatStage Combat { get; }
-
-        public RunAwayStage RunAway { get; }
-
-        public CurseStage Curse { get; }
+        public IStage CurrentStage { get; private set; }
 
         public IReadOnlyCollection<Card> CardsPlayed => _cardsPlayed.AsReadOnly();
 
@@ -72,15 +63,6 @@ namespace Munchkin.Core.Model
         {
             _cardsPlayed.Add(card);
             card.Play(Table);
-        }
-
-        /// <summary>
-        /// Allows players to exit the dungeon
-        /// </summary>
-        /// <returns> Dungeon goods that were inside. </returns>
-        public Dungeon ExitTheDungeon()
-        {
-            return this;
         }
     }
 }

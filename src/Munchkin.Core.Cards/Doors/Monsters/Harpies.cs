@@ -17,13 +17,14 @@ namespace Munchkin.Engine.Original.Doors
             var currentHero = gameContext.Players.Current;
             var currentHeroIsWizard = currentHero.Equipped.OfType<WizardClass>().Any();
 
-            var helpingHero = gameContext.Dungeon.Combat.HelpingPlayer;
-            var helpingHeroIsWizard = helpingHero?.Equipped.OfType<WizardClass>().Any();
+            // TODO: check if current stage actually is a combat
+            //var helpingHero = gameContext.Dungeon.Combat.HelpingPlayer;
+            //var helpingHeroIsWizard = helpingHero?.Equipped.OfType<WizardClass>().Any();
 
-            if (currentHeroIsWizard || helpingHeroIsWizard != null && helpingHeroIsWizard.Value)
-            {
-                gameContext.Dungeon.Combat.AddProperty(new PlayerStrengthBonusAttribute(5));
-            }
+            //if (currentHeroIsWizard || helpingHeroIsWizard != null && helpingHeroIsWizard.Value)
+            //{
+            //    gameContext.Dungeon.Combat.AddProperty(new PlayerStrengthBonusAttribute(5));
+            //}
 
             return base.Play(gameContext);
         }

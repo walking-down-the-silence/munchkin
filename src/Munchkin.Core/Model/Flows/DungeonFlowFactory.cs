@@ -10,15 +10,16 @@ namespace Munchkin.Console
             var battle = new CombatFlowFactory().Create();
             var curse = new CurseFlowFactory().Create();
 
-            var flow = Flow
+            //var flow = Flow
                 //.Execute<DungeonStage>(state => DungeonStage.KickOpenTheDoor(null, null))
-                .Condition<Dungeon>(
-                    state => state.LastCardPlayedIsBeast,
-                    positive => positive.Execute(state => battle.Build().Invoke(state.Combat).Dungeon),
-                    negative => negative.Execute(state => curse.Build().Invoke(state.Curse).Dungeon)
-                );
+                //.Condition<Dungeon>(
+                //    state => state.LastCardPlayedIsBeast,
+                //    positive => positive.Execute(state => battle.Build().Invoke(state.Combat).Dungeon),
+                //    negative => negative.Execute(state => curse.Build().Invoke(state.Curse).Dungeon)
+                //);
 
-            return flow;
+            //return flow;
+            throw new NotImplementedException();
         }
 
         public static Dungeon TurnFromBattleState(CombatStage state)

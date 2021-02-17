@@ -1,21 +1,23 @@
-﻿namespace Munchkin.Core.Model
+﻿using Munchkin.Core.Model.States;
+using System.Threading.Tasks;
+
+namespace Munchkin.Core.Model
 {
-    public class RunAwayStage
+    public class RunAwayStage : State, IStage
     {
-        public RunAwayStage(Dungeon dungeon, Table table)
+        private readonly Table _table;
+
+        public RunAwayStage(Table table)
         {
-            Dungeon = dungeon ?? throw new System.ArgumentNullException(nameof(dungeon));
-            Table = table ?? throw new System.ArgumentNullException(nameof(table));
+            _table = table ?? throw new System.ArgumentNullException(nameof(table));
         }
 
-        public Dungeon Dungeon { get; }
+        public bool IsTerminal => false;
 
-        public Table Table { get; }
-
-        public RunAwayStage EndTurn()
+        public async Task<IStage> Resolve()
         {
-            System.Console.WriteLine(nameof(EndTurn));
-            return this;
+            // TODO: prompt the player to throw the dice or play cards for runaway
+            return new EmptyStage(_table);
         }
 
         public RunAwayStage TakeBadStuff()

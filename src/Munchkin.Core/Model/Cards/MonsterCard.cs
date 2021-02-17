@@ -30,10 +30,11 @@ namespace Munchkin.Core.Model.Cards
 
         public override Task Play(Table context)
         {
-            context.Dungeon.Combat.AddProperty(new MonsterStrengthBonusAttribute(Level));
-            context.Dungeon.Combat.AddProperty(new RewardLevelsAttribute(RewardLevels));
-            context.Dungeon.Combat.AddProperty(new RewardTreasuresAttribute(RewardTreasures));
-            context.Dungeon.Combat.AddProperty(new RunAwayBonusAttribute(RunAwayBonus));
+            // TODO: check if current stage actually is a combat
+            context.Dungeon.CurrentStage.AddProperty(new MonsterStrengthBonusAttribute(Level));
+            context.Dungeon.CurrentStage.AddProperty(new RewardLevelsAttribute(RewardLevels));
+            context.Dungeon.CurrentStage.AddProperty(new RewardTreasuresAttribute(RewardTreasures));
+            context.Dungeon.CurrentStage.AddProperty(new RunAwayBonusAttribute(RunAwayBonus));
             return Task.CompletedTask;
         }
 

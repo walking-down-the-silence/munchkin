@@ -14,7 +14,8 @@ namespace Munchkin.Engine.Original.Treasures
 
         public override Task Play(Table gameContext)
         {
-            gameContext.Dungeon.Combat.AddProperty(new RunAwayBonusAttribute(GetProperty<RunAwayBonusAttribute>().Bonus));
+            // TODO: check if current stage actually is a combat
+            //gameContext.Dungeon.Combat.AddProperty(new RunAwayBonusAttribute(GetProperty<RunAwayBonusAttribute>().Bonus));
             return base.Play(gameContext);
         }
     }

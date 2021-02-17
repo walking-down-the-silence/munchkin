@@ -20,7 +20,7 @@ namespace Munchkin.Console
                         )
                         .Condition(
                             state => state.IsDiceRollSuccessful(),
-                            positive => positive.Execute(state => state.EndTurn()),
+                            positive => positive.Execute(state => state),
                             negative => negative.Execute(state => state.TakeBadStuff())
                         ),
                     negative => negative.Execute(state => state.TakeBadStuff())

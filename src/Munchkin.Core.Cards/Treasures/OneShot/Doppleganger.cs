@@ -31,7 +31,8 @@ namespace Munchkin.Engine.Original.Treasures
             strength += playerProperties.Select(x => x.Bonus).Aggregate((x, y) => x + y);
 
             // add doppleganger strength
-            gameContext.Dungeon.Combat.AddProperty(new PlayerStrengthBonusAttribute(strength));
+            // TODO: check if current stage actually is a combat
+            //gameContext.Dungeon.Combat.AddProperty(new PlayerStrengthBonusAttribute(strength));
             return base.Play(gameContext);
         }
     }
