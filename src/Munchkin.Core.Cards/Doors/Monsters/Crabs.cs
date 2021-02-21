@@ -1,6 +1,9 @@
+using System.Linq;
 using System.Threading.Tasks;
+using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Cards;
+using Munchkin.Core.Model.Enums;
 
 namespace Munchkin.Engine.Original.Doors
 {
@@ -10,9 +13,14 @@ namespace Munchkin.Engine.Original.Doors
         {
         }
 
-        public override Task BadStuff(Table gameContext)
+        public override Task BadStuff(Table state)
         {
-            throw new System.NotImplementedException();
+            state.Players.Current.Equipped
+                .OfType<PermanentItemCard>()
+                .Where(x => x.WearingType == EWearingType.Armor && x.WearingType == EWearingType.Footgear)
+                .ForEach(x => x.Discard(state));
+
+            return Task.CompletedTask;
         }
     }
 }

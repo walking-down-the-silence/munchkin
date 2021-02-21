@@ -21,6 +21,7 @@ namespace Munchkin.Engine.Original.Doors
                             && state.Players.Current.Equipped.OfType<ChangeSex>().Any();
             if (isFemale)
             {
+                // TODO: implement +1 Treasure reward when isFemale
                 //gameContext.Dungeon.RewardTreasures += 1;
             }
             else
