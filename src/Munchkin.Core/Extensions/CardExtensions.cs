@@ -1,4 +1,5 @@
-﻿using Munchkin.Core.Model;
+﻿using Munchkin.Core.Contracts;
+using Munchkin.Core.Model;
 using Munchkin.Core.Model.Cards;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,11 @@ namespace Munchkin.Core.Extensions
         public static IEnumerable<Card> NotOfType<TExcept>(this IEnumerable<Card> list)
         {
             return list.Where(card => !(card is TExcept));
+        }
+
+        public static bool HasAttribute<TAttribute>(this Card card) where TAttribute : IAttribute
+        {
+            return card is not null && card.Attributes.OfType<TAttribute>().Any();
         }
 
         public static FaceDownCard AsFaceDown(this Card card)

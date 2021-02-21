@@ -10,7 +10,7 @@ namespace Munchkin.Engine.Original.Doors
         {
         }
 
-        public override Task Play(Table context)
+        public override Task BadStuff(Table context)
         {
             context.Players.Current.LevelDown();
             return Task.CompletedTask;

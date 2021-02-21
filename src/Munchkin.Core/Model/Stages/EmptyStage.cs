@@ -30,12 +30,13 @@ namespace Munchkin.Core.Model.Stages
         /// Takes a card from the doors deck and puts in hand.
         /// </summary>
         /// <returns>The end stage.</returns>
-        public async Task<IStage> LootTheRoom()
+        public Task<IStage> LootTheRoom()
         {
             // TODO: check if deck is empty and reshuffle discard if it is
             var doorsCard = _table.DoorsCardDeck.Take();
             _table.Players.Current.TakeInHand(doorsCard);
-            return new EndStage(_table);
+            IStage stage = new EndStage(_table);
+            return Task.FromResult(stage);
         }
 
         /// <summary>

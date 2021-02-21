@@ -1,4 +1,6 @@
 ﻿using Munchkin.Core.Contracts;
+using Munchkin.Core.Extensions;
+using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Cards;
 using Munchkin.Core.Model.Requests;
 using System.Linq;
@@ -14,35 +16,53 @@ namespace Munchkin.Core.Model.Stages
         {
             _table = table ?? throw new System.ArgumentNullException(nameof(table));
             Curse = curse ?? throw new System.ArgumentNullException(nameof(curse));
-            LastCardPlayed = curse;
         }
 
-        public Dungeon Dungeon { get; }
-
         public CurseCard Curse { get; }
-
-        public Card LastCardPlayed { get; }
 
         public bool IsTerminal => false;
 
         public async Task<IStage> Resolve()
         {
-            // TODO: prompt the player to handle the curse by either playing a Wishing Ring card or by Taking The Bad Stuff
+            // TODO: handle a case when the player does not have a wishing ring, but can play other card to obtain one
+            var resolveCurseRequest = new PlayWishingRingOrContinueRequest(_table.Players.Current, _table);
+            var resolveCurseResponse = await _table.RequestSink.Send(resolveCurseRequest);
+            var resolveCurseAction = await resolveCurseResponse.Task;
 
+            if (resolveCurseAction == PlayWishingRingOrContinueActions.PlayWishingRing)
+            {
+                var curseCancellableCards = _table.Players.Current.YourHand
+                    .Concat(_table.Players.Current.Backpack)
+                    .Where(card => card.HasAttribute<CancelCurseAttribute>())
+                    .ToArray();
+                var selectCurseCancellableCardRequest = new SelectCardsRequest(_table.Players.Current, _table, curseCancellableCards);
+                var selectCurseCancellableCardResponse = await _table.RequestSink.Send(selectCurseCancellableCardRequest);
+                var selectCurseCancellableCard = await selectCurseCancellableCardResponse.Task;
 
-            var request = new LookForTroubleOrLootTheRoomRequest(_table.Players.Current, _table);
-            var response = await _table.RequestSink.Send(request);
-            var action = await response.Task;
-            bool lookForTrouble = action == EmptyRoomActions.LookForTrouble;
+                if (selectCurseCancellableCard is null)
+                {
+                    await TakeBadStuff(_table.Players.Current);
+                }
+            }
+            else
+            {
+                await TakeBadStuff(_table.Players.Current);
+            }
+
+            var furtherActionRequest = new LookForTroubleOrLootTheRoomRequest(_table.Players.Current, _table);
+            var furtherActionResponse = await _table.RequestSink.Send(furtherActionRequest);
+            var furtherAction = await furtherActionResponse.Task;
+            bool lookForTrouble = furtherAction == EmptyRoomActions.LookForTrouble;
             return lookForTrouble ? await LookForTrouble() : await LootTheRoom();
         }
 
-        public async Task<IStage> LootTheRoom()
+        public Task<IStage> LootTheRoom()
         {
             // TODO: check if deck is empty and reshuffle discard if it is
             DoorsCard doorsCard = _table.DoorsCardDeck.Take();
             _table.Players.Current.TakeInHand(doorsCard);
-            return new EndStage(_table);
+            IStage stage = new EndStage(_table);
+            return Task.FromResult(stage);
         }
 
         public async Task<IStage> LookForTrouble()
@@ -52,6 +72,12 @@ namespace Munchkin.Core.Model.Stages
             var response = await _table.RequestSink.Send(request);
             var monsterCard = await response.Task;
             return new CombatStage(_table, monsterCard);
+        }
+
+        private async Task TakeBadStuff(Player player)
+        {
+            // TODO: pass a player to take the bad stuff (for a case with helping player)
+            await Curse.BadStuff(_table);
         }
     }
 }

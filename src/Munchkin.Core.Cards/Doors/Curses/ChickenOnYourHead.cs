@@ -12,7 +12,7 @@ namespace Munchkin.Engine.Original.Doors
             AddProperty(new RunAwayBonusAttribute(-1));
         }
 
-        public override Task Play(Table context)
+        public override Task BadStuff(Table context)
         {
             return Task.CompletedTask;
         }

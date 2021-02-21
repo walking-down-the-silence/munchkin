@@ -11,7 +11,7 @@ namespace Munchkin.Engine.Original.Doors
         {
         }
 
-        public override Task Play(Table context)
+        public override Task BadStuff(Table context)
         {
             var classes = context.Players.Current.Equipped
                 .OfType<ClassCard>()

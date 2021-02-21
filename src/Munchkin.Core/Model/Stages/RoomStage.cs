@@ -27,20 +27,23 @@ namespace Munchkin.Core.Model.Stages
             };
         }
 
-        private async Task<IStage> Fight(MonsterCard monsterCard)
+        private Task<IStage> Fight(MonsterCard monsterCard)
         {
-            return new CombatStage(_table, monsterCard);
+            IStage stage = new CombatStage(_table, monsterCard);
+            return Task.FromResult(stage);
         }
 
-        private async Task<IStage> HandleCurse(CurseCard curseCard)
+        private Task<IStage> HandleCurse(CurseCard curseCard)
         {
-            return new CurseStage(_table, curseCard);
+            IStage stage = new CurseStage(_table, curseCard);
+            return Task.FromResult(stage);
         }
 
-        private async Task<IStage> TakeInHand(DoorsCard doorsCard)
+        private Task<IStage> TakeInHand(DoorsCard doorsCard)
         {
             _table.Players.Current.TakeInHand(doorsCard);
-            return new EmptyStage(_table);
+            IStage stage = new EmptyStage(_table);
+            return Task.FromResult(stage);
         }
     }
 }
