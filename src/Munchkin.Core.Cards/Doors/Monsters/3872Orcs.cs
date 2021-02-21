@@ -20,8 +20,10 @@ namespace Munchkin.Engine.Original.Doors
 
         public override async Task BadStuff(Table context)
         {
-            var diceRollRequest = new DiceRollRequest(context.Players.Current);
-            var diceRollResult = await context.Mediator.Send(diceRollRequest);
+            var diceRollRequest = new RollTheDiceRequest(context.Players.Current);
+            var diceRollResponse = await context.RequestSink.Send(diceRollRequest);
+            var diceRollResult = await diceRollResponse.Task;
+
             if (diceRollResult <= 2)
             {
                 context.Players.Current.Kill();

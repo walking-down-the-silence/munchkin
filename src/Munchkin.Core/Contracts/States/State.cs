@@ -14,16 +14,21 @@ namespace Munchkin.Core.Model
         /// </summary>
         public IReadOnlyCollection<Properties.Attribute> Attributes => _attributes.AsReadOnly();
 
+        /// <summary>
+        /// Gets a property of specific type.
+        /// </summary>
+        /// <typeparam name="TAttribute">Type of the attribute.</typeparam>
+        /// <returns>The attribute instance.</returns>
         public TAttribute GetProperty<TAttribute>() where TAttribute : Properties.Attribute
         {
             return _attributes.OfType<TAttribute>().FirstOrDefault();
         }
 
-        public int AggregateProperties<TAttribute>(Func<TAttribute, int> selector)
-        {
-            return _attributes.OfType<TAttribute>().Aggregate(0, (total, next) => total + selector(next));
-        }
-
+        /// <summary>
+        /// Add a property of specific type.
+        /// </summary>
+        /// <typeparam name="TAttribute">Type of the attribute.</typeparam>
+        /// <param name="attribute"></param>
         public void AddProperty<TAttribute>(TAttribute attribute) where TAttribute : Properties.Attribute
         {
             if (attribute is null) throw new ArgumentNullException(nameof(attribute));

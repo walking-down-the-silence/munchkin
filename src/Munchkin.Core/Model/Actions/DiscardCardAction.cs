@@ -21,8 +21,8 @@ namespace Munchkin.Core.Model.Actions
 
         public override async Task<Table> ExecuteAsync(Table state)
         {
-            var selectCardRequest = new SelectCardRequest(state.Players.Current, state, state.Players.Current.AllCards());
-            await state.Mediator.Send(selectCardRequest).ContinueWith(x => x.Result.Discard(state));
+            //var selectCardRequest = new SelectCardsRequest(state.Players.Current, state, state.Players.Current.AllCards());
+            //await state.RequestSink.Send(selectCardRequest).ContinueWith(x => x.Result.Discard(state));
 
             return state;
         }

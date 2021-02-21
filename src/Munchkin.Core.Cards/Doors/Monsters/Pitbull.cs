@@ -1,5 +1,6 @@
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Cards;
+using Munchkin.Core.Model.Requests;
 using System.Threading.Tasks;
 
 namespace Munchkin.Engine.Original.Doors
@@ -13,7 +14,10 @@ namespace Munchkin.Engine.Original.Doors
         public async override Task BadStuff(Table context)
         {
             // TODO: request the player to discard an item that looks like a stick
-            var card = await context.RequestSink.RequestAsync(context.Players.Current, null);
+            var request = new SelectCardsRequest(context.Players.Current, context, context.Players.Current.Equipped);
+            var response = await context.RequestSink.Send(request);
+            var card = await response.Task;
+
             if (card != null)
             {
                 context.Players.Current.Discard(card);

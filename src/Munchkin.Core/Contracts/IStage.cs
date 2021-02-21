@@ -1,7 +1,7 @@
 ﻿using Munchkin.Core.Contracts.States;
 using System.Threading.Tasks;
 
-namespace Munchkin.Core.Model
+namespace Munchkin.Core.Contracts
 {
     public interface IStage : IState
     {

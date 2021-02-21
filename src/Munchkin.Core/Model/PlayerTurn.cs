@@ -1,5 +1,4 @@
-﻿using Munchkin.Console;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 
@@ -9,16 +8,17 @@ namespace Munchkin.Core.Model
     {
         public static Task Start(IEnumerable<Player> players, int winningLevel)
         {
-            return NextTurn(ImmutableStack<Table>.Empty, Table.Setup(players, winningLevel));
+            // TODO: pass a valid reference for Mediator
+            return NextTurn(ImmutableStack<Table>.Empty, Table.Setup(null, players, winningLevel));
         }
 
         private static async Task NextTurn(ImmutableStack<Table> history, Table table)
         {
             if (!table.IsGameWon)
             {
-                var dungeonFlow = new DungeonFlowFactory().Create().Build();
+                //var dungeonFlow = new DungeonFlowFactory().Create().Build();
 
-                dungeonFlow.Invoke(table.Dungeon);
+                //dungeonFlow.Invoke(table.Dungeon);
                 table.Players.Next();
 
                 await NextTurn(history, table);

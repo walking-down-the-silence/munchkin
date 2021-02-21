@@ -1,8 +1,6 @@
 ﻿using MediatR;
-using Munchkin.Core.Contracts;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Cards;
-using Munchkin.Core.PlayerInteraction;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,10 +11,10 @@ namespace Munchkin.Core.Model
     /// </summary>
     public class Table
     {
-        private Table(CircularList<Player> players, int winningLevel)
+        private Table(IMediator mediator, CircularList<Player> players, int winningLevel)
         {
             Players = players ?? throw new System.ArgumentNullException(nameof(players));
-            RequestSink = new AsyncRequestSink<Card>();
+            RequestSink = mediator;
             WinningLevel = winningLevel;
             Dungeon = new Dungeon(this);
 
@@ -34,10 +32,10 @@ namespace Munchkin.Core.Model
         /// Begins the game
         /// </summary>
         /// <param name="winningLevel"> The winning level. </param>
-        public static Table Setup(IEnumerable<Player> players, int winningLevel)
+        public static Table Setup(IMediator mediator, IEnumerable<Player> players, int winningLevel)
         {
             var playersList = new CircularList<Player>(players);
-            return new Table(playersList, winningLevel);
+            return new Table(mediator, playersList, winningLevel);
         }
 
         /// <summary>
@@ -73,12 +71,7 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Request sink that is used for player interaction when a selection or decision is needed
         /// </summary>
-        public IAsyncRequestable<Card> RequestSink { get; }
-
-        /// <summary>
-        /// Request sink that is used for player interaction when a selection or decision is needed
-        /// </summary>
-        public IMediator Mediator { get; }
+        public IMediator RequestSink { get; }
 
         /// <summary>
         /// The winning level number

@@ -4,6 +4,7 @@ using Munchkin.Core.Contracts;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Cards;
+using Munchkin.Core.Model.Requests;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,8 +30,11 @@ namespace Munchkin.Engine.Original.Doors
 
         public async override Task BadStuff(Table context)
         {
-            var result = await context.RequestSink.RequestAsync(context.Players.Current, null);
-            if (result == null)
+            var request = new DiscardHandOrLoose2LevelsRequest(context.Players.Current, context);
+            var response = await context.RequestSink.Send(request);
+            var action = await response.Task;
+
+            if (action == DiscardHandOrLoose2LevelsActions.DiscardHand)
             {
                 context.Players.Current.DiscardHand();
             }

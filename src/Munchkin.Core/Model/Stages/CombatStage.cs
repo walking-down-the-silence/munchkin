@@ -1,23 +1,22 @@
-﻿using Munchkin.Core.Model.Cards;
+﻿using Munchkin.Core.Contracts;
+using Munchkin.Core.Extensions;
+using Munchkin.Core.Model.Cards;
 using Munchkin.Core.Model.Properties;
-using Munchkin.Core.Model.States;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Munchkin.Core.Model
+namespace Munchkin.Core.Model.Stages
 {
     public class CombatStage : State, IStage
     {
         private readonly Table _table;
-        private readonly MonsterCard _monsterCard;
         private readonly List<MonsterCard> _monsters;
 
         public CombatStage(Table table, MonsterCard monsterCard)
         {
             _table = table ?? throw new System.ArgumentNullException(nameof(table));
             _monsters = new List<MonsterCard> { monsterCard };
-            _monsterCard = monsterCard ?? throw new System.ArgumentNullException(nameof(monsterCard));
 
             // TODO: calculate and set the hero strength and other properties
             AddProperty(new PlayerStrengthBonusAttribute(0));
@@ -32,27 +31,27 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Monster strength if any present.
         /// </summary>
-        public int MonsterStrength => AggregateProperties<MonsterStrengthBonusAttribute>(x => x.Bonus);
+        public int MonsterStrength => this.AggregateProperties<MonsterStrengthBonusAttribute>(x => x.Bonus);
 
         /// <summary>
         /// Heroes strength that entered the dungeon.
         /// </summary>
-        public int PlayersStrength => AggregateProperties<PlayerStrengthBonusAttribute>(x => x.Bonus);
+        public int PlayersStrength => this.AggregateProperties<PlayerStrengthBonusAttribute>(x => x.Bonus);
 
         /// <summary>
         /// Bonus to run away from dungeon.
         /// </summary>
-        public int RunAwayBonus => AggregateProperties<RunAwayBonusAttribute>(x => x.Bonus);
+        public int RunAwayBonus => this.AggregateProperties<RunAwayBonusAttribute>(x => x.Bonus);
 
         /// <summary>
         /// Levels gained if dungeon is cleared.
         /// </summary>
-        public int RewardLevels => AggregateProperties<RewardLevelsAttribute>(x => x.Bonus);
+        public int RewardLevels => this.AggregateProperties<RewardLevelsAttribute>(x => x.Bonus);
 
         /// <summary>
         /// Treasures gained if dungeon is cleared.
         /// </summary>
-        public int RewardTreasures => AggregateProperties<RewardTreasuresAttribute>(x => x.Bonus);
+        public int RewardTreasures => this.AggregateProperties<RewardTreasuresAttribute>(x => x.Bonus);
 
         #endregion
 
@@ -62,7 +61,12 @@ namespace Munchkin.Core.Model
         public IReadOnlyCollection<MonsterCard> Monsters => _monsters;
 
         /// <summary>
-        /// Player that agreed to enter the dungeon to help
+        /// Gets the player that is currently in combat.
+        /// </summary>
+        public Player FightingPlayer { get; private set; }
+
+        /// <summary>
+        /// Gets the player that agreed to to help in combat.
         /// </summary>
         public Player HelpingPlayer { get; private set; }
 
@@ -70,54 +74,21 @@ namespace Munchkin.Core.Model
 
         public async Task<IStage> Resolve()
         {
-            // TODO: prompt the player if they want to run away or take bad stuff
-            bool isRunningAway = false;
-
-            if (isRunningAway)
+            // TODO: immplement the loop of an actual combat actions
+            if (!_table.Dungeon.PlayersAreWinningCombat())
             {
-                return new RunAwayStage(_table);
+                return new RunAwayStage(_table, FightingPlayer, HelpingPlayer, _monsters);
             }
 
-            // TODO: take bad stuff
             return new EndStage(_table);
         }
 
-        public void HelpPlayer(Player helpingPlayer)
+        public void HelpInCombat(Player helpingPlayer)
         {
+            // TODO: rethink how to initialize actions available to each player
             var playerActions = helpingPlayer.Actions.Select(action => action.Create()).ToList();
             _table.Dungeon.SetPlayerActions(helpingPlayer, playerActions);
             HelpingPlayer = helpingPlayer;
-        }
-
-        public bool AnyCardsPlayed()
-        {
-            System.Console.WriteLine(nameof(AnyCardsPlayed));
-            return true;
-        }
-
-        public bool PlayersAreWinningCombat()
-        {
-            System.Console.WriteLine(nameof(PlayersAreWinningCombat));
-            bool winning = true;
-            return winning;
-        }
-
-        public CombatStage TakeGoodStuff()
-        {
-            System.Console.WriteLine(nameof(TakeGoodStuff));
-            return this;
-        }
-
-        public CombatStage PromptUserToPlayCards()
-        {
-            System.Console.WriteLine(nameof(PromptUserToPlayCards));
-            return this;
-        }
-
-        public CombatStage Recalculate()
-        {
-            System.Console.WriteLine(nameof(Recalculate));
-            return this;
         }
     }
 }

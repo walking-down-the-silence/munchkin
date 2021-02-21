@@ -1,6 +1,6 @@
 ﻿using Munchkin.Core.Contracts;
 using Munchkin.Core.Model.Cards;
-using Munchkin.Core.Model.States;
+using Munchkin.Core.Model.Stages;
 using System.Collections.Generic;
 using System.Linq;
 

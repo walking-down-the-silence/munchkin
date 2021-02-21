@@ -9,4 +9,8 @@
     <ProjectReference Include="..\Munchkin.Expansions\Munchkin.Expansions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Requests\" />
+  </ItemGroup>
+
 </Project>

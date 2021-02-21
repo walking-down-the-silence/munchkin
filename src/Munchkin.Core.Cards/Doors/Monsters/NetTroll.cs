@@ -1,5 +1,6 @@
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Cards;
+using Munchkin.Core.Model.Requests;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,16 +12,19 @@ namespace Munchkin.Engine.Original.Doors
         {
         }
 
-        public async override Task BadStuff(Table context)
+        public async override Task BadStuff(Table state)
         {
-            var maxLevel = context.Players.Max(x => x.Level);
-            var players = context.Players.Where(x => x.Level == maxLevel).GetEnumerator();
+            var maxLevel = state.Players.Max(x => x.Level);
+            var players = state.Players.Where(x => x.Level == maxLevel).GetEnumerator();
 
             // until the current pllayer still has cards and more player of max level
-            while (players.MoveNext() && context.Players.Current.Equipped.OfType<TreasureCard>().Any())
+            while (players.MoveNext() && state.Players.Current.Equipped.OfType<TreasureCard>().Any())
             {
-                var card = await context.RequestSink.RequestAsync(players.Current, null);
-                context.Players.Current.Discard(card);
+                var treasures = state.Players.Current.Equipped.OfType<TreasureCard>().ToList();
+                var request = new SelectCardsRequest(players.Current, state, treasures);
+                var response = await state.RequestSink.Send(request);
+                var card = await response.Task;
+                state.Players.Current.Discard(card);
                 players.Current.PutInPlayAsCarried(card);
             }
         }

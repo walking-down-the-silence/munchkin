@@ -32,9 +32,9 @@ namespace Munchkin.Engine.Original.Actions
         public override async Task<Table> ExecuteAsync(Table state)
         {
             Interlocked.Decrement(ref _shotsLeft);
-            var selectCardRequest = new SelectCardRequest(state.Players.Current, state, state.Players.Current.AllCards());
+            var selectCardRequest = new SelectCardsRequest(state.Players.Current, state, state.Players.Current.AllCards());
             // TODO: add a bonus of +3 for each card
-            await state.Mediator.Send(selectCardRequest).ContinueWith(x => x.Result.Discard(state));
+            //await state.RequestSink.Send(selectCardRequest).ContinueWith(x => x.Result.Discard(state));
 
             return state;
         }

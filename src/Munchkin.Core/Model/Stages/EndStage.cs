@@ -1,6 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using Munchkin.Core.Contracts;
+using System.Threading.Tasks;
 
-namespace Munchkin.Core.Model.States
+namespace Munchkin.Core.Model.Stages
 {
     public class EndStage : State, IStage
     {

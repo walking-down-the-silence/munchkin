@@ -1,7 +1,8 @@
-﻿using Munchkin.Core.Model.Cards;
+﻿using Munchkin.Core.Contracts;
+using Munchkin.Core.Model.Cards;
 using System.Threading.Tasks;
 
-namespace Munchkin.Core.Model.States
+namespace Munchkin.Core.Model.Stages
 {
     public class RoomStage : State, IStage
     {
@@ -14,15 +15,15 @@ namespace Munchkin.Core.Model.States
             _doorsCard = doorsCard ?? throw new System.ArgumentNullException(nameof(doorsCard));
         }
 
-        public bool IsTerminal { get; }
+        public bool IsTerminal => false;
 
         public Task<IStage> Resolve()
         {
             return _doorsCard switch
             {
                 MonsterCard monsterCard => Fight(monsterCard),
-                CurseCard curseCard     => HandleCurse(curseCard),
-                _                       => TakeInHand(_doorsCard)
+                CurseCard curseCard => HandleCurse(curseCard),
+                _ => TakeInHand(_doorsCard)
             };
         }
 
