@@ -18,21 +18,21 @@ namespace Munchkin.Engine.Original.Doors
                     .New(new HasDwarfRaceRule())));
         }
 
-        public override async Task BadStuff(Table context)
+        public override async Task BadStuff(Table state)
         {
-            var diceRollRequest = new RollTheDiceRequest(context.Players.Current);
-            var diceRollResponse = await context.RequestSink.Send(diceRollRequest);
+            var diceRollRequest = new RollTheDiceRequest(state.Players.Current);
+            var diceRollResponse = await state.RequestSink.Send(diceRollRequest);
             var diceRollResult = await diceRollResponse.Task;
 
             if (diceRollResult <= 2)
             {
-                context.Players.Current.Kill();
+                state.Players.Current.Kill();
             }
             else
             {
                 for (int i = 0; i < diceRollResult; i++)
                 {
-                    context.Players.Current.LevelDown();
+                    state.Players.Current.LevelDown();
                 }
             }
         }

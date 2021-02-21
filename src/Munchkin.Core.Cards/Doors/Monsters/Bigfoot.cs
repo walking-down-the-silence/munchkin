@@ -1,3 +1,6 @@
+using Munchkin.Core.Cards.Effects;
+using Munchkin.Core.Cards.Rules;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Cards;
@@ -11,35 +14,19 @@ namespace Munchkin.Engine.Original.Doors
     {
         public Bigfoot() : base("Bigfoot", 12, 1, 3, 0, false)
         {
+            AddEffect(Effect
+                .New(new MonsterStrengthBonusEffect(3))
+                .With(() => Rule
+                    .New(new HasDwarfRaceRule()
+                    .Or(new HasHalflingRaceRule()))));
         }
 
-        public override Task Play(Table gameContext)
+        public override Task BadStuff(Table state)
         {
-            var currentHero = gameContext.Players.Current;
-            var currentHeroIsDwarf = currentHero.Equipped.OfType<DwarfRace>().Any();
-            var currentHeroIsHalfling = currentHero.Equipped.OfType<HalflingRace>().Any();
-
-            //var helpingHero = gameContext.Dungeon.HelpingPlayer;
-            //var helpingHeroIsDwarf = helpingHero?.Equipped.OfType<DwarfRace>().Any();
-            //var helpingHeroIsHalfling = helpingHero?.Equipped.OfType<HalflingRace>().Any();
-
-            //if (currentHeroIsDwarf
-            //    || currentHeroIsHalfling
-            //    || helpingHeroIsDwarf != null && helpingHeroIsDwarf.Value
-            //    || helpingHeroIsHalfling != null && helpingHeroIsHalfling.Value)
-            //{
-            //    gameContext.Dungeon.State.PlayersStrength += 3;
-            //}
-
-            return base.Play(gameContext);
-        }
-
-        public override Task BadStuff(Table gameContext)
-        {
-            gameContext.Players.Current.Equipped
+            state.Players.Current.Equipped
                 .OfType<PermanentItemCard>()
                 .Where(x => x.WearingType == EWearingType.Headgear)
-                .ForEach(x => x.Discard(gameContext));
+                .ForEach(x => x.Discard(state));
 
             return Task.CompletedTask;
         }

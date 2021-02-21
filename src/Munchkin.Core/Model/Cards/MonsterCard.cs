@@ -1,4 +1,6 @@
-﻿using Munchkin.Core.Model.Properties;
+﻿using Munchkin.Core.Extensions;
+using Munchkin.Core.Model.Properties;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards
@@ -35,6 +37,9 @@ namespace Munchkin.Core.Model.Cards
             context.Dungeon.CurrentStage.AddProperty(new RewardLevelsAttribute(RewardLevels));
             context.Dungeon.CurrentStage.AddProperty(new RewardTreasuresAttribute(RewardTreasures));
             context.Dungeon.CurrentStage.AddProperty(new RunAwayBonusAttribute(RunAwayBonus));
+
+            Effects.Where(effect => effect.Satisfies(context)).ForEach(effect => effect.Apply(context));
+
             return Task.CompletedTask;
         }
 
