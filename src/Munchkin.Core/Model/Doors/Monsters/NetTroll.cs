@@ -24,7 +24,7 @@ namespace Munchkin.Engine.Original.Doors
                 var request = new SelectCardsRequest(players.Current, state, treasures);
                 var response = await state.RequestSink.Send(request);
                 var card = await response.Task;
-                state.Players.Current.Discard(card);
+                state.Players.Current.Discard(state, card);
                 players.Current.PutInPlayAsCarried(card);
             }
         }

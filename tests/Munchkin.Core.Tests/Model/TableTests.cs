@@ -2,7 +2,6 @@
 using Moq;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Enums;
-using Munchkin.Engine.Original;
 using System;
 using Xunit;
 

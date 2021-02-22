@@ -10,7 +10,7 @@ namespace Munchkin.Core.Extensions
     {
         public static IEnumerable<Card> NotOfType<TExcept>(this IEnumerable<Card> list)
         {
-            return list.Where(card => !(card is TExcept));
+            return list.Where(card => card is not TExcept);
         }
 
         public static bool HasAttribute<TAttribute>(this Card card) where TAttribute : IAttribute

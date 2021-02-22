@@ -61,7 +61,7 @@ namespace Munchkin.Core.Contracts.Cards
         public IReadOnlyCollection<IActionDefinition<Table>> Actions => _actions.AsReadOnly();
 
         /// <inheritdoc />
-        public override string ToString() => $"{GetType().Name}: {Title}";
+        public override string ToString() => $"{Title}";
 
         /// <summary>
         /// Binds the card to the current one to be played along with it.

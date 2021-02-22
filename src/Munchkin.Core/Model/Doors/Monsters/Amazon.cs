@@ -44,7 +44,7 @@ namespace Munchkin.Engine.Original.Doors
 
                 foreach (var classCard in classes)
                 {
-                    state.Players.Current.Discard(classCard);
+                    state.Players.Current.Discard(state, classCard);
                 }
             }
             else

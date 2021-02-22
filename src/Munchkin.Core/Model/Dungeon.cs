@@ -11,14 +11,15 @@ namespace Munchkin.Core.Model
     /// </summary>
     public class Dungeon : State
     {
+        private readonly Table _table;
         private readonly List<Card> _cardsPlayed;
         private readonly Dictionary<Player, List<IAction<Table>>> _playerActions = new Dictionary<Player, List<IAction<Table>>>();
 
         public Dungeon(Table table)
         {
             // TODO: intiailize each stage with a proper card
+            _table = table ?? throw new System.ArgumentNullException(nameof(table));
             _cardsPlayed = new List<Card>();
-            Table = table ?? throw new System.ArgumentNullException(nameof(table));
         }
 
         /// <summary>
@@ -35,8 +36,6 @@ namespace Munchkin.Core.Model
             CurrentStage = roomStage;
             return roomStage;
         }
-
-        public Table Table { get; }
 
         public IStage CurrentStage { get; private set; }
 
@@ -62,7 +61,7 @@ namespace Munchkin.Core.Model
         public void PutInPlay(Card card)
         {
             _cardsPlayed.Add(card);
-            card.Play(Table);
+            card.Play(_table);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Munchkin.Core.Cards.Effects
     {
         public Table Apply(Table state)
         {
-            state.Players.Current.DiscardHand();
+            state.Players.Current.DiscardHand(state);
             return state;
         }
     }

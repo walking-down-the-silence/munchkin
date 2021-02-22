@@ -11,22 +11,22 @@ namespace Munchkin.Engine.Original.Doors
         {
         }
 
-        public async override Task BadStuff(Table context)
+        public async override Task BadStuff(Table state)
         {
             // TODO: request the player to discard an item that looks like a stick
-            var request = new SelectCardsRequest(context.Players.Current, context, context.Players.Current.Equipped);
-            var response = await context.RequestSink.Send(request);
+            var request = new SelectCardsRequest(state.Players.Current, state, state.Players.Current.Equipped);
+            var response = await state.RequestSink.Send(request);
             var card = await response.Task;
 
             if (card != null)
             {
-                context.Players.Current.Discard(card);
+                state.Players.Current.Discard(state, card);
             }
             else
             {
 
-                context.Players.Current.LevelDown();
-                context.Players.Current.LevelDown();
+                state.Players.Current.LevelDown();
+                state.Players.Current.LevelDown();
             }
         }
     }

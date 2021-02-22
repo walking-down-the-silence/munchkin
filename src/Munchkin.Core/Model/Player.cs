@@ -139,62 +139,79 @@ namespace Munchkin.Core.Model
         }
 
         /// <summary>
-        /// Discards a card from payer
+        /// Discards a card from the player and puts back into the discard pile.
         /// </summary>
-        public void Discard(Card card)
+        public void Discard(Table table, Card card)
         {
-            if (card is not null)
+            if (table is not null && card is not null)
             {
-                // TODO: make sure that removed cards go into the dicard pile
+                card.Discard(table);
                 _yourHand.Remove(card);
                 _backpack.Remove(card);
                 _equipped.Remove(card);
             }
         }
 
-        public void DiscardHand()
+        /// <summary>
+        /// Discards whole hand from the player and puts back into the discard pile.
+        /// </summary>
+        /// <param name="table"> Table instance with all the state. </param>
+        public void DiscardHand(Table table)
         {
-            // TODO: make sure that removed cards go into the dicard pile
+            _yourHand.OfType<DoorsCard>().ForEach(card => card.Discard(table));
+            _yourHand.OfType<TreasureCard>().ForEach(card => card.Discard(table));
             _yourHand.Clear();
         }
 
-        public void DiscardEquipped()
+        /// <summary>
+        /// Discards all equipped cards from the player and puts back into the discard pile.
+        /// </summary>
+        /// <param name="table"> Table instance with all the state. </param>
+        public void DiscardEquipped(Table table)
         {
-            // TODO: make sure that removed cards go into the dicard pile
+            _equipped.OfType<DoorsCard>().ToList().ForEach(card => card.Discard(table));
+            _equipped.OfType<TreasureCard>().ToList().ForEach(card => card.Discard(table));
             _equipped.Clear();
         }
 
         /// <summary>
         /// Revive the players hero and give intital cards.
         /// </summary>
-        /// <param name="state"> Table instance with all the state. </param>
-        public void Revive(Table state)
+        /// <param name="table"> Table instance with all the state. </param>
+        public void Revive(Table table)
         {
+            var doorCards = table.DoorsCardDeck.TakeRange(4);
+            var treasureCards = table.TreasureCardDeck.TakeRange(4);
+
             Enumerable.Empty<Card>()
-                .Concat(state.DoorsCardDeck.TakeRange(4))
-                .Concat(state.TreasureCardDeck.TakeRange(4))
+                .Concat(doorCards)
+                .Concat(treasureCards)
                 .ForEach(TakeInHand);
+
             _isDead = false;
         }
 
         /// <summary>
         /// Kills the player's hero.
         /// </summary>
-        /// <param name="state"> Table instance with all the state. </param>
-        public void Kill(Table state)
+        /// <param name="table"> Table instance with all the state. </param>
+        public void Kill(Table table)
         {
-            // TODO: make sure that removed cards go into the dicard pile
+            var playerCards = Enumerable.Empty<Card>()
+                .Concat(YourHand)
+                .Concat(Equipped
+                    .NotOfType<RaceCard>()
+                    .NotOfType<ClassCard>()
+                    .NotOfType<SuperMunchkin>()
+                    .NotOfType<Halfbreed>())
+                .Concat(Backpack)
+                .ToList();
+
+            playerCards.ForEach(card => card.Discard(table));
+
             _yourHand.Clear();
             _backpack.Clear();
 
-            var safeCards = Enumerable.Empty<Card>()
-                .Concat(_equipped.OfType<RaceCard>())
-                .Concat(_equipped.OfType<ClassCard>())
-                .Concat(_equipped.OfType<SuperMunchkin>())
-                .Concat(_equipped.OfType<Halfbreed>());
-
-            _equipped.Clear();
-            _equipped.AddRange(safeCards);
             _isDead = true;
         }
     }

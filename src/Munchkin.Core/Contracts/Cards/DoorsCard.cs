@@ -9,20 +9,17 @@ namespace Munchkin.Core.Contracts.Cards
         {
         }
 
-        public override void Discard(Table context)
+        public override void Discard(Table state)
         {
-            // remove card from player
-            Owner?.Discard(this);
-
             // put card to discard deck
-            context.DiscardedDoorsCards.Put(this);
+            state.DiscardedDoorsCards.Put(this);
 
             // clean up the card
             Owner = null;
             BoundTo = null;
 
             // discard all bounded cards
-            BoundCards.ForEach(card => card.Discard(context));
+            BoundCards.ForEach(card => card.Discard(state));
         }
     }
 }

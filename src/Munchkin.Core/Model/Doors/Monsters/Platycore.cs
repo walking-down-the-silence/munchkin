@@ -28,20 +28,20 @@ namespace Munchkin.Engine.Original.Doors
             return base.Play(context);
         }
 
-        public async override Task BadStuff(Table context)
+        public async override Task BadStuff(Table state)
         {
-            var request = new DiscardHandOrLoose2LevelsRequest(context.Players.Current, context);
-            var response = await context.RequestSink.Send(request);
+            var request = new DiscardHandOrLoose2LevelsRequest(state.Players.Current, state);
+            var response = await state.RequestSink.Send(request);
             var action = await response.Task;
 
             if (action == DiscardHandOrLoose2LevelsActions.DiscardHand)
             {
-                context.Players.Current.DiscardHand();
+                state.Players.Current.DiscardHand(state);
             }
             else
             {
-                context.Players.Current.LevelDown();
-                context.Players.Current.LevelDown();
+                state.Players.Current.LevelDown();
+                state.Players.Current.LevelDown();
             }
         }
     }

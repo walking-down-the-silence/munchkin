@@ -28,7 +28,7 @@ namespace Munchkin.Engine.Original.Doors
             {
                 foreach (var equippedFootgear in equippedFootgears)
                 {
-                    state.Players.Current.Discard(equippedFootgear);
+                    state.Players.Current.Discard(state, equippedFootgear);
                 }
             }
             else
