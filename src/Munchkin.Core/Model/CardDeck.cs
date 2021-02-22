@@ -23,6 +23,8 @@ namespace Munchkin.Core.Model
 
         public bool IsEmpty => _cards.Count == 0;
 
+        public override string ToString() => $"Count = {_cards.Count}";
+
         public void Shuffle()
         {
             int count = _cards.Count;

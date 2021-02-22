@@ -11,7 +11,7 @@ namespace Munchkin.Core.Model.Cards
         public override void Discard(Table context)
         {
             // remove card from player
-            Owner.Discard(this);
+            Owner?.Discard(this);
 
             // put card to discard deck
             context.DiscardedTreasureCards.Put(this);
@@ -22,11 +22,6 @@ namespace Munchkin.Core.Model.Cards
 
             // discard all bounded cards
             BoundCards.ForEach(card => card.Discard(context));
-        }
-
-        public virtual void PutInPlay(Table context)
-        {
-            context.Players.Current.PutInPlayAsCarried(this);
         }
     }
 }

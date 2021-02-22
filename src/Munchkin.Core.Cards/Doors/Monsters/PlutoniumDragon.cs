@@ -10,11 +10,11 @@ namespace Munchkin.Engine.Original.Doors
         {
         }
 
-        public override Task BadStuff(Table context)
+        public override Task BadStuff(Table state)
         {
-            if (context.Players.Current.Level > 5)
+            if (state.Players.Current.Level > 5)
             {
-                context.Players.Current.Kill();
+                state.Players.Current.Kill(state);
             }
 
             return Task.CompletedTask;

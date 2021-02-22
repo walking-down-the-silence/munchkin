@@ -98,7 +98,7 @@ namespace Munchkin.Core.Model
         /// </summary>
         public void TakeInHand(Card card)
         {
-            card.Take(this);
+            card?.Take(this);
             _yourHand.Add(card);
             _backpack.Remove(card);
             _equipped.Remove(card);
@@ -148,19 +148,23 @@ namespace Munchkin.Core.Model
         }
 
         /// <summary>
-        /// Revives the players hero
+        /// Revive the players hero and give intital cards.
         /// </summary>
-        /// <param name="cards"> Cards for hero to start with after being revived. </param>
-        public void Revive(IEnumerable<Card> cards)
+        /// <param name="state"> Table instance with all the state. </param>
+        public void Revive(Table state)
         {
-            cards.ForEach(TakeInHand);
+            Enumerable.Empty<Card>()
+                .Concat(state.DoorsCardDeck.TakeRange(4))
+                .Concat(state.TreasureCardDeck.TakeRange(4))
+                .ForEach(TakeInHand);
             _isDead = false;
         }
 
         /// <summary>
-        /// Kills the player's hero
+        /// Kills the player's hero.
         /// </summary>
-        public void Kill()
+        /// <param name="state"> Table instance with all the state. </param>
+        public void Kill(Table state)
         {
             // TODO: make sure that removed cards go into the dicard pile
             _yourHand.Clear();

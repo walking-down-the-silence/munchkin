@@ -9,7 +9,7 @@ namespace Munchkin.Core.Model
         public static Task Start(IEnumerable<Player> players, int winningLevel)
         {
             // TODO: pass a valid reference for Mediator
-            return NextTurn(ImmutableStack<Table>.Empty, Table.Setup(null, players, winningLevel));
+            return NextTurn(ImmutableStack<Table>.Empty, Table.Setup(null, players, null, null, winningLevel));
         }
 
         private static async Task NextTurn(ImmutableStack<Table> history, Table table)

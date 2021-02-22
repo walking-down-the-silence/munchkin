@@ -18,7 +18,6 @@ namespace Munchkin.Core.Tests
             };
 
             // Act
-            await PlayerTurn.Start(players, 10);
         }
     }
 }

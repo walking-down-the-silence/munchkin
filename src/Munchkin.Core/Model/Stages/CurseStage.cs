@@ -3,6 +3,7 @@ using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Cards;
 using Munchkin.Core.Model.Requests;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,16 +12,20 @@ namespace Munchkin.Core.Model.Stages
     public class CurseStage : State, IStage
     {
         private readonly Table _table;
+        private readonly List<Card> _playedCards;
 
-        public CurseStage(Table table, CurseCard curse)
+        public CurseStage(Table table, CurseCard curse, List<Card> playedCards)
         {
             _table = table ?? throw new System.ArgumentNullException(nameof(table));
+            _playedCards = playedCards ?? throw new System.ArgumentNullException(nameof(playedCards));
             Curse = curse ?? throw new System.ArgumentNullException(nameof(curse));
         }
 
         public CurseCard Curse { get; }
 
         public bool IsTerminal => false;
+
+        public IReadOnlyCollection<Card> PlayedCards => _playedCards.AsReadOnly();
 
         public async Task<IStage> Resolve()
         {
@@ -61,7 +66,7 @@ namespace Munchkin.Core.Model.Stages
             // TODO: check if deck is empty and reshuffle discard if it is
             DoorsCard doorsCard = _table.DoorsCardDeck.Take();
             _table.Players.Current.TakeInHand(doorsCard);
-            IStage stage = new EndStage(_table);
+            IStage stage = new EndStage(_table, _playedCards);
             return Task.FromResult(stage);
         }
 
@@ -71,7 +76,7 @@ namespace Munchkin.Core.Model.Stages
             var request = new SelectMonsterFromHandRequest(_table.Players.Current, _table, monsters);
             var response = await _table.RequestSink.Send(request);
             var monsterCard = await response.Task;
-            return new CombatStage(_table, monsterCard);
+            return new CombatStage(_table, monsterCard, _playedCards);
         }
 
         private async Task TakeBadStuff(Player player)

@@ -13,23 +13,26 @@ namespace Munchkin.Core.Model.Stages
         private readonly Player _fightingPlayer;
         private readonly Player _helpingPlayer;
         private readonly IReadOnlyCollection<MonsterCard> _monsters;
+        private readonly List<Card> _playedCards;
 
-        public RunAwayStage(Table table, Player fightingPlayer, Player helpingPlayer, IReadOnlyCollection<MonsterCard> monsters)
+        public RunAwayStage(Table table, Player fightingPlayer, Player helpingPlayer, IReadOnlyCollection<MonsterCard> monsters, List<Card> playedCards)
         {
             _table = table ?? throw new System.ArgumentNullException(nameof(table));
             _fightingPlayer = fightingPlayer ?? throw new System.ArgumentNullException(nameof(fightingPlayer));
             _helpingPlayer = helpingPlayer ?? throw new System.ArgumentNullException(nameof(helpingPlayer));
             _monsters = monsters ?? throw new System.ArgumentNullException(nameof(monsters));
+            _playedCards = playedCards ?? throw new System.ArgumentNullException(nameof(playedCards));
         }
 
         public bool IsTerminal => false;
 
+        public IReadOnlyCollection<Card> PlayedCards => _playedCards.AsReadOnly();
 
         public async Task<IStage> Resolve()
         {
             await HandlePlayerDecisionToRunAway(_fightingPlayer);
             await HandlePlayerDecisionToRunAway(_helpingPlayer);
-            return new EmptyStage(_table);
+            return new EmptyStage(_table, _playedCards);
         }
 
         private async Task HandlePlayerDecisionToRunAway(Player player)

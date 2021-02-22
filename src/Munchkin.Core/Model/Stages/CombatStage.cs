@@ -12,11 +12,13 @@ namespace Munchkin.Core.Model.Stages
     {
         private readonly Table _table;
         private readonly List<MonsterCard> _monsters;
+        private readonly List<Card> _playedCards;
 
-        public CombatStage(Table table, MonsterCard monsterCard)
+        public CombatStage(Table table, MonsterCard monsterCard, List<Card> playedCards)
         {
             _table = table ?? throw new System.ArgumentNullException(nameof(table));
             _monsters = new List<MonsterCard> { monsterCard };
+            _playedCards = playedCards ?? throw new System.ArgumentNullException(nameof(playedCards));
 
             // TODO: calculate and set the hero strength and other properties
             AddProperty(new PlayerStrengthBonusAttribute(0));
@@ -72,15 +74,17 @@ namespace Munchkin.Core.Model.Stages
 
         public bool IsTerminal => false;
 
+        public IReadOnlyCollection<Card> PlayedCards => _playedCards.AsReadOnly();
+
         public async Task<IStage> Resolve()
         {
             // TODO: immplement the loop of an actual combat actions
             if (!_table.Dungeon.PlayersAreWinningCombat())
             {
-                return new RunAwayStage(_table, FightingPlayer, HelpingPlayer, _monsters);
+                return new RunAwayStage(_table, FightingPlayer, HelpingPlayer, _monsters, _playedCards);
             }
 
-            return new EndStage(_table);
+            return new EndStage(_table, _playedCards);
         }
 
         public void HelpInCombat(Player helpingPlayer)

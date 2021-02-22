@@ -18,6 +18,8 @@ namespace Munchkin.Core
             get { return _innerList[_currentHeroIndex]; }
         }
 
+        public override string ToString() => $"Count = {_innerList.Count}";
+
         public T Next()
         {
             _currentHeroIndex = (_currentHeroIndex + 1) % _innerList.Count;

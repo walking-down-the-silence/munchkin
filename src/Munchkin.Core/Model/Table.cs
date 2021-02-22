@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Cards;
+using Munchkin.Expansions;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,31 +12,44 @@ namespace Munchkin.Core.Model
     /// </summary>
     public class Table
     {
-        private Table(IMediator mediator, CircularList<Player> players, int winningLevel)
+        private Table(
+            IMediator mediator,
+            CircularList<Player> players,
+            IEnumerable<TreasureCard> treasureCards,
+            IEnumerable<DoorsCard> doorsCards,
+            int winningLevel)
         {
+            RequestSink = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
             Players = players ?? throw new System.ArgumentNullException(nameof(players));
-            RequestSink = mediator;
             WinningLevel = winningLevel;
             Dungeon = new Dungeon(this);
 
-            // initialize and shuffle the decks
-            TreasureCardDeck = new CardDeck<TreasureCard>();
-            DoorsCardDeck = new CardDeck<DoorsCard>();
+            // TODO: initialize and shuffle the decks with all cards from factory
+            TreasureCardDeck = new CardDeck<TreasureCard>(treasureCards);
+            DoorsCardDeck = new CardDeck<DoorsCard>(doorsCards);
             DiscardedTreasureCards = new CardDeck<TreasureCard>();
             DiscardedDoorsCards = new CardDeck<DoorsCard>();
-
-            // give all players initial cards
-            Players.ForEach(ReviveHero);
         }
 
         /// <summary>
         /// Begins the game
         /// </summary>
         /// <param name="winningLevel"> The winning level. </param>
-        public static Table Setup(IMediator mediator, IEnumerable<Player> players, int winningLevel)
+        public static Table Setup(
+            IMediator mediator,
+            IEnumerable<Player> players,
+            ITreasuresFactory treasuresFactory,
+            IDoorsFactory doorsFactory,
+            int winningLevel)
         {
             var playersList = new CircularList<Player>(players);
-            return new Table(mediator, playersList, winningLevel);
+            var treasureCards = treasuresFactory.GetTreasureCards();
+            var doorsCards = doorsFactory.GetDoorsCards();
+            var table = new Table(mediator, playersList, treasureCards, doorsCards, winningLevel);
+
+            // give all players initial cards
+            table.Players.ForEach(player => player.Revive(table));
+            return table;
         }
 
         /// <summary>
@@ -66,7 +80,7 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Dungeon state representing all goods in this dungeon
         /// </summary>
-        public Dungeon Dungeon { get; private set; }
+        public Dungeon Dungeon { get; }
 
         /// <summary>
         /// Request sink that is used for player interaction when a selection or decision is needed
@@ -78,42 +92,9 @@ namespace Munchkin.Core.Model
         /// </summary>
         public int WinningLevel { get; }
 
-        public bool IsGameWon => Players.Any(x => x.Level >= WinningLevel);
-
-        public void PlayFromHand(Player player, Card card)
-        {
-            //InPlay.Add(card);
-            //player.YourHand.Remove(card);
-        }
-
-        public void PlayFromTable(Player player, Card card)
-        {
-            //InPlay.Add(card);
-            //player.YourHand.Remove(card);
-        }
-
-        public void EquipFromHand(Player player, Card card)
-        {
-            //player.Equipped.Add(card);
-            //player.YourHand.Remove(card);
-        }
-
-        public void EquipFromTable(Player player, Card card)
-        {
-            //player.Equipped.Add(card);
-            //player.Backpack.Remove(card);
-        }
-
         /// <summary>
-        /// Revives players hero and give intital cards
+        /// Gets if any of the players has won the game.
         /// </summary>
-        /// <param name="player"> Player to revive. </param>
-        private void ReviveHero(Player player)
-        {
-            var cards = Enumerable.Empty<Card>()
-                .Concat(DoorsCardDeck.TakeRange(4))
-                .Concat(TreasureCardDeck.TakeRange(4));
-            player.Revive(cards);
-        }
+        public bool IsGameWon => Players.Any(x => x.Level >= WinningLevel);
     }
 }

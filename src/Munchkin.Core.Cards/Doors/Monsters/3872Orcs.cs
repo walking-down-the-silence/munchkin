@@ -26,7 +26,7 @@ namespace Munchkin.Engine.Original.Doors
 
             if (diceRollResult <= 2)
             {
-                state.Players.Current.Kill();
+                state.Players.Current.Kill(state);
             }
             else
             {

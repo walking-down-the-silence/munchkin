@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Munchkin.Core\Munchkin.Core.csproj" />
-    <ProjectReference Include="..\Munchkin.Expansions\Munchkin.Expansions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
