@@ -12,14 +12,11 @@ namespace Munchkin.Core.Model
     public class Dungeon : State
     {
         private readonly Table _table;
-        private readonly List<Card> _cardsPlayed;
-        private readonly Dictionary<Player, List<IAction<Table>>> _playerActions = new Dictionary<Player, List<IAction<Table>>>();
+        private readonly Dictionary<Player, List<IAction<Table>>> _playerActions = new();
 
         public Dungeon(Table table)
         {
-            // TODO: intiailize each stage with a proper card
             _table = table ?? throw new System.ArgumentNullException(nameof(table));
-            _cardsPlayed = new List<Card>();
         }
 
         /// <summary>
@@ -39,12 +36,6 @@ namespace Munchkin.Core.Model
 
         public IStage CurrentStage { get; private set; }
 
-        public IReadOnlyCollection<Card> CardsPlayed => _cardsPlayed.AsReadOnly();
-
-        public Card LastCardPlayed => CardsPlayed.LastOrDefault();
-
-        public bool LastCardPlayedIsBeast => LastCardPlayed is MonsterCard;
-
         public void SetPlayerActions(Player player, ICollection<IAction<Table>> actions)
         {
             _playerActions[player] = actions.ToList();
@@ -53,15 +44,6 @@ namespace Munchkin.Core.Model
         public IReadOnlyCollection<IAction<Table>> GetPlayerActions(Player player)
         {
             return _playerActions[player].AsReadOnly();
-        }
-
-        /// <summary>
-        /// Add a card to the list of cards currently in play
-        /// </summary>
-        public void PutInPlay(Card card)
-        {
-            _cardsPlayed.Add(card);
-            card.Play(_table);
         }
     }
 }

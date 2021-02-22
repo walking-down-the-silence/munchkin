@@ -1,8 +1,8 @@
 using Munchkin.Core.Cards.Effects;
-using Munchkin.Core.Cards.Rules;
 using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
+using Munchkin.Core.Model.Rules;
 using System.Threading.Tasks;
 
 namespace Munchkin.Engine.Original.Doors
