@@ -1,6 +1,6 @@
 ﻿using MediatR;
+using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.PlayerInteraction;
-using Munchkin.Core.Model.Cards;
 using System.Collections.Generic;
 
 namespace Munchkin.Core.Model.Requests

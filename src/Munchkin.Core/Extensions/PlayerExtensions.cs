@@ -1,5 +1,5 @@
-﻿using Munchkin.Core.Model;
-using Munchkin.Core.Model.Cards;
+﻿using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Model;
 using System.Collections.Generic;
 using System.Linq;
 

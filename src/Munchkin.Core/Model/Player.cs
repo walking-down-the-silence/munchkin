@@ -1,7 +1,7 @@
 ﻿using Munchkin.Core.Contracts;
+using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Actions;
-using Munchkin.Core.Model.Cards;
 using Munchkin.Core.Model.Enums;
 using System;
 using System.Collections.Generic;
@@ -20,23 +20,28 @@ namespace Munchkin.Core.Model
         private readonly List<Card> _equipped = new List<Card>();
         private readonly List<IActionDefinition<Table>> _actions;
         private bool _isDead;
-        private int _level;
+        private int _level = 1;
 
         public Player(string name, EGender gender)
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
             Name = name;
             Gender = gender;
             _actions = new List<IActionDefinition<Table>>
             {
-                new ActionDefinition<Table>("As For Help", () => new AskForHelpAction()),
-                new ActionDefinition<Table>("Discard A Card", () => new DiscardCardAction()),
-                new ActionDefinition<Table>("End Combat", () => new EndBattleAction()),
-                new ActionDefinition<Table>("End Turn", () => new EndTurnAction()),
-                new ActionDefinition<Table>("Kick Down The Door", () => new KickDownTheDoorAction()),
-                new ActionDefinition<Table>("Look For Trouble", () => new LookForTroubleAction()),
+                new ActionDefinition<Table>("As For Help", () => new PlayerAskForHelpAction()),
+                new ActionDefinition<Table>("Discard A Card", () => new PlayerDiscardCardAction()),
+                new ActionDefinition<Table>("End Combat", () => new PlayerEndBattleAction()),
+                new ActionDefinition<Table>("End Turn", () => new PlayerEndTurnAction()),
+                new ActionDefinition<Table>("Kick Down The Door", () => new PlayerKickDownTheDoorAction()),
+                new ActionDefinition<Table>("Look For Trouble", () => new PlayerLookForTroubleAction()),
                 new ActionDefinition<Table>("Loot The Room", () => new LootTheRoomAction()),
-                new ActionDefinition<Table>("Run Away", () => new RunAwayAction()),
-                new ActionDefinition<Table>("Take Bad Stuff", () => new TakeBadStuffAction())
+                new ActionDefinition<Table>("Run Away", () => new PlayerRunAwayAction()),
+                new ActionDefinition<Table>("Take Bad Stuff", () => new PlayerTakeBadStuffAction())
             };
         }
 
@@ -98,10 +103,13 @@ namespace Munchkin.Core.Model
         /// </summary>
         public void TakeInHand(Card card)
         {
-            card?.Take(this);
-            _yourHand.Add(card);
-            _backpack.Remove(card);
-            _equipped.Remove(card);
+            if (card is not null)
+            {
+                card.Take(this);
+                _yourHand.Add(card);
+                _backpack.Remove(card);
+                _equipped.Remove(card);
+            }
         }
 
         /// <summary>
@@ -109,9 +117,12 @@ namespace Munchkin.Core.Model
         /// </summary>
         public void PutInPlayAsEquipped(Card card)
         {
-            _equipped.Add(card);
-            _backpack.Remove(card);
-            _yourHand.Remove(card);
+            if (card is not null)
+            {
+                _equipped.Add(card);
+                _backpack.Remove(card);
+                _yourHand.Remove(card);
+            }
         }
 
         /// <summary>
@@ -119,9 +130,12 @@ namespace Munchkin.Core.Model
         /// </summary>
         public void PutInPlayAsCarried(Card card)
         {
-            _backpack.Add(card);
-            _equipped.Remove(card);
-            _yourHand.Remove(card);
+            if (card is not null)
+            {
+                _backpack.Add(card);
+                _equipped.Remove(card);
+                _yourHand.Remove(card);
+            }
         }
 
         /// <summary>
@@ -129,10 +143,13 @@ namespace Munchkin.Core.Model
         /// </summary>
         public void Discard(Card card)
         {
-            // TODO: make sure that removed cards go into the dicard pile
-            _yourHand.Remove(card);
-            _backpack.Remove(card);
-            _equipped.Remove(card);
+            if (card is not null)
+            {
+                // TODO: make sure that removed cards go into the dicard pile
+                _yourHand.Remove(card);
+                _backpack.Remove(card);
+                _equipped.Remove(card);
+            }
         }
 
         public void DiscardHand()

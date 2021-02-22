@@ -1,7 +1,7 @@
 ﻿using Munchkin.Core.Contracts;
+using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Attributes;
-using Munchkin.Core.Model.Cards;
 using Munchkin.Core.Model.Requests;
 using System.Collections.Generic;
 using System.Linq;

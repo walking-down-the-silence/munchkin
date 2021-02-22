@@ -1,6 +1,6 @@
 ﻿using MediatR;
+using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model.Cards;
 using Munchkin.Expansions;
 using System.Collections.Generic;
 using System.Linq;

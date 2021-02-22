@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Munchkin.Core.Model.Cards;
+using Munchkin.Core.Contracts.Cards;
 
 namespace Munchkin.Expansions
 {
