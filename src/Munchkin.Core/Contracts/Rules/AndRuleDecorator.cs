@@ -1,4 +1,4 @@
-﻿namespace Munchkin.Core.Contracts
+﻿namespace Munchkin.Core.Contracts.Rules
 {
     public class AndRuleDecorator<TState> : IRule<TState>
     {

@@ -1,4 +1,4 @@
-﻿namespace Munchkin.Core.Contracts
+﻿namespace Munchkin.Core.Contracts.Attributes
 {
     /// <summary>
     /// Defines the ability and it's description which can be used.

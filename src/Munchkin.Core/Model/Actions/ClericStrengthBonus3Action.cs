@@ -1,12 +1,11 @@
 ﻿using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model;
 using Munchkin.Core.Model.Requests;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Munchkin.Engine.Original.Actions
+namespace Munchkin.Core.Model.Actions
 {
     internal class ClericStrengthBonus3Action : DynamicAction
     {

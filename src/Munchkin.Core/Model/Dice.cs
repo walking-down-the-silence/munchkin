@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Munchkin.Core
+namespace Munchkin.Core.Model
 {
     public static class Dice
     {

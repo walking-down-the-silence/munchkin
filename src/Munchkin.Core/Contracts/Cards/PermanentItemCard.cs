@@ -1,5 +1,5 @@
+using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Enums;
-using Munchkin.Core.Model.Properties;
 
 namespace Munchkin.Core.Contracts.Cards
 {

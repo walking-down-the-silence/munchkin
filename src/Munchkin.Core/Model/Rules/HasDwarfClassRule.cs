@@ -1,9 +1,8 @@
-﻿using Munchkin.Core.Contracts;
-using Munchkin.Core.Model;
+﻿using Munchkin.Core.Contracts.Rules;
 using Munchkin.Engine.Original.Doors;
 using System.Linq;
 
-namespace Munchkin.Core.Cards.Rules
+namespace Munchkin.Core.Model.Rules
 {
     public class HasDwarfClassRule : IRule<Table>
     {

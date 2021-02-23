@@ -1,9 +1,8 @@
+using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Model;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
-using Munchkin.Core.Model.Properties;
 
 namespace Munchkin.Engine.Original.Doors
 {

@@ -1,6 +1,6 @@
 ﻿using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
-using Munchkin.Core.Model.Properties;
+using Munchkin.Core.Model.Attributes;
 using System.Linq;
 using System.Threading.Tasks;
 

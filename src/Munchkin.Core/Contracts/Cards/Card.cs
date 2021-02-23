@@ -1,5 +1,6 @@
-﻿using Munchkin.Core.Model;
-using Munchkin.Core.Model.Properties;
+﻿using Munchkin.Core.Contracts.Attributes;
+using Munchkin.Core.Contracts.Rules;
+using Munchkin.Core.Model;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

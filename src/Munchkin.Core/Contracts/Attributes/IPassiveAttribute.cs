@@ -1,4 +1,4 @@
-﻿namespace Munchkin.Core.Contracts
+﻿namespace Munchkin.Core.Contracts.Attributes
 {
     /// <summary>
     /// Defines a passive trait that cannot be executed and has a permanent effect.

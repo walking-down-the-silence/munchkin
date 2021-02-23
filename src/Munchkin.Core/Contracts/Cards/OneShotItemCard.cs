@@ -1,6 +1,6 @@
 using Munchkin.Core.Model;
+using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Enums;
-using Munchkin.Core.Model.Properties;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Contracts.Cards

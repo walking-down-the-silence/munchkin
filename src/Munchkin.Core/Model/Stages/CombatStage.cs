@@ -1,7 +1,8 @@
 ﻿using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Contracts.States;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model.Properties;
+using Munchkin.Core.Model.Attributes;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

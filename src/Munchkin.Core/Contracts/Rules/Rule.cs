@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Munchkin.Core.Contracts
+namespace Munchkin.Core.Contracts.Rules
 {
     public static class Rule
     {

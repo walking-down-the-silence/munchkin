@@ -1,9 +1,8 @@
 using Munchkin.Core.Contracts.Actions;
-using Munchkin.Core.Model;
 using System;
 using System.Threading.Tasks;
 
-namespace Munchkin.Engine.Original.Actions
+namespace Munchkin.Core.Model.Actions
 {
     internal class ThiefStabFor2Action : DynamicAction
     {

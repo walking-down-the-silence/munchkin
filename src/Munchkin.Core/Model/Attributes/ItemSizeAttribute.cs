@@ -1,6 +1,7 @@
+using Munchkin.Core.Contracts.Attributes;
 using Munchkin.Core.Model.Enums;
 
-namespace Munchkin.Core.Model.Properties
+namespace Munchkin.Core.Model.Attributes
 {
     public class ItemSizeAttribute : Attribute
     {

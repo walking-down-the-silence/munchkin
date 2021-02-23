@@ -1,4 +1,4 @@
-﻿using Munchkin.Core.Contracts;
+﻿using Munchkin.Core.Contracts.Rules;
 using System;
 
 namespace Munchkin.Core.Model.Rules

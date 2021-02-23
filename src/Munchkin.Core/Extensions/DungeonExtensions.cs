@@ -1,5 +1,5 @@
 ﻿using Munchkin.Core.Model;
-using Munchkin.Core.Model.Properties;
+using Munchkin.Core.Model.Attributes;
 
 namespace Munchkin.Core.Extensions
 {

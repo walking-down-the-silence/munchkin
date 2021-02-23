@@ -1,5 +1,5 @@
-﻿using Munchkin.Core.Contracts;
-using Munchkin.Core.Contracts.Cards;
+﻿using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Enums;
 using System.Linq;

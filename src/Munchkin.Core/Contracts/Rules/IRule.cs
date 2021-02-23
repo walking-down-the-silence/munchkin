@@ -1,4 +1,4 @@
-﻿namespace Munchkin.Core.Contracts
+﻿namespace Munchkin.Core.Contracts.Rules
 {
     /// <summary>
     /// A rule that encapsulates the logic to check if an action can be executed.

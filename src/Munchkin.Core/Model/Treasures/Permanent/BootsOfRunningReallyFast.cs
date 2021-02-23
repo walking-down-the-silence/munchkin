@@ -1,8 +1,7 @@
-﻿using System.Threading.Tasks;
-using Munchkin.Core.Contracts.Cards;
+﻿using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Enums;
-using Munchkin.Core.Model.Properties;
+using System.Threading.Tasks;
 
 namespace Munchkin.Engine.Original.Treasures
 {

@@ -1,7 +1,7 @@
 using Munchkin.Core.Contracts.Cards;
 using System.Collections.Generic;
 
-namespace Munchkin.Expansions
+namespace Munchkin.Core.Contracts
 {
     public interface IDoorsFactory
     {

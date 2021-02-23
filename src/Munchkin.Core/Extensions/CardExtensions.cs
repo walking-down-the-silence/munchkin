@@ -1,4 +1,4 @@
-﻿using Munchkin.Core.Contracts;
+﻿using Munchkin.Core.Contracts.Attributes;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
 using System.Collections.Generic;

@@ -1,8 +1,7 @@
 ﻿using Munchkin.Core.Contracts;
-using Munchkin.Core.Model;
-using Munchkin.Core.Model.Properties;
+using Munchkin.Core.Model.Attributes;
 
-namespace Munchkin.Core.Cards.Effects
+namespace Munchkin.Core.Model.Effects
 {
     public class MonsterStrengthBonusEffect : IEffect<Table>
     {

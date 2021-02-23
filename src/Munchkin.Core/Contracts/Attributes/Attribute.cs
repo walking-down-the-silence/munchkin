@@ -1,6 +1,4 @@
-﻿using Munchkin.Core.Contracts;
-
-namespace Munchkin.Core.Model.Properties
+﻿namespace Munchkin.Core.Contracts.Attributes
 {
     public abstract class Attribute : IAttribute
     {

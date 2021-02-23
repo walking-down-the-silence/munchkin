@@ -1,6 +1,6 @@
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Engine.Original.Treasures;
-using Munchkin.Expansions;
 using System.Collections.Generic;
 
 namespace Munchkin.Core.Model

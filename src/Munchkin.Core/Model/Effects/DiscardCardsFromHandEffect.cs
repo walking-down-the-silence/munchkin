@@ -1,7 +1,6 @@
 ﻿using Munchkin.Core.Contracts;
-using Munchkin.Core.Model;
 
-namespace Munchkin.Core.Cards.Effects
+namespace Munchkin.Core.Model.Effects
 {
     public class DiscardCardsFromHandEffect : IEffect<Table>
     {

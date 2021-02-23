@@ -1,4 +1,4 @@
-﻿namespace Munchkin.Core.Model.Properties
+﻿namespace Munchkin.Core.Model.Attributes
 {
     public class StrengthBonusAttribute : BonusAttribute
     {

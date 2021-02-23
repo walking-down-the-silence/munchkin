@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
-using Munchkin.Core.Model.Properties;
+using Munchkin.Core.Model.Attributes;
 
 namespace Munchkin.Engine.Original.Doors
 {

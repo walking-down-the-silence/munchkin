@@ -1,4 +1,4 @@
-﻿using Munchkin.Core.Contracts;
+﻿using Munchkin.Core.Contracts.Rules;
 using Munchkin.Engine.Original.Doors;
 using System.Linq;
 

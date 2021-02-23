@@ -1,7 +1,7 @@
 using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
-using Munchkin.Engine.Original.Actions;
+using Munchkin.Core.Model.Actions;
 using System.Threading.Tasks;
 
 namespace Munchkin.Engine.Original.Doors

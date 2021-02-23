@@ -1,9 +1,8 @@
 using Munchkin.Core.Contracts.Actions;
-using Munchkin.Core.Model;
 using Munchkin.Core.Model.Requests;
 using System.Threading.Tasks;
 
-namespace Munchkin.Engine.Original.Actions
+namespace Munchkin.Core.Model.Actions
 {
     internal class WizardFleeMonsterAction : DynamicAction
     {
