@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace Munchkin.Core.Model.Requests
 {
-    public class SelectMonsterFromHandRequest : IRequest<Response<MonsterCard>>
+    public class PlayerSelectMonsterFromHandRequest : IRequest<Response<MonsterCard>>
     {
-        public SelectMonsterFromHandRequest(Player targetPlayer, Table table, IReadOnlyCollection<MonsterCard> options)
+        public PlayerSelectMonsterFromHandRequest(Player targetPlayer, Table table, IReadOnlyCollection<MonsterCard> options)
         {
             TargetPlayer = targetPlayer;
             Table = table;

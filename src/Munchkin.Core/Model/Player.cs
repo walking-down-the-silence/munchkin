@@ -3,10 +3,12 @@ using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Actions;
 using Munchkin.Core.Model.Enums;
+using Munchkin.Core.Model.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model
 {
@@ -195,24 +197,40 @@ namespace Munchkin.Core.Model
         /// Kills the player's hero.
         /// </summary>
         /// <param name="table"> Table instance with all the state. </param>
-        public void Kill(Table table)
+        public async Task Kill(Table table)
         {
+            _isDead = true;
+
+            // Step 1: leave the safe cards, level and active curses
             var playerCards = Enumerable.Empty<Card>()
                 .Concat(YourHand)
                 .Concat(Equipped
                     .NotOfType<RaceCard>()
                     .NotOfType<ClassCard>()
                     .NotOfType<SuperMunchkin>()
-                    .NotOfType<Halfbreed>())
+                    .NotOfType<Halfbreed>()
+                    .NotOfType<CurseCard>())
                 .Concat(Backpack)
                 .ToList();
 
             playerCards.ForEach(card => card.Discard(table));
 
+
+            // TODO: Step 2: send a request to each player to select the cards from dead player
+
+            foreach (var player in table.Players.Where(player => !player.IsDead))
+            {
+                var selectCardRequest = new PlayerSelectSingleCardRequest(player, table, _yourHand);
+                var selectCardResponse = await table.RequestSink.Send(selectCardRequest);
+                var selectedCard = await selectCardResponse.Task;
+
+                // TODO: consider how to remove selected card from pool of options
+                _yourHand.Remove(selectedCard);
+                player.TakeInHand(selectedCard);
+            }
+
             _yourHand.Clear();
             _backpack.Clear();
-
-            _isDead = true;
         }
     }
 }

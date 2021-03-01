@@ -47,8 +47,13 @@ namespace Munchkin.Core.Model
             var doorsCards = doorsFactory.GetDoorsCards();
             var table = new Table(mediator, playersList, treasureCards, doorsCards, winningLevel);
 
+            // shuffle the decks for randomness
+            table.DoorsCardDeck.Shuffle();
+            table.TreasureCardDeck.Shuffle();
+
             // give all players initial cards
             table.Players.ForEach(player => player.Revive(table));
+
             return table;
         }
 

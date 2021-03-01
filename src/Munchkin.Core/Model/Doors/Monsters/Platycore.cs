@@ -31,7 +31,7 @@ namespace Munchkin.Engine.Original.Doors
 
         public async override Task BadStuff(Table state)
         {
-            var request = new DiscardHandOrLoose2LevelsRequest(state.Players.Current, state);
+            var request = new PlayerDiscardHandOrLoose2LevelsRequest(state.Players.Current, state);
             var response = await state.RequestSink.Send(request);
             var action = await response.Task;
 

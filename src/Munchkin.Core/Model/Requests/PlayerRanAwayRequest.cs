@@ -3,9 +3,9 @@ using Munchkin.Core.Contracts.PlayerInteraction;
 
 namespace Munchkin.Core.Model.Requests
 {
-    public class PlayWishingRingOrContinueRequest : IRequest<Response<PlayWishingRingOrContinueActions>>
+    public class PlayerRanAwayRequest : IRequest<Response<RanAwayOrContinueActions>>
     {
-        public PlayWishingRingOrContinueRequest(Player targetPlayer, Table table)
+        public PlayerRanAwayRequest(Player targetPlayer, Table table)
         {
             TargetPlayer = targetPlayer;
             Table = table;

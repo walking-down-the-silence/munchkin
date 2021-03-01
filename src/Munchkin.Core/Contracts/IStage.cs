@@ -1,5 +1,6 @@
 ﻿using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.States;
+using Munchkin.Core.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,6 +12,6 @@ namespace Munchkin.Core.Contracts
 
         IReadOnlyCollection<Card> PlayedCards { get; }
 
-        Task<IStage> Resolve();
+        Task<IStage> Resolve(Table table);
     }
 }

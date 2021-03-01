@@ -11,13 +11,11 @@ namespace Munchkin.Core.Model.Stages
 {
     public class CombatStage : State, IStage
     {
-        private readonly Table _table;
         private readonly List<MonsterCard> _monsters;
         private readonly List<Card> _playedCards;
 
-        public CombatStage(Table table, MonsterCard monsterCard, List<Card> playedCards)
+        public CombatStage(MonsterCard monsterCard, List<Card> playedCards)
         {
-            _table = table ?? throw new System.ArgumentNullException(nameof(table));
             _monsters = new List<MonsterCard> { monsterCard };
             _playedCards = playedCards ?? throw new System.ArgumentNullException(nameof(playedCards));
 
@@ -77,22 +75,28 @@ namespace Munchkin.Core.Model.Stages
 
         public IReadOnlyCollection<Card> PlayedCards => _playedCards.AsReadOnly();
 
-        public async Task<IStage> Resolve()
+        public async Task<IStage> Resolve(Table table)
         {
-            // TODO: immplement the loop of an actual combat actions
-            if (!_table.Dungeon.PlayersAreWinningCombat())
+            // NOTE: this stage is blocked until each player agrees to end the combat
+            await table.Dungeon.OngoingCombat();
+
+            if (!table.Dungeon.PlayersAreWinningCombat())
             {
-                return new RunAwayStage(_table, FightingPlayer, HelpingPlayer, _monsters, _playedCards);
+                return new RunAwayStage(FightingPlayer, HelpingPlayer, _monsters, _playedCards);
+            }
+            else
+            {
+                // TODO: resolve the good stuff here
             }
 
-            return new EndStage(_table, _playedCards);
+            return new CharityStage(_playedCards);
         }
 
-        public void HelpInCombat(Player helpingPlayer)
+        public void HelpInCombat(Table table, Player helpingPlayer)
         {
             // TODO: rethink how to initialize actions available to each player
             var playerActions = helpingPlayer.Actions.Select(action => action.Create()).ToList();
-            _table.Dungeon.SetPlayerActions(helpingPlayer, playerActions);
+            table.Dungeon.SetPlayerActions(helpingPlayer, playerActions);
             HelpingPlayer = helpingPlayer;
         }
     }

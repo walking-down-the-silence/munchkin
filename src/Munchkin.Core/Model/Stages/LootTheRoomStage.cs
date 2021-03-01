@@ -6,24 +6,31 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
-    public class EndStage : State, IStage
+    /// <summary>
+    /// Takes a card from the doors deck and puts in hand.
+    /// </summary>
+    public class LootTheRoomStage : State, IStage
     {
         private readonly List<Card> _playedCards;
 
-        public EndStage(List<Card> playedCards)
+        public LootTheRoomStage(List<Card> playedCards)
         {
             _playedCards = playedCards ?? throw new System.ArgumentNullException(nameof(playedCards));
         }
 
-        public bool IsTerminal => true;
+        public bool IsTerminal => false;
 
         public IReadOnlyCollection<Card> PlayedCards => _playedCards.AsReadOnly();
 
+
         public Task<IStage> Resolve(Table table)
         {
-            _playedCards.ForEach(card => card.Discard(table));
-            _playedCards.Clear();
-            return Task.FromResult((IStage)this);
+            // TODO: check if deck is empty and reshuffle discard if it is
+            var doorsCard = table.DoorsCardDeck.Take();
+            table.Players.Current.TakeInHand(doorsCard);
+
+            var stage = new CharityStage(_playedCards);
+            return Task.FromResult<IStage>(stage);
         }
     }
 }

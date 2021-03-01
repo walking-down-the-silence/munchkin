@@ -14,7 +14,7 @@ namespace Munchkin.Engine.Original.Doors
         public async override Task BadStuff(Table state)
         {
             // TODO: request the player to discard an item that looks like a stick
-            var request = new SelectCardsRequest(state.Players.Current, state, state.Players.Current.Equipped);
+            var request = new PlayerSelectSingleCardRequest(state.Players.Current, state, state.Players.Current.Equipped);
             var response = await state.RequestSink.Send(request);
             var card = await response.Task;
 

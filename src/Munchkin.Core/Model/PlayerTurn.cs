@@ -1,24 +1,28 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model
 {
     public static class PlayerTurn
     {
-        public static Task Start(IEnumerable<Player> players, int winningLevel)
+        public static Task Start(Table table)
         {
             // TODO: pass a valid reference for Mediator
-            return NextTurn(ImmutableStack<Table>.Empty, Table.Setup(null, players, null, null, winningLevel));
+            return NextTurn(ImmutableStack<Table>.Empty, table);
         }
 
         private static async Task NextTurn(ImmutableStack<Table> history, Table table)
         {
             if (!table.IsGameWon)
             {
-                //var dungeonFlow = new DungeonFlowFactory().Create().Build();
+                // TODO: handle a case where some cards need to access current stage instance
+                table.Dungeon.KickOpenTheDoor();
 
-                //dungeonFlow.Invoke(table.Dungeon);
+                while (await table.Dungeon.MoveToNextStage(table))
+                {
+                }
+
+                history.Push(table);
                 table.Players.Next();
 
                 await NextTurn(history, table);

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Tests.Handlers
 {
-    public class SelectCardHandler : IRequestHandler<SelectCardsRequest, Response<Card>>
+    public class SelectCardHandler : IRequestHandler<PlayerSelectSingleCardRequest, Response<Card>>
     {
-        public Task<Response<Card>> Handle(SelectCardsRequest request, CancellationToken cancellationToken)
+        public Task<Response<Card>> Handle(PlayerSelectSingleCardRequest request, CancellationToken cancellationToken)
         {
             var (source, response) = Response<Card>.Create();
             var selectedCard = request.TargetPlayer.YourHand.FirstOrDefault();

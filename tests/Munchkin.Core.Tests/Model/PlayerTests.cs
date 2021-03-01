@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Moq;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Enums;
 using Munchkin.Engine.Original.Doors;
@@ -289,7 +288,7 @@ namespace Munchkin.Core.Tests.Model
         }
 
         [Fact]
-        public void Kill_WithTable_ShouldHaveEmptyHandButRemainRaceAndClassAndSuperMunchkinAndHalfbreed()
+        public async void Kill_ShouldHaveEmptyHand_ButRemainRaceAndClassAndSuperMunchkinAndHalfbreedAndCurses()
         {
             // Arrange
             var player = new Player("Johny Cash", EGender.Male);
@@ -304,15 +303,15 @@ namespace Munchkin.Core.Tests.Model
             player.PutInPlayAsEquipped(new WarriorClass());
             player.PutInPlayAsEquipped(new SuperMunchkin());
             player.PutInPlayAsEquipped(new Halfbreed());
-            player.Kill(table);
+            await player.Kill(table);
 
             // Assert
             Assert.Empty(player.YourHand);
             Assert.True(player.IsDead);
-            Assert.True(player.Equipped.OfType<RaceCard>().Any());
-            Assert.True(player.Equipped.OfType<ClassCard>().Any());
-            Assert.True(player.Equipped.OfType<SuperMunchkin>().Any());
-            Assert.True(player.Equipped.OfType<Halfbreed>().Any());
+            Assert.NotEmpty(player.Equipped.OfType<RaceCard>());
+            Assert.NotEmpty(player.Equipped.OfType<ClassCard>());
+            Assert.NotEmpty(player.Equipped.OfType<SuperMunchkin>());
+            Assert.NotEmpty(player.Equipped.OfType<Halfbreed>());
         }
     }
 }

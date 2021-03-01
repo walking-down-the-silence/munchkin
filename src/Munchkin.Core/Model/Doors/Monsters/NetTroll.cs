@@ -21,7 +21,7 @@ namespace Munchkin.Engine.Original.Doors
             while (players.MoveNext() && state.Players.Current.Equipped.OfType<TreasureCard>().Any())
             {
                 var treasures = state.Players.Current.Equipped.OfType<TreasureCard>().ToList();
-                var request = new SelectCardsRequest(players.Current, state, treasures);
+                var request = new PlayerSelectSingleCardRequest(players.Current, state, treasures);
                 var response = await state.RequestSink.Send(request);
                 var card = await response.Task;
                 state.Players.Current.Discard(state, card);

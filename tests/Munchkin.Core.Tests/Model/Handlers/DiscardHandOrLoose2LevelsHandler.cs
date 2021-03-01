@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Tests.Handlers
 {
-    public class DiscardHandOrLoose2LevelsHandler : IRequestHandler<DiscardHandOrLoose2LevelsRequest, Response<DiscardHandOrLoose2LevelsActions>>
+    public class DiscardHandOrLoose2LevelsHandler : IRequestHandler<PlayerDiscardHandOrLoose2LevelsRequest, Response<DiscardHandOrLoose2LevelsActions>>
     {
-        public Task<Response<DiscardHandOrLoose2LevelsActions>> Handle(DiscardHandOrLoose2LevelsRequest request, CancellationToken cancellationToken)
+        public Task<Response<DiscardHandOrLoose2LevelsActions>> Handle(PlayerDiscardHandOrLoose2LevelsRequest request, CancellationToken cancellationToken)
         {
             var (source, response) = Response<DiscardHandOrLoose2LevelsActions>.Create();
             source.SetResult(DiscardHandOrLoose2LevelsActions.DiscardHand);

@@ -18,7 +18,6 @@ namespace Munchkin.Core.Model
         public CardDeck(IEnumerable<TCard> cards)
         {
             _cards = new List<TCard>(cards);
-            Shuffle();
         }
 
         public bool IsEmpty => _cards.Count == 0;
