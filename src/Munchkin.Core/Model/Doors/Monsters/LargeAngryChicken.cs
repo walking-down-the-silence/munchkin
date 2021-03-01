@@ -1,6 +1,9 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
+using Munchkin.Core.Model.Enums;
 
 namespace Munchkin.Engine.Original.Doors
 {
@@ -10,9 +13,17 @@ namespace Munchkin.Engine.Original.Doors
         {
         }
 
-        public override Task BadStuff(Table gameContext)
+        public override Task Play(Table state)
         {
-            gameContext.Players.Current.LevelDown();
+            // TODO: Add logic "gain an extra level if you defeat it with fire or flame"
+
+            throw new NotImplementedException();
+        }
+
+        public override Task BadStuff(Table state)
+        {
+            state.Players.Current.LevelDown();
+
             return Task.CompletedTask;
         }
     }

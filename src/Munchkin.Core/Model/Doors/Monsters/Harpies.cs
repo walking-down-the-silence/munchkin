@@ -1,6 +1,9 @@
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Model;
-using System.Linq;
+using Munchkin.Core.Model.Effects;
+using Munchkin.Core.Model.Rules;
 using System.Threading.Tasks;
 
 namespace Munchkin.Engine.Original.Doors
@@ -9,29 +12,17 @@ namespace Munchkin.Engine.Original.Doors
     {
         public Harpies() : base("Harpies", 4, 1, 2, 0, false)
         {
+            AddEffect(Effect
+              .New(new MonsterStrengthBonusEffect(5))
+              .With(() => Rule
+                  .New(new HasWizardClassRule())));
         }
 
-        public override Task Play(Table gameContext)
+        public override Task BadStuff(Table state)
         {
-            var currentHero = gameContext.Players.Current;
-            var currentHeroIsWizard = currentHero.Equipped.OfType<WizardClass>().Any();
+            state.Players.Current.LevelDown();
+            state.Players.Current.LevelDown();
 
-            // TODO: check if current stage actually is a combat
-            //var helpingHero = gameContext.Dungeon.Combat.HelpingPlayer;
-            //var helpingHeroIsWizard = helpingHero?.Equipped.OfType<WizardClass>().Any();
-
-            //if (currentHeroIsWizard || helpingHeroIsWizard != null && helpingHeroIsWizard.Value)
-            //{
-            //    gameContext.Dungeon.Combat.AddProperty(new PlayerStrengthBonusAttribute(5));
-            //}
-
-            return base.Play(gameContext);
-        }
-
-        public override Task BadStuff(Table gameContext)
-        {
-            gameContext.Players.Current.LevelDown();
-            gameContext.Players.Current.LevelDown();
             return Task.CompletedTask;
         }
     }

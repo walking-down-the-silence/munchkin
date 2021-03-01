@@ -1,6 +1,7 @@
 using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Rules;
+using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Effects;
 using Munchkin.Core.Model.Enums;
@@ -27,10 +28,7 @@ namespace Munchkin.Engine.Original.Doors
 
             if (equippedFootgears.Any())
             {
-                foreach (var equippedFootgear in equippedFootgears)
-                {
-                    state.Players.Current.Discard(state, equippedFootgear);
-                }
+                equippedFootgears.ForEach(card => card.Discard(state));
             }
             else
             {

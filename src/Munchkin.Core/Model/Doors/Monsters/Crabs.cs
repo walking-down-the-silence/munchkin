@@ -17,7 +17,7 @@ namespace Munchkin.Engine.Original.Doors
         {
             state.Players.Current.Equipped
                 .OfType<PermanentItemCard>()
-                .Where(x => x.WearingType == EWearingType.Armor && x.WearingType == EWearingType.Footgear)
+                .Where(x => x.WearingType == EWearingType.Armor || x.WearingType == EWearingType.Footgear)
                 .ForEach(x => x.Discard(state));
 
             return Task.CompletedTask;

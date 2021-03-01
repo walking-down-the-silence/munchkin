@@ -8,12 +8,14 @@ namespace Munchkin.Engine.Original.Doors
     {
         public MisterBones() : base("Mister Bones", 2, 1, 1, 0, true)
         {
+            //TODO: lose level event if you escape
         }
 
-        public override Task BadStuff(Table gameContext)
+        public override Task BadStuff(Table state)
         {
-            gameContext.Players.Current.LevelDown();
-            gameContext.Players.Current.LevelDown();
+            state.Players.Current.LevelDown();
+            state.Players.Current.LevelDown();
+
             return Task.CompletedTask;
         }
     }

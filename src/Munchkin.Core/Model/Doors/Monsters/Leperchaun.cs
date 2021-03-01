@@ -1,8 +1,12 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Contracts.Rules;
+using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
+using Munchkin.Core.Model.Effects;
+using Munchkin.Core.Model.Requests;
+using Munchkin.Core.Model.Rules;
+using System.Threading.Tasks;
 
 namespace Munchkin.Engine.Original.Doors
 {
@@ -10,23 +14,21 @@ namespace Munchkin.Engine.Original.Doors
     {
         public Leperchaun() : base("Leperchaun", 4, 1, 2, 0, false)
         {
+            AddEffect(Effect
+              .New(new MonsterStrengthBonusEffect(5))
+              .With(() => Rule
+                  .New(new HasElfRaceRule())));
         }
 
-        public override Task Play(Table gameContext)
+        public async override Task BadStuff(Table state)
         {
-            var currentHero = gameContext.Players.Current;
-            var currentHeroIsElf = currentHero.Equipped.OfType<ElfRace>().Any();
+            var cardSelectedByLeftPlayer = await new SelectCardsRequest(state.Players.PeekNext(), state, state.Players.Current.Equipped)
+                .SendRequestAsync(state);
+            state.Players.Current.Discard(state, cardSelectedByLeftPlayer);
 
-            // TODO: check if current stage actually is a combat
-            //var helpingHero = gameContext.Dungeon.Combat.HelpingPlayer;
-            //var helpingHeroIsElf = helpingHero?.Equipped.OfType<ElfRace>().Any();
-
-            return base.Play(gameContext);
-        }
-
-        public override Task BadStuff(Table gameContext)
-        {
-            throw new NotImplementedException();
+            var cardSelectedByRightPlayer = await new SelectCardsRequest(state.Players.PeekPrevious(), state, state.Players.Current.Equipped)
+                .SendRequestAsync(state);
+            state.Players.Current.Discard(state, cardSelectedByRightPlayer);
         }
     }
 }
