@@ -13,12 +13,13 @@ namespace Munchkin.Engine.Original.Doors
         {
         }
 
-        public override Task BadStuff(Table gameContext)
+        public override Task BadStuff(Table state)
         {
-            gameContext.Players.Current.Equipped
+            state.Players.Current.Equipped
                 .OfType<ItemCard>()
                 .Where(x => x.ItemSize == EItemSize.Big)
-                .ForEach(x => x.Discard(gameContext));
+                .ForEach(x => x.Discard(state));
+
             return Task.CompletedTask;
         }
     }

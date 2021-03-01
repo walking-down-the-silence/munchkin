@@ -7,8 +7,9 @@ namespace Munchkin.Engine.Original.Doors
 {
     public sealed class Pitbull : MonsterCard
     {
-        public Pitbull() : base("Pitbull", 2, 1, 1, 0, false)
+        public Pitbull() : base("Pit Bull", 2, 1, 1, 0, false)
         {
+            //TODO: handle logic here
         }
 
         public async override Task BadStuff(Table state)

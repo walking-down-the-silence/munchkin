@@ -1,8 +1,10 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Model;
+using Munchkin.Core.Model.Effects;
+using Munchkin.Core.Model.Rules;
+using System.Threading.Tasks;
 
 namespace Munchkin.Engine.Original.Doors
 {
@@ -10,23 +12,18 @@ namespace Munchkin.Engine.Original.Doors
     {
         public UndeadHorse() : base("Undead Horse", 4, 1, 2, 0, true)
         {
+            AddEffect(Effect
+                .New(new MonsterStrengthBonusEffect(5))
+                .With(() => Rule
+                    .New(new HasDwarfRaceRule())));
         }
 
-        public override Task Play(Table gameContext)
+        public override Task BadStuff(Table state)
         {
-            var currentHero = gameContext.Players.Current;
-            var currentHeroIsDwarf = currentHero.Equipped.OfType<DwarfRace>().Any();
+            state.Players.Current.LevelDown();
+            state.Players.Current.LevelDown();
 
-            // TODO: check if current stage actually is a combat
-            //var helpingHero = gameContext.Dungeon.Combat.HelpingPlayer;
-            //var helpingHeroIsDwarf = helpingHero?.Equipped.OfType<DwarfRace>().Any();
-
-            return base.Play(gameContext);
-        }
-
-        public override Task BadStuff(Table gameContext)
-        {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }
