@@ -1,10 +1,10 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Requests;
 using Munchkin.Core.Model.Requests.Enums;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Munchkin.Engine.Original.Doors
 {
@@ -16,33 +16,35 @@ namespace Munchkin.Engine.Original.Doors
 
         public async override Task BadStuff(Table state)
         {
-            // TODO: add logic to chose between lose items or cards in hand
+            // TODO: double check this cards logic
             var diceRollResult = Dice.Roll();
 
-            var request = new LoseItemsOrCardsInHandRequest(state.Players.Current, state);
-            var response = await state.RequestSink.Send(request);
-            var action = await response.Task;
+            var action = await new LoseItemsOrCardsInHandRequest(state.Players.Current, state)
+                .SendRequestAsync(state);
 
             if (action == LoseItemsOrCardsInHandActions.LoseItems)
             {
-                for(var i = 1; i <= diceRollResult; i++)
+                var itemCards = state.Players.Current.Equipped.OfType<ItemCard>().ToList();
+
+                if (itemCards.Any())
                 {
-                    var itemCards = state.Players.Current.Equipped.OfType<ItemCard>().ToList();
-                    var selectCardsRequest = new SelectCardsRequest(state.Players.Current, state, itemCards);
-                    var selectCardsResponse = await state.RequestSink.Send(selectCardsRequest);
-                    var card = await selectCardsResponse.Task;
-                    state.Players.Current.Discard(state, card);
+                    var cardsToDiscard = await new PlayerSelectMultipleCardsRequest(state.Players.Current, state, itemCards, diceRollResult)
+                        .SendRequestAsync(state);
+
+                    cardsToDiscard.ForEach(card => card.Discard(state));
                 }
             }
             else
             {
-                for (var i = 1; i <= diceRollResult; i++)
+                var handCards = state.Players.Current.YourHand.ToList();
+
+                if (handCards.Any())
                 {
-                    var handCards = state.Players.Current.YourHand.ToList();
-                    var selectCardsRequest = new SelectCardsRequest(state.Players.Current, state, handCards);
-                    var selectCardsResponse = await state.RequestSink.Send(selectCardsRequest);
-                    var card = await selectCardsResponse.Task;
-                    state.Players.Current.Discard(state, card);
+
+                    var cardsToDiscard = await new PlayerSelectMultipleCardsRequest(state.Players.Current, state, handCards, diceRollResult)
+                       .SendRequestAsync(state);
+
+                    cardsToDiscard.ForEach(card => card.Discard(state));
                 }
             }
         }
