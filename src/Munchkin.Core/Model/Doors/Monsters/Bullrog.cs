@@ -1,7 +1,6 @@
-using System;
-using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
+using System.Threading.Tasks;
 
 namespace Munchkin.Engine.Original.Doors
 {
@@ -11,9 +10,10 @@ namespace Munchkin.Engine.Original.Doors
         {
         }
 
-        public override Task BadStuff(Table gameContext)
+        public override async Task BadStuff(Table state)
         {
-            throw new NotImplementedException();
+            // TODO: double check: "will not pursue anyone with level 4 or below" 
+            await state.Players.Current.Kill(state);
         }
     }
 }

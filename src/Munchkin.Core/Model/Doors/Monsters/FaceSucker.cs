@@ -1,9 +1,13 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
+using Munchkin.Core.Model.Effects;
 using Munchkin.Core.Model.Enums;
+using Munchkin.Core.Model.Rules;
 
 namespace Munchkin.Engine.Original.Doors
 {
@@ -11,30 +15,20 @@ namespace Munchkin.Engine.Original.Doors
     {
         public FaceSucker() : base("Face Sucker", 8, 1, 2, 0, false)
         {
+            AddEffect(Effect
+               .New(new MonsterStrengthBonusEffect(6))
+               .With(() => Rule
+                 .New(new HasElfRaceRule())));
         }
 
-        public override Task Play(Table gameContext)
+        public override Task BadStuff(Table state)
         {
-            var currentHero = gameContext.Players.Current;
-            var currentHeroIsElf = currentHero.Equipped.OfType<ElfRace>().Any();
-
-            //var helpingHero = gameContext.Dungeon.HelpingPlayer;
-            //var helpingHeroIsElf = helpingHero?.Equipped.OfType<ElfRace>().Any();
-
-            //if (currentHeroIsElf || helpingHeroIsElf != null && helpingHeroIsElf.Value)
-            //{
-            //    gameContext.Dungeon.PlayersStrength += 6;
-            //}
-
-            return base.Play(gameContext);
-        }
-
-        public override Task BadStuff(Table gameContext)
-        {
-            gameContext.Players.Current.Equipped
+            state.Players.Current.Equipped
                 .OfType<PermanentItemCard>()
                 .Where(x => x.WearingType == EWearingType.Headgear)
-                .ForEach(x => x.Discard(gameContext));
+                .ForEach(x => x.Discard(state));
+
+            state.Players.Current.LevelDown();
 
             return Task.CompletedTask;
         }

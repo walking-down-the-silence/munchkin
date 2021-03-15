@@ -8,13 +8,15 @@ namespace Munchkin.Engine.Original.Doors
     {
         public FloatingNose() : base("Floating Nose", 10, 1, 3, 0, false)
         {
+            //TODO: double check rules about fight it
         }
 
-        public override Task BadStuff(Table gameContext)
+        public override Task BadStuff(Table state)
         {
-            gameContext.Players.Current.LevelDown();
-            gameContext.Players.Current.LevelDown();
-            gameContext.Players.Current.LevelDown();
+            state.Players.Current.LevelDown();
+            state.Players.Current.LevelDown();
+            state.Players.Current.LevelDown();
+
             return Task.CompletedTask;
         }
     }
