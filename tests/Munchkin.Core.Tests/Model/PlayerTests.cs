@@ -1,10 +1,12 @@
 ﻿using MediatR;
 using Moq;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Enums;
 using Munchkin.Engine.Original.Doors;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -23,7 +25,7 @@ namespace Munchkin.Core.Tests.Model
         public void Ctor_WithValidName_ShouldCreatePlayer()
         {
             // Arrange
-            var player = new Player("Johny Cash", EGender.Male);
+            var player = CreatePlayerJohny();
 
             // Act, Assert
             Assert.NotNull(player.Name);
@@ -39,7 +41,7 @@ namespace Munchkin.Core.Tests.Model
         public void TakeInHand_WithNull_ShouldHaveEmptyHand()
         {
             // Arrange
-            var player = new Player("Johny Cash", EGender.Male);
+            var player = CreatePlayerJohny();
 
             // Act
             player.TakeInHand(null);
@@ -54,7 +56,7 @@ namespace Munchkin.Core.Tests.Model
         public void TakeInHand_WithValidCard_ShouldNotHaveEmptyHand()
         {
             // Arrange
-            var player = new Player("Johny Cash", EGender.Male);
+            var player = CreatePlayerJohny();
             var card = new SuperMunchkin();
 
             // Act
@@ -70,7 +72,7 @@ namespace Munchkin.Core.Tests.Model
         public void PutInPlayAsEquipped_WithNull_ShouldNotHaveEmptyEquipped()
         {
             // Arrange
-            var player = new Player("Johny Cash", EGender.Male);
+            var player = CreatePlayerJohny();
 
             // Act
             player.PutInPlayAsEquipped(null);
@@ -85,7 +87,7 @@ namespace Munchkin.Core.Tests.Model
         public void PutInPlayAsEquipped_WithValidCard_ShouldNotHaveEmptyEquipped()
         {
             // Arrange
-            var player = new Player("Johny Cash", EGender.Male);
+            var player = CreatePlayerJohny();
             var card = new SuperMunchkin();
 
             // Act
@@ -102,7 +104,7 @@ namespace Munchkin.Core.Tests.Model
         public void PutInPlayAsCarried_WithNull_ShouldNotHaveEmptyBackpack()
         {
             // Arrange
-            var player = new Player("Johny Cash", EGender.Male);
+            var player = CreatePlayerJohny();
 
             // Act
             player.PutInPlayAsCarried(null);
@@ -117,7 +119,7 @@ namespace Munchkin.Core.Tests.Model
         public void PutInPlayAsCarried_WithValidCard_ShouldNotHaveEmptyBackpack()
         {
             // Arrange
-            var player = new Player("Johny Cash", EGender.Male);
+            var player = CreatePlayerJohny();
             var card = new SuperMunchkin();
 
             // Act
@@ -134,7 +136,7 @@ namespace Munchkin.Core.Tests.Model
         public void LevelDown_ShouldNotGoLowerThanLevel1()
         {
             // Arrange
-            var player = new Player("Johny Cash", EGender.Male);
+            var player = CreatePlayerJohny();
 
             // Act
             player.LevelDown();
@@ -149,7 +151,7 @@ namespace Munchkin.Core.Tests.Model
         public void LevelUp_ShouldGoUpOneLevel()
         {
             // Arrange
-            var player = new Player("Johny Cash", EGender.Male);
+            var player = CreatePlayerJohny();
 
             // Act
             player.LevelUp();
@@ -162,12 +164,11 @@ namespace Munchkin.Core.Tests.Model
         public void Discard_WithValidCard_ShouldHaveNotEmptyDoorsDiscardPile()
         {
             // Arrange
-            var player = new Player("Johny Cash", EGender.Male);
-            var mediator = Mock.Of<IMediator>();
-            var players = new Player[] { player };
+            var player = CreatePlayerJohny();
+            var players = new[] { player };
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var doorFactory = new MunchkinOriginalDoorsFactory();
-            var table = Table.Setup(mediator, players, treasureFactory, doorFactory, 10);
+            var table = SetupTable(players, treasureFactory, doorFactory, 10);
 
             // Act
             var card = player.YourHand.OfType<DoorsCard>().First();
@@ -184,12 +185,11 @@ namespace Munchkin.Core.Tests.Model
         public void DiscardHand_WithTable_ShouldHaveEmptyHandAndNotEmptyDiscardPiles()
         {
             // Arrange
-            var player = new Player("Johny Cash", EGender.Male);
-            var mediator = Mock.Of<IMediator>();
-            var players = new Player[] { player };
+            var player = CreatePlayerJohny();
+            var players = new[] { player };
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var doorFactory = new MunchkinOriginalDoorsFactory();
-            var table = Table.Setup(mediator, players, treasureFactory, doorFactory, 10);
+            var table = SetupTable(players, treasureFactory, doorFactory, 10);
 
             // Act
             player.DiscardHand(table);
@@ -206,12 +206,11 @@ namespace Munchkin.Core.Tests.Model
         public void DiscardEquipped_WithTable_ShouldHaveEmptyHandAndNotEmptyDiscardPiles()
         {
             // Arrange
-            var player = new Player("Johny Cash", EGender.Male);
-            var mediator = Mock.Of<IMediator>();
-            var players = new Player[] { player };
+            var player = CreatePlayerJohny();
+            var players = new[] { player };
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var doorFactory = new MunchkinOriginalDoorsFactory();
-            var table = Table.Setup(mediator, players, treasureFactory, doorFactory, 10);
+            var table = SetupTable(players, treasureFactory, doorFactory, 10);
 
             // Act
             var treasureCards = player.YourHand.OfType<TreasureCard>().ToList();
@@ -229,12 +228,11 @@ namespace Munchkin.Core.Tests.Model
         public void PutInPlayAsCarried_WithCardFromHand_ShouldHaveNotEmptyBackpack()
         {
             // Arrange
-            var player = new Player("Johny Cash", EGender.Male);
-            var mediator = Mock.Of<IMediator>();
-            var players = new Player[] { player };
+            var player = CreatePlayerJohny();
+            var players = new[] { player };
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var doorFactory = new MunchkinOriginalDoorsFactory();
-            var table = Table.Setup(mediator, players, treasureFactory, doorFactory, 10);
+            var table = SetupTable(players, treasureFactory, doorFactory, 10);
 
             // Act
             var card = player.YourHand.OfType<TreasureCard>().First();
@@ -250,12 +248,11 @@ namespace Munchkin.Core.Tests.Model
         public void PutInPlayAsEquipped_WithCardFromHand_ShouldHaveNotEmptyEquipped()
         {
             // Arrange
-            var player = new Player("Johny Cash", EGender.Male);
-            var mediator = Mock.Of<IMediator>();
-            var players = new Player[] { player };
+            var player = CreatePlayerJohny();
+            var players = new[] { player };
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var doorFactory = new MunchkinOriginalDoorsFactory();
-            var table = Table.Setup(mediator, players, treasureFactory, doorFactory, 10);
+            var table = SetupTable(players, treasureFactory, doorFactory, 10);
 
             // Act
             var card = player.YourHand.OfType<TreasureCard>().First();
@@ -271,12 +268,11 @@ namespace Munchkin.Core.Tests.Model
         public void Revive_WithTable_ShouldHaveNotEmptyHand()
         {
             // Arrange
-            var player = new Player("Johny Cash", EGender.Male);
-            var mediator = Mock.Of<IMediator>();
-            var players = new Player[0];
+            var player = CreatePlayerJohny();
+            var players = new[] { player };
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var doorFactory = new MunchkinOriginalDoorsFactory();
-            var table = Table.Setup(mediator, players, treasureFactory, doorFactory, 10);
+            var table = SetupTableNoRevive(players, treasureFactory, doorFactory, 10);
 
             // Act
             player.Revive(table);
@@ -291,12 +287,11 @@ namespace Munchkin.Core.Tests.Model
         public async void Kill_ShouldHaveEmptyHand_ButRemainRaceAndClassAndSuperMunchkinAndHalfbreedAndCurses()
         {
             // Arrange
-            var player = new Player("Johny Cash", EGender.Male);
-            var mediator = Mock.Of<IMediator>();
-            var players = new Player[] { player };
+            var player = CreatePlayerJohny();
+            var players = new[] { player };
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var doorFactory = new MunchkinOriginalDoorsFactory();
-            var table = Table.Setup(mediator, players, treasureFactory, doorFactory, 10);
+            var table = SetupTable(players, treasureFactory, doorFactory, 10);
 
             // Act
             player.PutInPlayAsEquipped(new ElfRace());
@@ -312,6 +307,60 @@ namespace Munchkin.Core.Tests.Model
             Assert.NotEmpty(player.Equipped.OfType<ClassCard>());
             Assert.NotEmpty(player.Equipped.OfType<SuperMunchkin>());
             Assert.NotEmpty(player.Equipped.OfType<Halfbreed>());
+        }
+
+        private static Player CreatePlayerJohny()
+        {
+            return new Player("Johny Cash", EGender.Male);
+        }
+
+        private Table SetupTable(IEnumerable<Player> players, ITreasuresFactory treasureFactory, IDoorsFactory doorFactory, int winningLevel)
+        {
+            var mediator = Mock.Of<IMediator>();
+            var table = new Table(mediator);
+            table.SetWinningLevel(winningLevel);
+
+            if (treasureFactory != null)
+            {
+                table.AddTreasures(treasureFactory.GetTreasureCards().ToArray());
+            }
+
+            if (doorFactory != null)
+            {
+                table.AddDoors(doorFactory.GetDoorsCards().ToArray());
+            }
+
+            foreach (var player in players)
+            {
+                table.JoinPlayer(player);
+                player.Revive(table);
+            }
+
+            return table;
+        }
+
+        private Table SetupTableNoRevive(IEnumerable<Player> players, ITreasuresFactory treasureFactory, IDoorsFactory doorFactory, int winningLevel)
+        {
+            var mediator = Mock.Of<IMediator>();
+            var table = new Table(mediator);
+            table.SetWinningLevel(winningLevel);
+
+            if (treasureFactory != null)
+            {
+                table.AddTreasures(treasureFactory.GetTreasureCards().ToArray());
+            }
+
+            if (doorFactory != null)
+            {
+                table.AddDoors(doorFactory.GetDoorsCards().ToArray());
+            }
+
+            foreach (var player in players)
+            {
+                table.JoinPlayer(player);
+            }
+
+            return table;
         }
     }
 }

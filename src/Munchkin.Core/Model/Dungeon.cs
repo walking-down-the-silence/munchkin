@@ -1,8 +1,8 @@
 ﻿using Munchkin.Core.Contracts;
-using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.States;
 using Munchkin.Core.Model.Stages;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,33 +15,31 @@ namespace Munchkin.Core.Model
     {
         private readonly Table _table;
         private readonly Dictionary<Player, List<IAction<Table>>> _playerActions = new();
-        private IStage _currentStage;
 
         public Dungeon(Table table)
         {
             _table = table ?? throw new System.ArgumentNullException(nameof(table));
         }
 
-        public IStage CurrentStage => _currentStage;
-
-        /// <summary>
-        /// Allows main players hero to enter the dungeon
-        /// </summary>
-        /// <param name="door"> Doors, in which hero should enter the dungeon. </param>
-        /// <param name="table"> Table state when entering the dungeon. </param>
-        public DoorsCard KickOpenTheDoor()
+        public static async Task<Table> NextTurn()
         {
-            var playerActions = _table.Players.Current.Actions.Select(action => action.Create()).ToList();
-            SetPlayerActions(_table.Players.Current, playerActions);
+            var stage = new SetupTableStep();
+            var table = await stage.Resolve(new Table(null));
+            var history = ImmutableStack<Table>.Empty;
 
-            var door = _table.DoorsCardDeck.Take();
-            return door;
-        }
+            while (!table.IsGameWon)
+            {
+                var playerTurn = new PlayerTurnStep();
+                table = await playerTurn.Resolve(table);
 
-        public async Task<bool> MoveToNextStage(Table table)
-        {
-            _currentStage = await _currentStage.Resolve(table);
-            return _currentStage.IsTerminal;
+                history = history.Push(table);
+
+                // NOTE: clear/reset the state befor moving to next turn
+                table.Dungeon.Clear();
+                table.Players.Next();
+            }
+
+            return table;
         }
 
         public async Task OngoingCombat()

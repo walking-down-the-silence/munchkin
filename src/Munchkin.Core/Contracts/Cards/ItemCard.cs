@@ -28,8 +28,8 @@ namespace Munchkin.Core.Contracts.Cards
         public override Task Play(Table context)
         {
             // TODO: check if current stage actually is a combat
-            context.Dungeon.CurrentStage.AddProperty(new PlayerStrengthBonusAttribute(StrengthBonus));
-            context.Dungeon.CurrentStage.AddProperty(new RunAwayBonusAttribute(RunAwayBonus));
+            context.Dungeon.AddProperty(new PlayerStrengthBonusAttribute(StrengthBonus));
+            context.Dungeon.AddProperty(new RunAwayBonusAttribute(RunAwayBonus));
 
             // apply dynamic effects if conditions are met
             Effects.Where(effect => effect.Satisfies(context)).ForEach(effect => effect.Apply(context));

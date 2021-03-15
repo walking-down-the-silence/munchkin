@@ -1,7 +1,5 @@
 ﻿using MediatR;
-using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,49 +10,16 @@ namespace Munchkin.Core.Model
     /// </summary>
     public class Table
     {
-        private Table(
-            IMediator mediator,
-            CircularList<Player> players,
-            IEnumerable<TreasureCard> treasureCards,
-            IEnumerable<DoorsCard> doorsCards,
-            int winningLevel)
+        public Table(IMediator mediator)
         {
             RequestSink = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
-            Players = players ?? throw new System.ArgumentNullException(nameof(players));
-            WinningLevel = winningLevel;
             Dungeon = new Dungeon(this);
 
-            // TODO: initialize and shuffle the decks with all cards from factory
-            TreasureCardDeck = new CardDeck<TreasureCard>(treasureCards);
-            DoorsCardDeck = new CardDeck<DoorsCard>(doorsCards);
+            Players = new CircularList<Player>();
+            TreasureCardDeck = new CardDeck<TreasureCard>();
+            DoorsCardDeck = new CardDeck<DoorsCard>();
             DiscardedTreasureCards = new CardDeck<TreasureCard>();
             DiscardedDoorsCards = new CardDeck<DoorsCard>();
-        }
-
-        /// <summary>
-        /// Begins the game
-        /// </summary>
-        /// <param name="winningLevel"> The winning level. </param>
-        public static Table Setup(
-            IMediator mediator,
-            IEnumerable<Player> players,
-            ITreasuresFactory treasuresFactory,
-            IDoorsFactory doorsFactory,
-            int winningLevel)
-        {
-            var playersList = new CircularList<Player>(players);
-            var treasureCards = treasuresFactory.GetTreasureCards();
-            var doorsCards = doorsFactory.GetDoorsCards();
-            var table = new Table(mediator, playersList, treasureCards, doorsCards, winningLevel);
-
-            // shuffle the decks for randomness
-            table.DoorsCardDeck.Shuffle();
-            table.TreasureCardDeck.Shuffle();
-
-            // give all players initial cards
-            table.Players.ForEach(player => player.Revive(table));
-
-            return table;
         }
 
         /// <summary>
@@ -65,12 +30,12 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Gets the treasures card deck
         /// </summary>
-        public CardDeck<TreasureCard> TreasureCardDeck { get; }
+        public CardDeck<TreasureCard> TreasureCardDeck { get; private set; }
 
         /// <summary>
         /// Gets the doors card deck
         /// </summary>
-        public CardDeck<DoorsCard> DoorsCardDeck { get; }
+        public CardDeck<DoorsCard> DoorsCardDeck { get; private set; }
 
         /// <summary>
         /// Gets the discarded treasure cards
@@ -88,18 +53,42 @@ namespace Munchkin.Core.Model
         public Dungeon Dungeon { get; }
 
         /// <summary>
+        /// The winning level number
+        /// </summary>
+        public int WinningLevel { get; private set; }
+
+        /// <summary>
         /// Request sink that is used for player interaction when a selection or decision is needed
         /// </summary>
         public IMediator RequestSink { get; }
 
         /// <summary>
-        /// The winning level number
-        /// </summary>
-        public int WinningLevel { get; }
-
-        /// <summary>
         /// Gets if any of the players has won the game.
         /// </summary>
         public bool IsGameWon => Players.Any(x => x.Level >= WinningLevel);
+
+        /// <summary>
+        /// Sets the target level required to win the game.
+        /// </summary>
+        /// <param name="winningLevel">Target level.</param>
+        public void SetWinningLevel(int winningLevel) => WinningLevel = winningLevel;
+
+        /// <summary>
+        /// Assigns the player to the gaming table.
+        /// </summary>
+        /// <param name="player">The player to assign.</param>
+        public void JoinPlayer(Player player) => Players.Add(player);
+
+        /// <summary>
+        /// Appends the treasure cards to the deck. Can be used for additional expansions.
+        /// </summary>
+        /// <param name="cards">Cars to add.</param>
+        public void AddTreasures(IReadOnlyCollection<TreasureCard> cards) => TreasureCardDeck = new CardDeck<TreasureCard>(cards);
+
+        /// <summary>
+        /// Appends the door cards to the deck. Can be used for additional expansions.
+        /// </summary>
+        /// <param name="cards">Cards to add.</param>
+        public void AddDoors(IReadOnlyCollection<DoorsCard> cards) => DoorsCardDeck = new CardDeck<DoorsCard>(cards);
     }
 }

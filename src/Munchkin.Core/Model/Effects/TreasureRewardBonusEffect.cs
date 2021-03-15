@@ -13,7 +13,7 @@ namespace Munchkin.Core.Model.Effects
 
         public Table Apply(Table state)
         {
-            state.Dungeon.CurrentStage.AddProperty(new RewardTreasuresAttribute(TreasureBonus));
+            state.Dungeon.AddProperty(new RewardTreasuresAttribute(TreasureBonus));
             return state;
         }
     }

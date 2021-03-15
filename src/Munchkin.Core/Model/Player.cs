@@ -33,17 +33,10 @@ namespace Munchkin.Core.Model
 
             Name = name;
             Gender = gender;
+
             _actions = new List<IActionDefinition<Table>>
             {
                 new ActionDefinition<Table>("As For Help", () => new PlayerAskForHelpAction()),
-                new ActionDefinition<Table>("Discard A Card", () => new PlayerDiscardCardAction()),
-                new ActionDefinition<Table>("End Combat", () => new PlayerEndBattleAction()),
-                new ActionDefinition<Table>("End Turn", () => new PlayerEndTurnAction()),
-                new ActionDefinition<Table>("Kick Down The Door", () => new PlayerKickDownTheDoorAction()),
-                new ActionDefinition<Table>("Look For Trouble", () => new PlayerLookForTroubleAction()),
-                new ActionDefinition<Table>("Loot The Room", () => new LootTheRoomAction()),
-                new ActionDefinition<Table>("Run Away", () => new PlayerRunAwayAction()),
-                new ActionDefinition<Table>("Take Bad Stuff", () => new PlayerTakeBadStuffAction())
             };
         }
 

@@ -1,28 +1,26 @@
 ﻿using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Contracts.States;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
-    public class CharityStage : State, IStage
+    public class CharityStep : IHierarchialStep<Table>
     {
         private readonly List<Card> _playedCards;
 
-        public CharityStage(List<Card> playedCards)
+        public CharityStep(List<Card> playedCards)
         {
             _playedCards = playedCards ?? throw new System.ArgumentNullException(nameof(playedCards));
         }
 
-        public bool IsTerminal => false;
-
         public IReadOnlyCollection<Card> PlayedCards => _playedCards.AsReadOnly();
 
-        public Task<IStage> Resolve(Table table)
+        public async Task<Table> Resolve(Table table)
         {
-            var stage = new EndStage(_playedCards);
-            return Task.FromResult<IStage>(stage);
+            // TODO: implement the charity loop
+            var stage = new EndStep(_playedCards);
+            return await stage.Resolve(table);
         }
     }
 }
