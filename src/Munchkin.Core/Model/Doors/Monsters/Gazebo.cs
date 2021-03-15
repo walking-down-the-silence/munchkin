@@ -8,13 +8,15 @@ namespace Munchkin.Engine.Original.Doors
     {
         public Gazebo() : base("Gazebo", 8, 1, 2, 0, false)
         {
+            //TODO: no one can help you
         }
 
-        public override Task BadStuff(Table gameContext)
+        public override Task BadStuff(Table state)
         {
-            gameContext.Players.Current.LevelDown();
-            gameContext.Players.Current.LevelDown();
-            gameContext.Players.Current.LevelDown();
+            state.Players.Current.LevelDown();
+            state.Players.Current.LevelDown();
+            state.Players.Current.LevelDown();
+
             return Task.CompletedTask;
         }
     }

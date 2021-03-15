@@ -8,9 +8,10 @@ namespace Munchkin.Engine.Original.Doors
     {
         public Hippogriff() : base("Hippogriff", 16, 2, 4, 0, false)
         {
+            //TODO: will not persue anyone with level 3 or below
         }
 
-        public override Task BadStuff(Table gameContext)
+        public override Task BadStuff(Table state)
         {
             throw new System.NotImplementedException();
         }

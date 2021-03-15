@@ -9,14 +9,15 @@ namespace Munchkin.Engine.Original.Doors
     {
         public Ghoulfiends() : base("Ghoulfiends", 8, 1, 2, 0, false)
         {
+            //TODO: fight with your level only
         }
 
-        public override Task BadStuff(Table gameContext)
+        public override Task BadStuff(Table state)
         {
-            int minPlayerLevel = gameContext.Players.Min(x => x.Level);
-            while (gameContext.Players.Current.Level > minPlayerLevel)
+            int minPlayerLevel = state.Players.Min(x => x.Level);
+            while (state.Players.Current.Level > minPlayerLevel)
             {
-                gameContext.Players.Current.LevelDown();
+                state.Players.Current.LevelDown();
             }
 
             return Task.CompletedTask;

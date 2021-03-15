@@ -3,7 +3,6 @@ using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Effects;
-using Munchkin.Core.Model.Requests;
 using Munchkin.Core.Model.Rules;
 using System.Threading.Tasks;
 
@@ -21,13 +20,11 @@ namespace Munchkin.Engine.Original.Doors
 
         public override async Task BadStuff(Table state)
         {
-            var diceRollRequest = new RollTheDiceRequest(state.Players.Current);
-            var diceRollResponse = await state.RequestSink.Send(diceRollRequest);
-            var diceRollResult = await diceRollResponse.Task;
+            var diceRollResult = Dice.Roll();
 
             if (diceRollResult <= 2)
             {
-                state.Players.Current.Kill(state);
+                await state.Players.Current.Kill(state);
             }
             else
             {
