@@ -1,27 +1,22 @@
-﻿using Munchkin.Core.Contracts.Actions;
+﻿using Munchkin.Core.Contracts;
+using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Requests;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal class ClericStrengthBonus3Action : DynamicAction
+    internal class ClericStrengthBonus3Action : MultiShotAction, IRenewableAction<Table>
     {
-        /// <summary>
-        /// Gets how many timer per turn and action can be executed
-        /// </summary>
-        private int _shotsLeft = 3;
-
-        public ClericStrengthBonus3Action() : base("Bonus +3", "")
+        public ClericStrengthBonus3Action() : base(3, "Bonus +3", "")
         {
         }
 
         public override bool CanExecute(Table state)
         {
             // TODO: check if current stage actually is a combat
-            return _shotsLeft > 0
+            return ExecutionsLeft > 0
                 //&& state.Dungeon.Combat.Monsters.Any(monster => monster.IsUndead)
                 && (state.Players.Current.Equipped.Any()
                 || state.Players.Current.Backpack.Any()
@@ -30,12 +25,17 @@ namespace Munchkin.Core.Model.Actions
 
         public override async Task<Table> ExecuteAsync(Table state)
         {
-            Interlocked.Decrement(ref _shotsLeft);
+            // TODO: decrese the ExecutionsLeft counter
             var selectCardRequest = new PlayerSelectSingleCardRequest(state.Players.Current, state, state.Players.Current.AllCards());
             // TODO: add a bonus of +3 for each card
             //await state.RequestSink.Send(selectCardRequest).ContinueWith(x => x.Result.Discard(state));
 
             return state;
+        }
+
+        public bool Reset(Table state)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

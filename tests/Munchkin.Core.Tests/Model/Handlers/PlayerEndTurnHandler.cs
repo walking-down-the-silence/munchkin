@@ -13,7 +13,7 @@ namespace Munchkin.Core.Tests.Model.Handlers
         {
             // NOTE: this implementation autoresolves the action and is purely for testing purpose
             var (source, response) = Response<Unit>.Create();
-            var playerAction = new PlayerEndTurnAction(source);
+            var playerAction = new PlayerNextStageAction(source);
             await playerAction.ExecuteAsync(request.Table);
             return response;
         }

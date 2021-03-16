@@ -1,18 +1,21 @@
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Model.Requests;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal class WizardFleeMonsterAction : DynamicAction
+    internal class WizardFleeMonsterAction : DynamicAction, IRenewableAction<Table>
     {
+        private bool _wasExecuted = false;
+
         public WizardFleeMonsterAction() : base("Flee Monster", "")
         {
         }
 
         public override bool CanExecute(Table state)
         {
-            return state.Players.Current.YourHand.Count >= 3;
+            return !_wasExecuted && state.Players.Current.YourHand.Count >= 3;
         }
 
         public override async Task<Table> ExecuteAsync(Table state)
@@ -27,7 +30,14 @@ namespace Munchkin.Core.Model.Actions
             var selectMonsterInPlayRequest = new PlayerSelectSingleCardRequest(state.Players.Current, state, state.Players.Current.YourHand);
             //await state.RequestSink.Send(selectMonsterInPlayRequest).ContinueWith(x => x.Result.Discard(state));
 
+            _wasExecuted = true;
             return state;
+        }
+
+        public bool Reset(Table state)
+        {
+            _wasExecuted = false;
+            return true;
         }
     }
 }

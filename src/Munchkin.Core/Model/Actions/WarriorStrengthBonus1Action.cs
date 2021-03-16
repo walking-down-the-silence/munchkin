@@ -4,22 +4,13 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal class WarriorStrengthBonus1Action : DynamicAction
+    internal class WarriorStrengthBonus1Action : MultiShotAction
     {
-        public WarriorStrengthBonus1Action() : base("Rage (+1)", "")
+        public WarriorStrengthBonus1Action() : base(3, "Rage (+1)", "")
         {
-            Shots = 3;
         }
 
-        /// <summary>
-        /// Gets how many timer per turn and action can be executed
-        /// </summary>
-        public int Shots { get; }
-
-        public override bool CanExecute(Table state)
-        {
-            throw new NotImplementedException();
-        }
+        public override bool CanExecute(Table state) => ExecutionsLeft > 0;
 
         public override Task<Table> ExecuteAsync(Table state)
         {

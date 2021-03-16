@@ -7,9 +7,9 @@ namespace Munchkin.Core.Model.Actions
     /// <summary>
     /// Asks other player to help in battle
     /// </summary>
-    public class PlayerAskForHelpAction : DynamicAction
+    public class PlayerAskForHelpAction : MultiShotAction
     {
-        public PlayerAskForHelpAction() : base("Ask For Help", "")
+        public PlayerAskForHelpAction() : base(int.MaxValue, "Ask For Help", "")
         {
         }
 

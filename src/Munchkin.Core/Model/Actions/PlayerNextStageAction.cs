@@ -1,27 +1,27 @@
 using MediatR;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Actions;
 using System;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Actions
 {
-    public class PlayerEndTurnAction : DynamicAction
+    public class PlayerNextStageAction : DynamicAction, IOneShotAction<Table>
     {
         private readonly TaskCompletionSource<Unit> _taskCompletionSource;
+        private bool _wasExecuted = false;
 
-        public PlayerEndTurnAction(TaskCompletionSource<Unit> taskCompletionSource) : base("End Turn", "")
+        public PlayerNextStageAction(TaskCompletionSource<Unit> taskCompletionSource) : base("Next Stage", "")
         {
             _taskCompletionSource = taskCompletionSource ?? throw new ArgumentNullException(nameof(taskCompletionSource));
         }
 
-        public override bool CanExecute(Table state)
-        {
-            return !_taskCompletionSource.Task.IsCompleted;
-        }
+        public override bool CanExecute(Table state) => !_wasExecuted;
 
         public override Task<Table> ExecuteAsync(Table state)
         {
             _taskCompletionSource.SetResult(Unit.Value);
+            _wasExecuted = true;
             return Task.FromResult(state);
         }
     }

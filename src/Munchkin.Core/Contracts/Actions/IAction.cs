@@ -3,8 +3,9 @@
 namespace Munchkin.Core.Contracts
 {
     /// <summary>
-    /// Defines the action that can be executed and modifies the state.
+    /// Defines an action that can be executed and modifies the state.
     /// </summary>
+    /// <typeparam name="TState"> The context to use for execution. </typeparam>
     public interface IAction<TState>
     {
         /// <summary>
