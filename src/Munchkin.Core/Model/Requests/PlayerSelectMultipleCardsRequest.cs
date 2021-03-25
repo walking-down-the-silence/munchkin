@@ -12,7 +12,7 @@ namespace Munchkin.Core.Model.Requests
             TargetPlayer = targetPlayer ?? throw new System.ArgumentNullException(nameof(targetPlayer));
             Table = table ?? throw new System.ArgumentNullException(nameof(table));
             Options = options ?? throw new System.ArgumentNullException(nameof(options));
-            CardsToSelectQuantity = cardsToSelectQuantity; // TODO: chould I check for 0?
+            CardsToSelectQuantity = cardsToSelectQuantity; // TODO: should I check for 0?
         }
 
         public Player TargetPlayer { get; }
