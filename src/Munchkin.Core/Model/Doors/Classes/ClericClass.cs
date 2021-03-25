@@ -10,13 +10,19 @@ namespace Munchkin.Engine.Original.Doors
     {
         public ClericClass() : base("Cleric")
         {
-            AddAction(new ActionDefinition<Table>("", () => new ClericStrengthBonus3Action()));
-            AddAction(new ActionDefinition<Table>("", () => new ClericReviveCardAction()));
         }
+
+        public IAction<Table> ReviveTheCard { get; private set; }
+
+        public IAction<Table> AddStrengtAgainstUndead { get; private set; }
 
         public override Task Play(Table context)
         {
-            throw new System.NotImplementedException();
+            // TODO: Owner here is null because it is not set yet
+            ReviveTheCard = new ClericReviveCardAction(Owner);
+            AddStrengtAgainstUndead = new ClericStrengthBonus3Action();
+
+            return Task.CompletedTask;
         }
     }
 }

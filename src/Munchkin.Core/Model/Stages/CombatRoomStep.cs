@@ -1,25 +1,46 @@
 ﻿using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
+using Munchkin.Core.Model.Actions;
 using Munchkin.Core.Model.Attributes;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
     public class CombatRoomStep : IHierarchialStep<Table>
     {
-        private readonly List<MonsterCard> _monsters;
+        private readonly Player _fightingPlayer;
         private readonly MonsterCard _monsterCard;
+        private readonly List<MonsterCard> _monsters;
         private readonly List<Card> _playedCards;
 
-        public CombatRoomStep(MonsterCard monsterCard, List<Card> playedCards)
+        public CombatRoomStep(Player fightingPlayer, MonsterCard monsterCard, List<Card> playedCards)
         {
             _monsters = new List<MonsterCard> { monsterCard };
+            _fightingPlayer = fightingPlayer ?? throw new System.ArgumentNullException(nameof(fightingPlayer));
             _monsterCard = monsterCard ?? throw new System.ArgumentNullException(nameof(monsterCard));
             _playedCards = playedCards ?? throw new System.ArgumentNullException(nameof(playedCards));
+
+            AskForHelp = new PlayerAskForHelpAction(this);
+            OfferHelp = new PlayerOfferHelpAction(this, fightingPlayer);
         }
+
+        #region Actions
+
+        /// <summary>
+        /// Gets the dynamic action for asking help in combat.
+        /// </summary>
+        public IAction<Table> AskForHelp { get; }
+
+        /// <summary>
+        /// Gets the dynamic action for offering help in combat.
+        /// </summary>
+        public IAction<Table> OfferHelp { get; }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// A collection of monsters in combat.
@@ -29,7 +50,7 @@ namespace Munchkin.Core.Model.Stages
         /// <summary>
         /// Gets the player that is currently in combat.
         /// </summary>
-        public Player FightingPlayer { get; private set; }
+        public Player FightingPlayer => _fightingPlayer;
 
         /// <summary>
         /// Gets the player that agreed to to help in combat.
@@ -37,6 +58,8 @@ namespace Munchkin.Core.Model.Stages
         public Player HelpingPlayer { get; private set; }
 
         public IReadOnlyCollection<Card> PlayedCards => _playedCards.AsReadOnly();
+
+        #endregion
 
         public async Task<Table> Resolve(Table table)
         {
@@ -47,13 +70,15 @@ namespace Munchkin.Core.Model.Stages
             table.Dungeon.AddProperty(new RewardLevelsAttribute(_monsterCard.RewardLevels));
             table.Dungeon.AddProperty(new RewardTreasuresAttribute(_monsterCard.RewardTreasures));
 
+            // TODO: add "Ask For Help" action to list of available ones
+
             // NOTE: this stage is blocked until each player agrees to end the combat
-            await table.Dungeon.OngoingCombat();
+            await table.Dungeon.WaitForAllPlayers();
 
             if (!table.Dungeon.PlayersAreWinningCombat())
             {
                 var runAway = new RunAwayStep(FightingPlayer, HelpingPlayer, _monsters, _playedCards);
-                return await  runAway.Resolve(table);
+                return await runAway.Resolve(table);
             }
             else
             {
@@ -64,12 +89,9 @@ namespace Munchkin.Core.Model.Stages
             return await charity.Resolve(table);
         }
 
-        public void HelpInCombat(Table table, Player helpingPlayer)
+        public void HelpPlayerInCombat(Player player)
         {
-            // TODO: rethink how to initialize actions available to each player
-            var playerActions = helpingPlayer.Actions.Select(action => action.Create()).ToList();
-            table.Dungeon.SetPlayerActions(helpingPlayer, playerActions);
-            HelpingPlayer = helpingPlayer;
+            HelpingPlayer = player;
         }
     }
 }

@@ -10,12 +10,16 @@ namespace Munchkin.Engine.Original.Doors
     {
         public WizardClass() : base("Wizard")
         {
-            AddAction(new ActionDefinition<Table>("", () => new WizardFleeMonsterAction()));
         }
+
+        public IAction<Table> FleeMonster { get; private set; }
 
         public override Task Play(Table context)
         {
-            throw new System.NotImplementedException();
+            // TODO: Owner here is null because it is not set yet
+            FleeMonster = new WizardFleeMonsterAction();
+
+            return Task.CompletedTask;
         }
     }
 }

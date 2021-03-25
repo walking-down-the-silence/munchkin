@@ -7,10 +7,11 @@ namespace Munchkin.Core.Extensions
 {
     public static class RequestExtensions
     {
-        public static async Task<T> SendRequestAsync<T>(this IRequest<Response<T>> request, Table state)
+        public static async Task<TResult> SendAsync<TResult>(this IRequest<Response<TResult>> request, Table table)
         {
-            var response = await state.RequestSink.Send(request);
-            return await response.Task;
+            var response = await table.RequestSink.Send(request);
+            var result = await response.Task;
+            return result;
         }
     }
 }

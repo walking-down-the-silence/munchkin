@@ -7,8 +7,10 @@ namespace Munchkin.Core.Model.Stages
     {
         public async Task<Table> Resolve(Table table)
         {
+            // NOTE: wait for players to play cards and setup the avatar
+            table = await table.Dungeon.WaitForAllPlayers();
+
             var revive = new RevivePlayerAvatarStep();
-            // TODO: wait for player to play cards and setup the avatar
             return await revive.Resolve(table);
         }
     }

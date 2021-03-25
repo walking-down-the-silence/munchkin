@@ -23,7 +23,7 @@ namespace Munchkin.Core.Model.Stages
             var stage = door switch
             {
                 CurseCard curseCard     => new CursedRoomStage(curseCard, _playedCards),
-                MonsterCard monsterCard => new CombatRoomStep(monsterCard, _playedCards),
+                MonsterCard monsterCard => new CombatRoomStep(table.Players.Current, monsterCard, _playedCards),
                 _                       => TakeInHand(table, door)
             };
 

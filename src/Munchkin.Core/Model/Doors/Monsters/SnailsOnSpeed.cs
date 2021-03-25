@@ -20,7 +20,7 @@ namespace Munchkin.Engine.Original.Doors
             var diceRollResult = Dice.Roll();
 
             var action = await new LoseItemsOrCardsInHandRequest(state.Players.Current, state)
-                .SendRequestAsync(state);
+                .SendAsync(state);
 
             if (action == LoseItemsOrCardsInHandActions.LoseItems)
             {
@@ -29,7 +29,7 @@ namespace Munchkin.Engine.Original.Doors
                 if (itemCards.Any())
                 {
                     var cardsToDiscard = await new PlayerSelectMultipleCardsRequest(state.Players.Current, state, itemCards, diceRollResult)
-                        .SendRequestAsync(state);
+                        .SendAsync(state);
 
                     cardsToDiscard.ForEach(card => card.Discard(state));
                 }
@@ -42,7 +42,7 @@ namespace Munchkin.Engine.Original.Doors
                 {
 
                     var cardsToDiscard = await new PlayerSelectMultipleCardsRequest(state.Players.Current, state, handCards, diceRollResult)
-                       .SendRequestAsync(state);
+                       .SendAsync(state);
 
                     cardsToDiscard.ForEach(card => card.Discard(state));
                 }

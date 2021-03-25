@@ -17,10 +17,10 @@ namespace Munchkin.Core.Model
     /// </summary>
     public class Player
     {
-        private readonly List<Card> _yourHand = new List<Card>();
-        private readonly List<Card> _backpack = new List<Card>();
-        private readonly List<Card> _equipped = new List<Card>();
-        private readonly List<IActionDefinition<Table>> _actions;
+        private readonly List<Card> _yourHand = new();
+        private readonly List<Card> _backpack = new();
+        private readonly List<Card> _equipped = new();
+        private readonly List<IAction<Table>> _actions = new();
         private bool _isDead;
         private int _level = 1;
 
@@ -33,11 +33,6 @@ namespace Munchkin.Core.Model
 
             Name = name;
             Gender = gender;
-
-            _actions = new List<IActionDefinition<Table>>
-            {
-                new ActionDefinition<Table>("As For Help", () => new PlayerAskForHelpAction()),
-            };
         }
 
         /// <summary>
@@ -78,10 +73,7 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Gets the dynamic actions for the user
         /// </summary>
-        public IReadOnlyCollection<IActionDefinition<Table>> Actions => _actions
-            .Concat(_equipped.SelectMany(card => card.Actions))
-            .ToList()
-            .AsReadOnly();
+        public IReadOnlyCollection<IAction<Table>> Actions => _actions.AsReadOnly();
 
         /// <summary>
         /// Levels up the player
@@ -209,6 +201,7 @@ namespace Munchkin.Core.Model
             playerCards.ForEach(card => card.Discard(table));
 
 
+            // TODO: move this from the card to the stage
             // TODO: Step 2: send a request to each player to select the cards from dead player
 
             foreach (var player in table.Players.Where(player => !player.IsDead))

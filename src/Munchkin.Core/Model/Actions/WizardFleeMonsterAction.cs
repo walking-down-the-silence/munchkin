@@ -18,20 +18,20 @@ namespace Munchkin.Core.Model.Actions
             return !_wasExecuted && state.Players.Current.YourHand.Count >= 3;
         }
 
-        public override async Task<Table> ExecuteAsync(Table state)
+        public override async Task<Table> ExecuteAsync(Table table)
         {
-            var selectCardFromHandRequest = new PlayerSelectSingleCardRequest(state.Players.Current, state, state.Players.Current.YourHand);
+            var selectCardFromHandRequest = new PlayerSelectSingleCardRequest(table.Players.Current, table, table.Players.Current.YourHand);
             //await state.RequestSink.Send(selectCardFromHandRequest).ContinueWith(x => x.Result.Discard(state));
             //await state.RequestSink.Send(selectCardFromHandRequest).ContinueWith(x => x.Result.Discard(state));
             //await state.RequestSink.Send(selectCardFromHandRequest).ContinueWith(x => x.Result.Discard(state));
 
             // TODO: check if current stage actually is a combat
             // TODO: do not actually discard, but remove reward levels and leave the treasures until combat is resolved
-            var selectMonsterInPlayRequest = new PlayerSelectSingleCardRequest(state.Players.Current, state, state.Players.Current.YourHand);
+            var selectMonsterInPlayRequest = new PlayerSelectSingleCardRequest(table.Players.Current, table, table.Players.Current.YourHand);
             //await state.RequestSink.Send(selectMonsterInPlayRequest).ContinueWith(x => x.Result.Discard(state));
 
             _wasExecuted = true;
-            return state;
+            return table;
         }
 
         public bool Reset(Table state)

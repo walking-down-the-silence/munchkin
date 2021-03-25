@@ -28,7 +28,7 @@ namespace Munchkin.Core.Model.Stages
             var response = await table.RequestSink.Send(request);
             var monsterCard = await response.Task;
 
-            var stage = new CombatRoomStep(monsterCard, _playedCards);
+            var stage = new CombatRoomStep(table.Players.Current, monsterCard, _playedCards);
             return await stage.Resolve(table);
         }
     }

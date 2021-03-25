@@ -1,6 +1,7 @@
 ﻿using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Extensions;
+using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Requests;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,18 +24,26 @@ namespace Munchkin.Core.Model.Actions
                 || state.Players.Current.YourHand.Any());
         }
 
-        public override async Task<Table> ExecuteAsync(Table state)
+        public override async Task<Table> ExecuteAsync(Table table)
         {
-            // TODO: decrese the ExecutionsLeft counter
-            var selectCardRequest = new PlayerSelectSingleCardRequest(state.Players.Current, state, state.Players.Current.AllCards());
-            // TODO: add a bonus of +3 for each card
-            //await state.RequestSink.Send(selectCardRequest).ContinueWith(x => x.Result.Discard(state));
+            table = await base.ExecuteAsync(table);
 
-            return state;
+            var allPlayerCards = table.Players.Current.AllCards();
+
+            // TODO: change the request to be able to select MAXIMUM of N cards, but not EXACTLY N
+            var selectedCards = await new PlayerSelectMultipleCardsRequest(table.Players.Current, table, allPlayerCards, 3)
+                .SendAsync(table);
+
+            // NOTE: adds a bonus of +3 for each card
+            selectedCards.ForEach(card => table.Dungeon.AddProperty(new PlayerStrengthBonusAttribute(3)));
+            selectedCards.DiscardAll(table);
+
+            return table;
         }
 
         public bool Reset(Table state)
         {
+            // TODO: reset the execution count
             throw new System.NotImplementedException();
         }
     }

@@ -23,11 +23,11 @@ namespace Munchkin.Engine.Original.Doors
         public async override Task BadStuff(Table state)
         {
             var cardSelectedByLeftPlayer = await new PlayerSelectSingleCardRequest(state.Players.PeekNext(), state, state.Players.Current.Equipped)
-                .SendRequestAsync(state);
+                .SendAsync(state);
             state.Players.Current.Discard(state, cardSelectedByLeftPlayer);
 
             var cardSelectedByRightPlayer = await new PlayerSelectSingleCardRequest(state.Players.PeekPrevious(), state, state.Players.Current.Equipped)
-                .SendRequestAsync(state);
+                .SendAsync(state);
             state.Players.Current.Discard(state, cardSelectedByRightPlayer);
         }
     }

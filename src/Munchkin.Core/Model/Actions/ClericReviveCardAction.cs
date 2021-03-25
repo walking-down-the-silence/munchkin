@@ -1,26 +1,30 @@
-using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Actions;
 using System;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal class ClericReviveCardAction : DynamicAction, IRenewableAction<Table>
+    internal class ClericReviveCardAction : MultiShotAction
     {
+        private readonly Player _player;
         private bool _wasExecuted = false;
 
-        public ClericReviveCardAction() : base("Revive Card", "")
+        public ClericReviveCardAction(Player player) : base(int.MaxValue, "Revive Card", "")
         {
+            _player = player ?? throw new ArgumentNullException(nameof(player));
         }
 
         public override bool CanExecute(Table state) => !_wasExecuted;
 
-        public override Task<Table> ExecuteAsync(Table state)
+        public override async Task<Table> ExecuteAsync(Table table)
         {
-            throw new NotImplementedException();
+            table = await base.ExecuteAsync(table);
+
+            // TODO: think how to pass the respective deck to take the card from it
+            return table;
         }
 
-        public bool Reset(Table state)
+        public bool Reset(Table table)
         {
             _wasExecuted = false;
             return true;

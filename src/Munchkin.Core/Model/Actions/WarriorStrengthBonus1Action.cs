@@ -12,8 +12,10 @@ namespace Munchkin.Core.Model.Actions
 
         public override bool CanExecute(Table state) => ExecutionsLeft > 0;
 
-        public override Task<Table> ExecuteAsync(Table state)
+        public override async Task<Table> ExecuteAsync(Table table)
         {
+            table = await base.ExecuteAsync(table);
+
             throw new NotImplementedException();
             //Shots--;
             //var playerCards = Player.Equipped

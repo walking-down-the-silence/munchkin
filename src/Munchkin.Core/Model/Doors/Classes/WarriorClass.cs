@@ -10,12 +10,16 @@ namespace Munchkin.Engine.Original.Doors
     {
         public WarriorClass() : base("Warrior")
         {
-            AddAction(new ActionDefinition<Table>("", () => new WarriorStrengthBonus1Action()));
         }
+
+        public IAction<Table> AddStrengthAgainstMonster { get; private set; }
 
         public override Task Play(Table context)
         {
-            throw new System.NotImplementedException();
+            // TODO: Owner here is null because it is not set yet
+            AddStrengthAgainstMonster = new WarriorStrengthBonus1Action();
+
+            return Task.CompletedTask;
         }
     }
 }

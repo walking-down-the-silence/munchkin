@@ -10,13 +10,19 @@ namespace Munchkin.Engine.Original.Doors
     {
         public ThiefClass() : base("Thief")
         {
-            AddAction(new ActionDefinition<Table>("", () => new ThiefStealCardAction()));
-            AddAction(new ActionDefinition<Table>("", () => new ThiefStabFor2Action()));
         }
+
+        public IAction<Table> StealTheCard { get; private set; }
+
+        public IAction<Table> Backstab { get; private set; }
 
         public override Task Play(Table context)
         {
-            throw new System.NotImplementedException();
+            // TODO: Owner here is null because it is not set yet
+            StealTheCard = new ThiefStealCardAction();
+            Backstab = new ThiefStabFor2Action();
+
+            return Task.CompletedTask;
         }
     }
 }

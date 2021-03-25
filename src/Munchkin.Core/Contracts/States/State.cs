@@ -38,6 +38,6 @@ namespace Munchkin.Core.Contracts.States
         /// <summary>
         /// Clears the state attributes.
         /// </summary>
-        public void Clear() => _attributes.Clear();
+        public virtual void Reset() => _attributes.Clear();
     }
 }

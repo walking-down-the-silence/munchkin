@@ -7,11 +7,6 @@
     public interface IActionDefinition<TState>
     {
         /// <summary>
-        /// The title for the action.
-        /// </summary>
-        string Title { get; }
-
-        /// <summary>
         /// A factory method to create the actual action.
         /// </summary>
         /// <returns>An instance of the actual action.</returns>

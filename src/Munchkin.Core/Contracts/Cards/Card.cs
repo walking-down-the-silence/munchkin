@@ -1,6 +1,7 @@
 ﻿using Munchkin.Core.Contracts.Attributes;
 using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,18 +13,13 @@ namespace Munchkin.Core.Contracts.Cards
     /// </summary>
     public abstract class Card
     {
-        private readonly List<Card> _boundCards = new List<Card>();
-        private readonly List<IConditionalEffect<Table>> _effects = new List<IConditionalEffect<Table>>();
-        private readonly List<IAttribute> _attributes = new List<IAttribute>();
-        private readonly List<IActionDefinition<Table>> _actions = new List<IActionDefinition<Table>>();
-
-        protected Card()
-        {
-        }
+        private readonly List<Card> _boundCards = new();
+        private readonly List<IConditionalEffect<Table>> _effects = new();
+        private readonly List<IAttribute> _attributes = new();
 
         protected Card(string title)
         {
-            Title = title ?? throw new System.ArgumentNullException(nameof(title));
+            Title = title ?? throw new ArgumentNullException(nameof(title));
         }
 
         /// <summary>
@@ -56,11 +52,6 @@ namespace Munchkin.Core.Contracts.Cards
         /// </summary>
         public IReadOnlyCollection<IAttribute> Attributes => _attributes.AsReadOnly();
 
-        /// <summary>
-        /// Gets the dynamic actions that a card has.
-        /// </summary>
-        public IReadOnlyCollection<IActionDefinition<Table>> Actions => _actions.AsReadOnly();
-
         /// <inheritdoc />
         public override string ToString() => $"{Title}";
 
@@ -78,10 +69,7 @@ namespace Munchkin.Core.Contracts.Cards
         /// Assigns the card to the player that took it.
         /// </summary>
         /// <param name="player">The player who took the card.</param>
-        public void Take(Player player)
-        {
-            Owner = player;
-        }
+        public void Take(Player player) => Owner = player;
 
         /// <summary>
         /// Executes logic of the card being played.
@@ -97,12 +85,6 @@ namespace Munchkin.Core.Contracts.Cards
         public abstract void Discard(Table context);
 
         /// <summary>
-        /// Add the dynamic action to the card.
-        /// </summary>
-        /// <param name="dynamicAction"> The concrete dynamic action. </param>
-        protected void AddAction(IActionDefinition<Table> dynamicAction) => _actions.Add(dynamicAction);
-
-        /// <summary>
         /// Adds an effect to the card.
         /// </summary>
         /// <param name="effect"> The <see cref="IConditionalEffect{TState}"/> instance. </param>
@@ -112,13 +94,13 @@ namespace Munchkin.Core.Contracts.Cards
         /// Add the property to the card.
         /// </summary>
         /// <param name="property"> The concrete property instance. </param>
-        protected void AddProperty(Attribute property) => _attributes.Add(property);
+        protected void AddProperty(Attributes.Attribute property) => _attributes.Add(property);
 
         /// <summary>
         /// Gets the concrete property of type <see cref="T"/>
         /// </summary>
         /// <typeparam name="T"> The <see cref="T"/> type of property. </typeparam>
         /// <returns> The concrete property instance. </returns>
-        protected T GetProperty<T>() where T : Attribute => _attributes.OfType<T>().FirstOrDefault();
+        protected T GetProperty<T>() where T : Attributes.Attribute => _attributes.OfType<T>().FirstOrDefault();
     }
 }

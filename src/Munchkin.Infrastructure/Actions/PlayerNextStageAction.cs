@@ -1,9 +1,10 @@
 using MediatR;
 using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Actions;
+using Munchkin.Core.Model;
 using System.Threading.Tasks;
 
-namespace Munchkin.Core.Model.Actions
+namespace Munchkin.Infrastructure.Actions
 {
     public class PlayerNextStageAction : DynamicAction, IOneShotAction<Table>
     {

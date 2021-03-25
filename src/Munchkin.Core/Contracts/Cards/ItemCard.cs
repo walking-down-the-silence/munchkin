@@ -37,10 +37,14 @@ namespace Munchkin.Core.Contracts.Cards
             return Task.CompletedTask;
         }
 
-        public virtual Task Sell(Table state)
+        public virtual void Sell(Table state)
         {
             state.Dungeon.AddProperty(new GoldPiecesAttribute(GoldPieces));
-            return Task.CompletedTask;
+        }
+
+        public virtual void Equip(Table state, Player player)
+        {
+            player.PutInPlayAsEquipped(this);
         }
     }
 }
