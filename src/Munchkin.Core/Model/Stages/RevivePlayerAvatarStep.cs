@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
-    public class RevivePlayerAvatarStep : ITerminalStep<Table>
+    public class RevivePlayerAvatarStep : TerminalStep<Table>
     {
-        public Task<Table> Resolve(Table table)
+        public override Task<Table> Resolve(Table table)
         {
             if (table.Players.Current.IsDead)
             {

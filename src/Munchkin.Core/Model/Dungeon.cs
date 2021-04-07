@@ -22,6 +22,8 @@ namespace Munchkin.Core.Model
             _table = table ?? throw new System.ArgumentNullException(nameof(table));
         }
 
+        public IReadOnlyCollection<Card> PlayedCards => _playedCards.AsReadOnly();
+
         public static async Task<Table> NextTurn()
         {
             var stage = new SetupTableStep();
@@ -48,6 +50,10 @@ namespace Munchkin.Core.Model
             base.Reset();
             _playedCards.Clear();
         }
+
+        public void AddPlayedCard(Card card) => _playedCards.Add(card);
+
+        public void RemovePlayedCard(Card card) => _playedCards.Remove(card);
 
         public async Task<Table> WaitForAllPlayers()
         {

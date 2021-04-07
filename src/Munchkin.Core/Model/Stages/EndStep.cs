@@ -1,25 +1,15 @@
 ﻿using Munchkin.Core.Contracts;
-using Munchkin.Core.Contracts.Cards;
-using System.Collections.Generic;
+using Munchkin.Core.Extensions;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
-    public class EndStep : IStep<Table>
+    public class EndStep : TerminalStep<Table>
     {
-        private readonly List<Card> _playedCards;
-
-        public EndStep(List<Card> playedCards)
+        public override Task<Table> Resolve(Table table)
         {
-            _playedCards = playedCards ?? throw new System.ArgumentNullException(nameof(playedCards));
-        }
-
-        public IReadOnlyCollection<Card> PlayedCards => _playedCards.AsReadOnly();
-
-        public Task<Table> Resolve(Table table)
-        {
-            _playedCards.ForEach(card => card.Discard(table));
-            _playedCards.Clear();
+            table.Dungeon.PlayedCards.ForEach(card => card.Discard(table));
+            table.Dungeon.Reset();
             return Task.FromResult(table);
         }
     }

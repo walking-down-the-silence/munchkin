@@ -6,28 +6,27 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
-    public class RunAwayStep : IHierarchialStep<Table>
+    public class RunAwayStep : HierarchialStep<Table>
     {
         private readonly Player _fightingPlayer;
         private readonly Player _helpingPlayer;
         private readonly IReadOnlyCollection<MonsterCard> _monsters;
-        private readonly List<Card> _playedCards;
 
-        public RunAwayStep(Player fightingPlayer, Player helpingPlayer, IReadOnlyCollection<MonsterCard> monsters, List<Card> playedCards)
+        public RunAwayStep(
+            Player fightingPlayer,
+            Player helpingPlayer,
+            IReadOnlyCollection<MonsterCard> monsters)
         {
             _fightingPlayer = fightingPlayer ?? throw new System.ArgumentNullException(nameof(fightingPlayer));
             _helpingPlayer = helpingPlayer ?? throw new System.ArgumentNullException(nameof(helpingPlayer));
             _monsters = monsters ?? throw new System.ArgumentNullException(nameof(monsters));
-            _playedCards = playedCards ?? throw new System.ArgumentNullException(nameof(playedCards));
         }
 
-        public IReadOnlyCollection<Card> PlayedCards => _playedCards.AsReadOnly();
-
-        public async Task<Table> Resolve(Table table)
+        public override async Task<Table> Resolve(Table table)
         {
             table = await HandlePlayerDecisionToRunAway(table, _fightingPlayer);
             table = await HandlePlayerDecisionToRunAway(table, _helpingPlayer);
-            var stage = new EndStep(_playedCards);
+            var stage = new EndStep();
             return await stage.Resolve(table);
         }
 
