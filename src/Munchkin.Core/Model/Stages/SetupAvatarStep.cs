@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
-    public class SetupAvatarStep : IHierarchialStep<Table>
+    public class SetupAvatarStep : IStep<Table>
     {
         public async Task<Table> Resolve(Table table)
         {

@@ -8,19 +8,17 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
-    public class CombatRoomStep : IHierarchialStep<Table>
+    public class CombatRoomStep : HierarchialStep<Table>
     {
         private readonly Player _fightingPlayer;
         private readonly MonsterCard _monsterCard;
         private readonly List<MonsterCard> _monsters;
-        private readonly List<Card> _playedCards;
 
-        public CombatRoomStep(Player fightingPlayer, MonsterCard monsterCard, List<Card> playedCards)
+        public CombatRoomStep(Player fightingPlayer, MonsterCard monsterCard)
         {
             _monsters = new List<MonsterCard> { monsterCard };
             _fightingPlayer = fightingPlayer ?? throw new System.ArgumentNullException(nameof(fightingPlayer));
             _monsterCard = monsterCard ?? throw new System.ArgumentNullException(nameof(monsterCard));
-            _playedCards = playedCards ?? throw new System.ArgumentNullException(nameof(playedCards));
 
             AskForHelp = new PlayerAskForHelpAction(this);
             OfferHelp = new PlayerOfferHelpAction(this, fightingPlayer);
@@ -57,11 +55,9 @@ namespace Munchkin.Core.Model.Stages
         /// </summary>
         public Player HelpingPlayer { get; private set; }
 
-        public IReadOnlyCollection<Card> PlayedCards => _playedCards.AsReadOnly();
-
         #endregion
 
-        public async Task<Table> Resolve(Table table)
+        public override async Task<Table> Resolve(Table table)
         {
             // TODO: calculate and set the hero strength and other properties
             table.Dungeon.AddProperty(new PlayerStrengthBonusAttribute(0));
@@ -77,7 +73,7 @@ namespace Munchkin.Core.Model.Stages
 
             if (!table.Dungeon.PlayersAreWinningCombat())
             {
-                var runAway = new RunAwayStep(FightingPlayer, HelpingPlayer, _monsters, _playedCards);
+                var runAway = new RunAwayStep(FightingPlayer, HelpingPlayer, _monsters);
                 return await runAway.Resolve(table);
             }
             else
@@ -85,7 +81,7 @@ namespace Munchkin.Core.Model.Stages
                 // TODO: resolve the good stuff here
             }
 
-            var charity = new CharityStep(_playedCards);
+            var charity = new CharityStep();
             return await charity.Resolve(table);
         }
 

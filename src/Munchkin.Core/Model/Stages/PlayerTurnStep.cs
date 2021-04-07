@@ -4,22 +4,20 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model
 {
-    public class PlayerTurnStep : IHierarchialStep<Table>
+    public class PlayerTurnStep : SequenceStep<Table>
     {
-        public async Task<Table> Resolve(Table table)
+        public PlayerTurnStep()
         {
-            var resetActions = new ResetActionsStep();
-            table = await resetActions.Resolve(table);
+            AddStep(new ResetActionsStep());
+            AddStep(new SetupAvatarStep());
+            AddStep(new KickOpenTheDoorStep(null));
+        }
 
-            var setupAvatar = new SetupAvatarStep();
-            table = await setupAvatar.Resolve(table);
-
-            var room = new KickOpenTheDoorStep();
-            table = await room.Resolve(table);
-
+        public override async Task<Table> Resolve(Table table)
+        {
             // NOTE: wait for each player to actually end the turn by executing action
-            await table.Dungeon.WaitForAllPlayers();
-
+            table = await base.Resolve(table);
+            table = await table.Dungeon.WaitForAllPlayers();
             return table;
         }
     }

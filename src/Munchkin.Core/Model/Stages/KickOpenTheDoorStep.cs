@@ -1,29 +1,30 @@
 ﻿using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
     public class KickOpenTheDoorStep : IStep<Table>
     {
-        private readonly List<Card> _playedCards = new();
-
-        public KickOpenTheDoorStep()
+        public KickOpenTheDoorStep(Player currentPlayer)
         {
+            CurrentPlayer = currentPlayer ?? throw new System.ArgumentNullException(nameof(currentPlayer));
         }
 
-        public IReadOnlyCollection<Card> PlayedCards => _playedCards.AsReadOnly();
+        public Player CurrentPlayer { get; }
+
+        public DoorsCard Card { get; private set; }
 
         public async Task<Table> Resolve(Table table)
         {
             var door = table.DoorsCardDeck.Take();
-            _playedCards.Add(door);
+            table.Dungeon.AddPlayedCard(door);
+            Card = door;
 
             var stage = door switch
             {
-                CurseCard curseCard     => new CursedRoomStage(curseCard, _playedCards),
-                MonsterCard monsterCard => new CombatRoomStep(table.Players.Current, monsterCard, _playedCards),
+                CurseCard curseCard     => new CursedRoomStage(curseCard),
+                MonsterCard monsterCard => new CombatRoomStep(table.Players.Current, monsterCard),
                 _                       => TakeInHand(table, door)
             };
 
@@ -33,9 +34,9 @@ namespace Munchkin.Core.Model.Stages
         private IStep<Table> TakeInHand(Table table, DoorsCard doorsCard)
         {
             // NOTE: if card is taking in hand then remove from played, so it is not discarded later
-            _playedCards.Remove(doorsCard);
+            table.Dungeon.RemovePlayedCard(doorsCard);
             table.Players.Current.TakeInHand(doorsCard);
-            return new EmptyRoomStep(_playedCards);
+            return new EmptyRoomStep();
         }
     }
 }

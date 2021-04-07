@@ -3,27 +3,21 @@ using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Requests;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
-    public class CurseStep : ITerminalStep<Table>
+    public class CurseStep : TerminalStep<Table>
     {
-        private readonly List<Card> _playedCards;
-
-        public CurseStep(CurseCard curse, List<Card> playedCards)
+        public CurseStep(CurseCard curse)
         {
-            _playedCards = playedCards ?? throw new System.ArgumentNullException(nameof(playedCards));
             CurseCard = curse ?? throw new System.ArgumentNullException(nameof(curse));
         }
 
         public CurseCard CurseCard { get; }
 
-        public IReadOnlyCollection<Card> PlayedCards => _playedCards.AsReadOnly();
-
-        public async Task<Table> Resolve(Table table)
+        public override async Task<Table> Resolve(Table table)
         {
             // TODO: handle a case when the player does not have a wishing ring, but can play other card to obtain one
             var resolveCurseRequest = new PlayerChooseWishingRingOrContinueRequest(table.Players.Current, table);
@@ -36,9 +30,8 @@ namespace Munchkin.Core.Model.Stages
                     .Concat(table.Players.Current.Backpack)
                     .Where(card => card.HasAttribute<CancelCurseAttribute>())
                     .ToArray();
-                var selectCurseCancellableCardRequest = new PlayerSelectSingleCardRequest(table.Players.Current, table, curseCancellableCards);
-                var selectCurseCancellableCardResponse = await table.RequestSink.Send(selectCurseCancellableCardRequest);
-                var selectCurseCancellableCard = await selectCurseCancellableCardResponse.Task;
+                var selectCurseCancellableCard = await new PlayerSelectSingleCardRequest(table.Players.Current, table, curseCancellableCards)
+                    .SendAsync(table);
 
                 if (selectCurseCancellableCard is null)
                 {
