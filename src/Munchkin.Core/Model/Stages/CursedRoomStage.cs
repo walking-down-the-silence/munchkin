@@ -1,5 +1,5 @@
-﻿using Munchkin.Core.Contracts;
-using Munchkin.Core.Contracts.Cards;
+﻿using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Contracts.Stages;
 
 namespace Munchkin.Core.Model.Stages
 {

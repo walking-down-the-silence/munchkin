@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Munchkin.Core.Contracts;
+using Munchkin.Core.Contracts.Stages;
 using Munchkin.Core.Extensions;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -1,5 +1,6 @@
 ﻿using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Contracts.Stages;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Actions;
 using Munchkin.Core.Model.Attributes;

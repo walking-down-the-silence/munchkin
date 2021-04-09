@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Munchkin.Core.Contracts
+namespace Munchkin.Core.Contracts.Stages
 {
     public interface IStep<TContext>
     {
