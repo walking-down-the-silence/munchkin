@@ -13,7 +13,7 @@ namespace Munchkin.Core.Contracts.Stages
             _func = func ?? throw new ArgumentNullException(nameof(func));
         }
 
-        public static IDecisionTreeContextBuilder Empty()
+        public static IDecisionTreeContext Empty()
         {
             return new DecisionTreeBuilder();
         }
@@ -26,14 +26,9 @@ namespace Munchkin.Core.Contracts.Stages
             return await _func.Invoke(table);
         }
 
-        public async Task<Table> Resolve(IStep<Table> table)
+        private class DecisionTreeBuilder : IDecisionTreeContext
         {
-            throw new NotImplementedException();
-        }
-
-        private class DecisionTreeBuilder : IDecisionTreeContextBuilder
-        {
-            private Func<Table, Task<Table>> _currentFunc;
+            private readonly Func<Table, Task<Table>> _currentFunc;
 
             public DecisionTreeBuilder()
             {
@@ -49,8 +44,8 @@ namespace Munchkin.Core.Contracts.Stages
 
             public IDecisionTreeBuilder Condition(
                 Func<Table, Task<bool>> condition,
-                Func<IDecisionTreeContextBuilder, IDecisionTreeBuilder> branch1,
-                Func<IDecisionTreeContextBuilder, IDecisionTreeBuilder> branch2)
+                Func<IDecisionTreeContext, IDecisionTreeBuilder> branch1,
+                Func<IDecisionTreeContext, IDecisionTreeBuilder> branch2)
             {
                 if (condition is null)
                     throw new ArgumentNullException(nameof(condition));
@@ -76,7 +71,7 @@ namespace Munchkin.Core.Contracts.Stages
                 return new DecisionTreeBuilder(nextFunc);
             }
 
-            public IDecisionTreeContextBuilder Then(IStep<Table> step)
+            public IDecisionTreeContext Then(IStep<Table> step)
             {
                 if (step is null)
                     throw new ArgumentNullException(nameof(step));
@@ -88,16 +83,6 @@ namespace Munchkin.Core.Contracts.Stages
                 });
 
                 return new DecisionTreeBuilder(nextFunc);
-            }
-
-            public ITransitionGraphBuilder Transition(Action<ITransitionBuilder> transiftionConfig)
-            {
-                if (transiftionConfig is null)
-                {
-                    throw new ArgumentNullException(nameof(transiftionConfig));
-                }
-
-                return this;
             }
         }
     }

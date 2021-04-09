@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Contracts.Stages
 {
-    public interface IDecisionConditionBuilder
+    public interface IDecisionConditionContext
     {
         IDecisionTreeBuilder Condition(
             Func<Table, Task<bool>> condition,
-            Func<IDecisionTreeContextBuilder, IDecisionTreeBuilder> branch1,
-            Func<IDecisionTreeContextBuilder, IDecisionTreeBuilder> branch2);
+            Func<IDecisionTreeContext, IDecisionTreeBuilder> branch1,
+            Func<IDecisionTreeContext, IDecisionTreeBuilder> branch2);
     }
 }
