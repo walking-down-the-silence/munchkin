@@ -7,9 +7,13 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
-    public class SetupTableStep : TerminalStep<Table>
+    public class SetupTableStep : StepBase<Table>
     {
-        public override async Task<Table> Resolve(Table table)
+        public SetupTableStep() : base(StepNames.SetupTable)
+        {
+        }
+
+        protected override async Task<Table> OnResolve(Table table)
         {
             // TODO: pass a valid reference for Mediator
             return Setup(table, null, null, null, null);

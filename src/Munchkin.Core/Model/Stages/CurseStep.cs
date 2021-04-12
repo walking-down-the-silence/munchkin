@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
-    public class CurseStep : TerminalStep<Table>
+    public class CurseStep : StepBase<Table>
     {
-        public CurseStep(CurseCard curse)
+        public CurseStep(CurseCard curse) : base(StepNames.Curse)
         {
             CurseCard = curse ?? throw new System.ArgumentNullException(nameof(curse));
         }
 
         public CurseCard CurseCard { get; }
 
-        public override async Task<Table> Resolve(Table table)
+        protected override async Task<Table> OnResolve(Table table)
         {
             // TODO: handle a case when the player does not have a wishing ring, but can play other card to obtain one
             var resolveCurseRequest = new PlayerChooseWishingRingOrContinueRequest(table.Players.Current, table);

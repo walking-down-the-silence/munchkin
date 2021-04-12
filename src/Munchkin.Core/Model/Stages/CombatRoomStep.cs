@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
-    public class CombatRoomStep : HierarchialStep<Table>
+    public class CombatRoomStep : StepBase<Table>
     {
         private readonly Player _fightingPlayer;
         private readonly MonsterCard _monsterCard;
         private readonly List<MonsterCard> _monsters;
 
-        public CombatRoomStep(Player fightingPlayer, MonsterCard monsterCard)
+        public CombatRoomStep(Player fightingPlayer, MonsterCard monsterCard) : base(StepNames.Combat)
         {
             _monsters = new List<MonsterCard> { monsterCard };
             _fightingPlayer = fightingPlayer ?? throw new System.ArgumentNullException(nameof(fightingPlayer));
@@ -58,7 +58,7 @@ namespace Munchkin.Core.Model.Stages
 
         #endregion
 
-        public override async Task<Table> Resolve(Table table)
+        protected override async Task<Table> OnResolve(Table table)
         {
             // TODO: calculate and set the hero strength and other properties
             table.Dungeon.AddProperty(new PlayerStrengthBonusAttribute(0));

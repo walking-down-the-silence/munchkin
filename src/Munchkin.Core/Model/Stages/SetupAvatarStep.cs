@@ -3,9 +3,13 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
-    public class SetupAvatarStep : IStep<Table>
+    public class SetupAvatarStep : StepBase<Table>
     {
-        public async Task<Table> Resolve(Table table)
+        public SetupAvatarStep() : base(StepNames.SetupAvatar)
+        {            
+        }
+
+        protected override async Task<Table> OnResolve(Table table)
         {
             // NOTE: wait for players to play cards and setup the avatar
             table = await table.Dungeon.WaitForAllPlayers();

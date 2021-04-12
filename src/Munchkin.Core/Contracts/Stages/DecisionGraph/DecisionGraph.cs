@@ -26,10 +26,7 @@ namespace Munchkin.Core.Contracts.Stages
             while (currentStep != null)
             {
                 table = await currentStep.Resolve(table);
-                var transition = _transitionRegister.GetTransition(currentStep.GetType());
-                currentStep = transition.CanExecute(currentStep)
-                    ? transition.Execute(currentStep)
-                    : default;
+                currentStep = _transitionRegister.TransitionFrom(currentStep);
             }
 
             return table;
@@ -64,34 +61,6 @@ namespace Munchkin.Core.Contracts.Stages
             }
         }
 
-        private class TransitionRegister
-        {
-            private readonly Dictionary<Type, Transition> _transitions = new();
-
-            public void Register<TSource>(Transition transition)
-                where TSource : IStep<Table>
-            {
-                if (transition is null)
-                {
-                    throw new ArgumentNullException(nameof(transition));
-                }
-
-                _transitions[typeof(TSource)] = transition;
-            }
-
-            public Transition GetTransition(Type fromStepType)
-            {
-                if (fromStepType is null)
-                {
-                    throw new ArgumentNullException(nameof(fromStepType));
-                }
-
-                return _transitions.ContainsKey(fromStepType)
-                    ? _transitions[fromStepType]
-                    : default;
-            }
-        }
-
         private class TransitionBuilder : ITransitionFromContext
         {
             private readonly TransitionRegister _transitionRegister;
@@ -101,30 +70,82 @@ namespace Munchkin.Core.Contracts.Stages
                 _transitionRegister = transitionRegister ?? throw new ArgumentNullException(nameof(transitionRegister));
             }
 
-            public ITransitionToContext<TSource> From<TSource>()
+            public ITransitionToContext<TSource> From<TSource>(string stepName)
                 where TSource : IStep<Table>
             {
-                return new TransitionToBuilder<TSource>(_transitionRegister);
+                return new TransitionToBuilder<TSource>(stepName, _transitionRegister);
             }
         }
 
         private class TransitionToBuilder<TSource> : ITransitionToContext<TSource>
             where TSource : IStep<Table>
         {
+            private readonly string _stepName;
             private readonly TransitionRegister _transitionRegister;
 
-            public TransitionToBuilder(TransitionRegister transitionRegister)
+            public TransitionToBuilder(string stepName, TransitionRegister transitionRegister)
             {
+                _stepName = stepName ?? throw new ArgumentNullException(nameof(stepName));
                 _transitionRegister = transitionRegister ?? throw new ArgumentNullException(nameof(transitionRegister));
             }
 
-            public ITransitionToContext<TSource> To<TResult>(Func<TSource, TResult> configCreation, Func<TSource, bool> configCondition)
+            public ITransitionToContext<TSource> To<TResult>(
+                Func<TSource, TResult> configCreation,
+                Func<TSource, bool> configCondition)
                 where TResult : IStep<Table>
             {
                 var transition = Transition.Create(configCreation, configCondition);
-                _transitionRegister.Register<TSource>(transition);
-                return new TransitionToBuilder<TSource>(_transitionRegister);
+                _transitionRegister.Register<TSource>(_stepName, transition);
+                return new TransitionToBuilder<TSource>(_stepName, _transitionRegister);
             }
+        }
+
+        private class TransitionRegister
+        {
+            private readonly Dictionary<string, TransitionHandler> _transitions = new();
+
+            public void Register<TSource>(string fromStepName, Transition transition)
+                where TSource : IStep<Table>
+            {
+                if (transition is null)
+                {
+                    throw new ArgumentNullException(nameof(transition));
+                }
+
+                var handler = _transitions.ContainsKey(fromStepName)
+                    ? new TransitionHandler(transition, _transitions[fromStepName])
+                    : new TransitionHandler(transition, null);
+                _transitions[fromStepName] = handler;
+            }
+
+            public IStep<Table> TransitionFrom(IStep<Table> currentStep)
+            {
+                if (currentStep is null)
+                {
+                    throw new ArgumentNullException(nameof(currentStep));
+                }
+
+                var handler = _transitions.ContainsKey(currentStep.Name)
+                    ? _transitions[currentStep.Name]
+                    : default;
+                return handler?.Handle(currentStep);
+            }
+        }
+
+        private class TransitionHandler
+        {
+            private readonly Transition _transition;
+            private readonly TransitionHandler _nextHandler;
+
+            public TransitionHandler(Transition current, TransitionHandler next)
+            {
+                _transition = current ?? throw new ArgumentNullException(nameof(current));
+                _nextHandler = next;
+            }
+
+            public IStep<Table> Handle(IStep<Table> step) => _transition.CanExecute(step)
+                ? _transition.Execute(step)
+                : _nextHandler?.Handle(step);
         }
     }
 }
