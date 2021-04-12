@@ -9,9 +9,13 @@ namespace Munchkin.Core.Model.Stages
     /// <summary>
     /// Prompts a request to the player to select a monster from hand, if any.
     /// </summary>
-    public class LookForTroubleStep : IStep<Table>
+    public class LookForTroubleStep : StepBase<Table>
     {
-        public async Task<Table> Resolve(Table table)
+        public LookForTroubleStep() : base(StepNames.LookForTrouble)
+        {               
+        }
+
+        protected override async Task<Table> OnResolve(Table table)
         {
             var monsters = table.Players.Current.YourHand.OfType<MonsterCard>().ToList();
             var request = new PlayerSelectMonsterFromHandRequest(table.Players.Current, table, monsters);

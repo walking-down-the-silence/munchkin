@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
-    public class KickOpenTheDoorStep : IStep<Table>
+    public class KickOpenTheDoorStep : StepBase<Table>
     {
-        public KickOpenTheDoorStep(Player currentPlayer)
+        public KickOpenTheDoorStep(Player currentPlayer) : base(StepNames.KickOpenTheDoor)
         {
             CurrentPlayer = currentPlayer ?? throw new System.ArgumentNullException(nameof(currentPlayer));
         }
@@ -15,7 +15,7 @@ namespace Munchkin.Core.Model.Stages
 
         public DoorsCard Card { get; private set; }
 
-        public async Task<Table> Resolve(Table table)
+        protected override async Task<Table> OnResolve(Table table)
         {
             var door = table.DoorsCardDeck.Take();
             table.Dungeon.AddPlayedCard(door);

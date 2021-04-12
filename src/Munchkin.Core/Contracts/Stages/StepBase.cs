@@ -4,6 +4,18 @@ namespace Munchkin.Core.Contracts.Stages
 {
     public abstract class StepBase<TContext> : IStep<TContext>
     {
+        protected StepBase(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new System.ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            Name = name;
+        }
+
+        public string Name { get; }
+
         public async Task<TContext> Resolve(TContext context)
         {
             context = await OnBeforeResolve(context);

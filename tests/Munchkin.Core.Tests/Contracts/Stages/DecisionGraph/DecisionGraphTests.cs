@@ -56,7 +56,7 @@ namespace Munchkin.Core.Tests.Contracts.Stages
             // Arrange
             var decitionTreeBuilder = DecisionGraph.Empty();
             var transitionConfig = new Action<ITransitionFromContext>(x => x
-                    .From<KickOpenTheDoorStep>()
+                    .From<KickOpenTheDoorStep>(StepNames.KickOpenTheDoor)
                     .To<CombatRoomStep>(
                         configCreation: s => null,
                         configCondition: s => true)
@@ -78,7 +78,7 @@ namespace Munchkin.Core.Tests.Contracts.Stages
             // Arrange
             var decitionTreeBuilder = DecisionGraph.Empty();
             var transitionConfig = new Action<ITransitionFromContext>(x => x
-                    .From<KickOpenTheDoorStep>()
+                    .From<KickOpenTheDoorStep>(StepNames.KickOpenTheDoor)
                     .To<CombatRoomStep>(
                         configCreation: s => null,
                         configCondition: s => true)
@@ -110,7 +110,7 @@ namespace Munchkin.Core.Tests.Contracts.Stages
             startStep.Setup(x => x.Resolve(It.IsAny<Table>())).Returns(Task.FromResult(table));
 
             var transitionConfig = new Action<ITransitionFromContext>(x => x
-                    .From<StartStep>()
+                    .From<StartStep>(nameof(StartStep))
                     .To<EndStep>(
                         configCreation: s => endStep.Object,
                         configCondition: s => true));
@@ -138,7 +138,7 @@ namespace Munchkin.Core.Tests.Contracts.Stages
             startStep.Setup(x => x.Resolve(It.IsAny<Table>())).Returns(Task.FromResult(table));
 
             var transitionConfig = new Action<ITransitionFromContext>(x => x
-                    .From<StartStep>()
+                    .From<StartStep>(nameof(StartStep))
                     .To<EndStep>(
                         configCreation: s => endStep.Object,
                         configCondition: s => false));
@@ -155,11 +155,15 @@ namespace Munchkin.Core.Tests.Contracts.Stages
 
     public class StartStep : IStep<Table>
     {
+        public string Name => nameof(StartStep);
+
         public virtual Task<Table> Resolve(Table context) => Task.FromResult<Table>(null);
     }
 
     public class EndStep : IStep<Table>
     {
+        public string Name => nameof(EndStep);
+
         public virtual Task<Table> Resolve(Table context) => Task.FromResult<Table>(null);
     }
 }

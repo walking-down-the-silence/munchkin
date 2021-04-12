@@ -4,9 +4,12 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
-    public class EmptyRoomStep : HierarchialStep<Table>
+    public class EmptyRoomStep : StepBase<Table>
     {
-        public override async Task<Table> Resolve(Table table)
+        public EmptyRoomStep() : base(StepNames.EmptyRoom)
+        {
+        }
+        protected override async Task<Table> OnResolve(Table table)
         {
             var request = new PlayerLookForTroubleOrLootTheRoomRequest(table.Players.Current, table);
             var response = await table.RequestSink.Send(request);

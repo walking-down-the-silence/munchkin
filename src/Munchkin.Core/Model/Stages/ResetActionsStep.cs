@@ -3,9 +3,14 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
-    public class ResetActionsStep : TerminalStep<Table>
+    public class ResetActionsStep : StepBase<Table>
     {
-        public override Task<Table> Resolve(Table context)
+        public ResetActionsStep() : base(StepNames.ResetActions)
+        {
+
+        }
+
+        protected override async Task<Table> OnResolve(Table table)
         {
             throw new System.NotImplementedException();
         }

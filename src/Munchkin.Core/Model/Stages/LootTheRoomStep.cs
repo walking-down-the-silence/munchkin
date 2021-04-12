@@ -6,9 +6,13 @@ namespace Munchkin.Core.Model.Stages
     /// <summary>
     /// Takes a card from the doors deck and puts in hand.
     /// </summary>
-    public class LootTheRoomStep : HierarchialStep<Table>
+    public class LootTheRoomStep : StepBase<Table>
     {
-        public override async Task<Table> Resolve(Table table)
+        public LootTheRoomStep() : base(StepNames.LootTheRoom)
+        {
+        }
+
+        protected override async Task<Table> OnResolve(Table table)
         {
             // TODO: check if deck is empty and reshuffle discard if it is
             var doorsCard = table.DoorsCardDeck.Take();
