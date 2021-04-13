@@ -15,28 +15,31 @@ namespace Munchkin.Core.Model.Stages
 
         public DoorsCard Card { get; private set; }
 
-        protected override async Task<Table> OnResolve(Table table)
+        protected override Task<Table> OnResolve(Table table)
         {
             var door = table.DoorsCardDeck.Take();
-            table.Dungeon.AddPlayedCard(door);
-            Card = door;
 
-            var stage = door switch
-            {
-                CurseCard curseCard     => new CursedRoomStage(curseCard),
-                MonsterCard monsterCard => new CombatRoomStep(table.Players.Current, monsterCard),
-                _                       => TakeInHand(table, door)
-            };
+            table = door is not MonsterCard && door is not CurseCard
+                ? TakeInHand(table, door)
+                : PutInPlay(table, door);
 
-            return await stage.Resolve(table);
+            return Task.FromResult(table);
         }
 
-        private IStep<Table> TakeInHand(Table table, DoorsCard doorsCard)
+        private Table TakeInHand(Table table, DoorsCard doorsCard)
         {
             // NOTE: if card is taking in hand then remove from played, so it is not discarded later
             table.Dungeon.RemovePlayedCard(doorsCard);
             table.Players.Current.TakeInHand(doorsCard);
-            return new EmptyRoomStep();
+            return table;
+        }
+
+        private Table PutInPlay(Table table, DoorsCard doorsCard)
+        {
+            // NOTE: if card not taken in hand, then it should be put in play
+            table.Dungeon.AddPlayedCard(doorsCard);
+            Card = doorsCard;
+            return table;
         }
     }
 }
