@@ -8,8 +8,6 @@ namespace Munchkin.Core.Model.Stages
 {
     public class RunAwayStep : StepBase<Table>
     {
-        private readonly Player _fightingPlayer;
-        private readonly Player _helpingPlayer;
         private readonly IReadOnlyCollection<MonsterCard> _monsters;
 
         public RunAwayStep(
@@ -17,15 +15,18 @@ namespace Munchkin.Core.Model.Stages
             Player helpingPlayer,
             IReadOnlyCollection<MonsterCard> monsters) : base(StepNames.RunAway)
         {
-            _fightingPlayer = fightingPlayer ?? throw new System.ArgumentNullException(nameof(fightingPlayer));
-            _helpingPlayer = helpingPlayer ?? throw new System.ArgumentNullException(nameof(helpingPlayer));
+            FightingPlayer = fightingPlayer ?? throw new System.ArgumentNullException(nameof(fightingPlayer));
+            HelpingPlayer = helpingPlayer ?? throw new System.ArgumentNullException(nameof(helpingPlayer));
             _monsters = monsters ?? throw new System.ArgumentNullException(nameof(monsters));
         }
+        public Player FightingPlayer { get; }
+
+        public Player HelpingPlayer { get; }
 
         protected override async Task<Table> OnResolve(Table table)
         {
-            table = await HandlePlayerDecisionToRunAway(table, _fightingPlayer);
-            table = await HandlePlayerDecisionToRunAway(table, _helpingPlayer);
+            table = await HandlePlayerDecisionToRunAway(table, FightingPlayer);
+            table = await HandlePlayerDecisionToRunAway(table, HelpingPlayer);
             var stage = new EndStep();
             return await stage.Resolve(table);
         }

@@ -6,12 +6,12 @@ namespace Munchkin.Core.Contracts.Stages
     public interface ITransitionToContext<TSource>
         where TSource : IStep<Table>
     {
-        ITransitionToContext<TSource> To<TResult>(
-            Func<TSource, TResult> configCreation,
+        ITransitionToContext<TSource> To<TTarget>(
+            Func<TSource, TTarget> configCreation,
             Func<TSource, bool> configCondition)
-            where TResult : IStep<Table>;
-        ITransitionToContext<TSource> To<TResult>(
-            Func<TSource, TResult> configCreation)
-            where TResult : IStep<Table>;
+            where TTarget : IStep<Table>;
+        ITransitionToContext<TSource> To<TTarget>(
+            Func<TSource, TTarget> configCreation)
+            where TTarget : IStep<Table>;
     }
 }

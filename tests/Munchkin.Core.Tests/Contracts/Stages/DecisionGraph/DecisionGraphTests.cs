@@ -60,7 +60,7 @@ namespace Munchkin.Core.Tests.Contracts.Stages
                     .To<CombatRoomStep>(
                         configCreation: s => null,
                         configCondition: s => true)
-                    .To<CursedRoomStage>(
+                    .To<CurseStep>(
                         configCreation: s => null,
                         configCondition: s => true));
 
@@ -82,7 +82,7 @@ namespace Munchkin.Core.Tests.Contracts.Stages
                     .To<CombatRoomStep>(
                         configCreation: s => null,
                         configCondition: s => true)
-                    .To<CursedRoomStage>(
+                    .To<CurseStep>(
                         configCreation: s => null,
                         configCondition: s => true));
 
