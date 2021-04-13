@@ -92,6 +92,15 @@ namespace Munchkin.Core.Contracts.Stages
             public ITransitionToContext<TSource> To<TResult>(
                 Func<TSource, TResult> configCreation,
                 Func<TSource, bool> configCondition)
+                where TResult : IStep<Table> => InternalTo(configCreation, configCondition);
+
+            public ITransitionToContext<TSource> To<TResult>(
+                Func<TSource, TResult> configCreation)
+                where TResult : IStep<Table> => InternalTo(configCreation, s => true);
+
+            private ITransitionToContext<TSource> InternalTo<TResult>(
+                Func<TSource, TResult> configCreation,
+                Func<TSource, bool> configCondition)
                 where TResult : IStep<Table>
             {
                 var transition = Transition.Create(configCreation, configCondition);
