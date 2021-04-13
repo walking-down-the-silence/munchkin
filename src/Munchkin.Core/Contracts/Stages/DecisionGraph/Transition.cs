@@ -32,9 +32,11 @@ namespace Munchkin.Core.Contracts.Stages
             _condition = condition ?? throw new ArgumentNullException(nameof(condition));
         }
 
-        public static Transition Create<TSource, TResult>(Func<TSource, TResult> configCreation, Func<TSource, bool> configCondition)
+        public static Transition Create<TSource, TTarget>(
+            Func<TSource, TTarget> configCreation,
+            Func<TSource, bool> configCondition)
             where TSource : IStep<Table>
-            where TResult : IStep<Table>
+            where TTarget : IStep<Table>
         {
             if (configCreation is null)
             {
@@ -48,7 +50,7 @@ namespace Munchkin.Core.Contracts.Stages
 
             Func<IStep<Table>, IStep<Table>> creator = (s) => configCreation.Invoke((TSource)s);
             Func<IStep<Table>, bool> condition = (s) => configCondition.Invoke((TSource)s);
-            return new Transition(nameof(TSource), nameof(TResult), creator, condition);
+            return new Transition(nameof(TSource), nameof(TTarget), creator, condition);
         }
 
         public bool CanExecute(IStep<Table> currentStep)

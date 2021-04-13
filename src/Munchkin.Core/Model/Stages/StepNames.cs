@@ -13,7 +13,6 @@
             KickOpenTheDoor,
             LookForTrouble,
             LootTheRoom,
-            ResetActions,
             RevivePlayerAvatar,
             RunAway,
             SetupAvatar,
@@ -37,8 +36,6 @@
         public const string LookForTrouble = "Look For Trouble";
 
         public const string LootTheRoom = "Loot The Room";
-
-        public const string ResetActions = "Reset Actions";
 
         public const string RevivePlayerAvatar = "Revive Player Avatar";
 

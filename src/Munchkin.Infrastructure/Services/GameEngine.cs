@@ -28,52 +28,43 @@ namespace Munchkin.Infrastructure.Services
                 var decisionGraph = DecisionGraph
                     .Empty()
                     .Transition(x => x
-                        .From<ResetActionsStep>(StepNames.ResetActions)
-                        .To<SetupAvatarStep>(s => new SetupAvatarStep()))
-                    .Transition(x => x
                         .From<SetupAvatarStep>(StepNames.SetupAvatar)
                         .To<KickOpenTheDoorStep>(s => new KickOpenTheDoorStep(table.Players.Current)))
                     .Transition(x => x
                         .From<KickOpenTheDoorStep>(StepNames.KickOpenTheDoor)
-                        .To<CombatRoomStep>(
-                            configCreation: s => new CombatRoomStep(s.CurrentPlayer, s.Card as MonsterCard),
-                            configCondition: s => s.Card is MonsterCard)
-                        .To<CurseStep>(
-                            configCreation: s => new CurseStep(s.Card as CurseCard),
-                            configCondition: s => s.Card is CurseCard)
-                        .To<EmptyRoomStep>(
-                            configCreation: s => new EmptyRoomStep(),
-                            configCondition: s => s.Card is not MonsterCard && s.Card is not CurseCard))
+                        .To<CombatRoomStep>(CreateCombatStep, CanTransitionToCombat)
+                        .To<CurseStep>(CreateCurseRoomStep, CanTransitionToCurse)
+                        .To<EmptyRoomStep>(CreateEmptyRoom, CardIsNotMonsterAndNoteCurse))
                     .Transition(x => x
-                        .From<CursedRoomStage>(StepNames.Curse)
-                        .To<EmptyRoomStep>(s => new EmptyRoomStep(), s => true))
+                        .From<CurseStep>(StepNames.Curse)
+                        .To<EmptyRoomStep>(CreateEmptyRoom, CanTransitionToEmptyRoom))
                     .Transition(x => x
                         .From<CombatRoomStep>(StepNames.Combat)
-                        .To<RunAwayStep>(s => new RunAwayStep(s.FightingPlayer, s.HelpingPlayer, s.Monsters), s => true)
-                        .To<CharityStep>(s => new CharityStep(), s => true))
+                        .To<RunAwayStep>(CreateRunAway, CanTransitionToRunAway)
+                        .To<CharityStep>(CreateCharity, CanTransitionToCharity))
                     .Transition(x => x
                         .From<EmptyRoomStep>(StepNames.EmptyRoom)
-                        .To<LookForTroubleStep>(s => new LookForTroubleStep(), s => true)
-                        .To<LootTheRoomStep>(s => new LootTheRoomStep(), s => true))
+                        .To<LookForTroubleStep>(CreateLookForTrouble, CanTransitionToLookForTrouble)
+                        .To<LootTheRoomStep>(CreateLootTheRoom, CanTransitionToLootTheRoom))
                     .Transition(x => x
                         .From<LookForTroubleStep>(StepNames.LookForTrouble)
-                        .To<CombatRoomStep>(s => new CombatRoomStep(null, null), s => true))
+                        .To<CombatRoomStep>(CreateCombatStep, CanTransitionToCombat))
                     .Transition(x => x
                         .From<LootTheRoomStep>(StepNames.LootTheRoom)
-                        .To<CharityStep>(s => new CharityStep(), s => true))
+                        .To<CharityStep>(CreateCharity, CanTransitionToCharity))
                     .Transition(x => x
                         .From<RunAwayStep>(StepNames.RunAway)
-                        .To<DeathStep>(s => new DeathStep(), s => true))
+                        .To<DeathStep>(CreateDeathStep, CanTransitionToDeathStep))
                     .Transition(x => x
                         .From<CharityStep>(StepNames.Charity)
-                        .To<EndStep>(s => new EndStep(), s => true))
+                        .To<EndStep>(CreateEndStep, CanTransitionToEnd))
                     .Transition(x => x
                         .From<DeathStep>(StepNames.Death)
-                        .To<EndStep>(s => new EndStep(), s => true))
+                        .To<EndStep>(CreateEndStep, CanTransitionToEnd))
                     .Build();
 
                 // NOTE: wait for each player to actually end the turn by executing action
-                var initialStep = new ResetActionsStep();
+                var initialStep = new SetupAvatarStep();
                 table = await decisionGraph.Resolve(table, initialStep);
 
                 history = history.Push(table);
@@ -85,5 +76,57 @@ namespace Munchkin.Infrastructure.Services
 
             return table;
         }
+
+        private bool CanTransitionToCombat(KickOpenTheDoorStep source) => source.Card is MonsterCard;
+
+        private CombatRoomStep CreateCombatStep(KickOpenTheDoorStep step) => new(step.CurrentPlayer, step.Card as MonsterCard);
+
+        private CombatRoomStep CreateCombatStep(LookForTroubleStep step) => new(null, null);
+
+        private bool CanTransitionToCombat(LookForTroubleStep step) => true;
+
+        private bool CanTransitionToCurse(KickOpenTheDoorStep source) => source.Card is CurseCard;
+
+        private CurseStep CreateCurseRoomStep(KickOpenTheDoorStep step) => new(step.Card as CurseCard);
+
+        private bool CardIsNotMonsterAndNoteCurse(KickOpenTheDoorStep step) => step.Card is not MonsterCard && step.Card is not CurseCard;
+
+        private EmptyRoomStep CreateEmptyRoom(KickOpenTheDoorStep step) => new();
+
+        private EmptyRoomStep CreateEmptyRoom(CurseStep step) => new();
+
+        private bool CanTransitionToEmptyRoom(CurseStep step) => true;
+
+        private RunAwayStep CreateRunAway(CombatRoomStep step) => new(step.FightingPlayer, step.HelpingPlayer, step.Monsters);
+
+        private bool CanTransitionToRunAway(CombatRoomStep step) => true;
+
+        private CharityStep CreateCharity(CombatRoomStep step) => new();
+
+        private bool CanTransitionToCharity(CombatRoomStep step) => true;
+
+        private CharityStep CreateCharity(LootTheRoomStep step) => new();
+
+        private bool CanTransitionToCharity(LootTheRoomStep step) => true;
+
+        private LookForTroubleStep CreateLookForTrouble(EmptyRoomStep step) => new();
+
+        private bool CanTransitionToLookForTrouble(EmptyRoomStep step) => true;
+
+        private LootTheRoomStep CreateLootTheRoom(EmptyRoomStep step) => new();
+
+        private bool CanTransitionToLootTheRoom(EmptyRoomStep step) => true;
+
+        private DeathStep CreateDeathStep(RunAwayStep step) => new();
+
+        private bool CanTransitionToDeathStep(RunAwayStep step) => true;
+
+        private EndStep CreateEndStep(CharityStep step) => new();
+
+        private bool CanTransitionToEnd(CharityStep step) => true;
+
+        private EndStep CreateEndStep(DeathStep step) => new();
+
+        private bool CanTransitionToEnd(DeathStep step) => true;
     }
 }
