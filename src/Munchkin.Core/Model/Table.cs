@@ -10,17 +10,17 @@ namespace Munchkin.Core.Model
     /// </summary>
     public class Table
     {
-        public Table(IMediator mediator)
+        private Table()
         {
-            RequestSink = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
             Dungeon = new Dungeon(this);
-
             Players = new CircularList<Player>();
             TreasureCardDeck = new CardDeck<TreasureCard>();
             DoorsCardDeck = new CardDeck<DoorsCard>();
             DiscardedTreasureCards = new CardDeck<TreasureCard>();
             DiscardedDoorsCards = new CardDeck<DoorsCard>();
         }
+
+        public static Table Empty() => new();
 
         /// <summary>
         /// Gets the list of players

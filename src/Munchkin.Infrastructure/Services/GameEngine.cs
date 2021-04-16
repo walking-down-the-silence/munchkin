@@ -1,73 +1,61 @@
 ﻿using MediatR;
+using Munchkin.Core;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Stages;
+using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
+using Munchkin.Core.Model.Enums;
 using Munchkin.Core.Model.Stages;
-using System.Collections.Immutable;
+using Munchkin.Infrastructure.Models;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Munchkin.Infrastructure.Services
 {
     public class GameEngine
     {
+        private readonly GameRoom _gameRoom;
         private readonly IMediator _mediator;
+        private readonly ITreasuresFactory _treasuresFactory;
+        private readonly IDoorsFactory _doorsFactory;
 
-        public GameEngine(IMediator mediator)
+        public GameEngine(
+            GameRoom gameRoom,
+            IMediator mediator,
+            ITreasuresFactory treasuresFactory,
+            IDoorsFactory doorsFactory)
         {
             _mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
+            _treasuresFactory = treasuresFactory;
+            _doorsFactory = doorsFactory;
+            _gameRoom = gameRoom ?? throw new System.ArgumentNullException(nameof(gameRoom));
         }
 
         public async Task<Table> NextTurn()
         {
-            var stage = new SetupTableStep();
-            var table = await stage.Resolve(new Table(_mediator));
-            var history = ImmutableStack<Table>.Empty;
+            // NOTE: setup the table before the game starts
+            var players = _gameRoom.Players.Select(p => new Player(p.UserName, EGender.Male));
+            var playersList = new CircularList<Player>();
+
+            var table = Table.Empty();
+            table.AddTreasures(_treasuresFactory.GetTreasureCards().ToList());
+            table.AddDoors(_doorsFactory.GetDoorsCards().ToList());
+
+            // NOTE: shuffle the decks for randomness
+            table.DoorsCardDeck.Shuffle();
+            table.TreasureCardDeck.Shuffle();
+
+            // give all players initial cards
+            table.Players.ForEach(player => player.Revive(table));
 
             while (!table.IsGameWon)
             {
-                var decisionGraph = DecisionGraph
-                    .Empty()
-                    .Transition(x => x
-                        .From<SetupAvatarStep>(StepNames.SetupAvatar)
-                        .To<KickOpenTheDoorStep>(s => new KickOpenTheDoorStep(table.Players.Current)))
-                    .Transition(x => x
-                        .From<KickOpenTheDoorStep>(StepNames.KickOpenTheDoor)
-                        .To<CombatRoomStep>(CreateCombatStep, CanTransitionToCombat)
-                        .To<CurseStep>(CreateCurseRoomStep, CanTransitionToCurse)
-                        .To<EmptyRoomStep>(CreateEmptyRoom, CardIsNotMonsterAndNoteCurse))
-                    .Transition(x => x
-                        .From<CurseStep>(StepNames.Curse)
-                        .To<EmptyRoomStep>(CreateEmptyRoom, CanTransitionToEmptyRoom))
-                    .Transition(x => x
-                        .From<CombatRoomStep>(StepNames.Combat)
-                        .To<RunAwayStep>(CreateRunAway, CanTransitionToRunAway)
-                        .To<CharityStep>(CreateCharity, CanTransitionToCharity))
-                    .Transition(x => x
-                        .From<EmptyRoomStep>(StepNames.EmptyRoom)
-                        .To<LookForTroubleStep>(CreateLookForTrouble, CanTransitionToLookForTrouble)
-                        .To<LootTheRoomStep>(CreateLootTheRoom, CanTransitionToLootTheRoom))
-                    .Transition(x => x
-                        .From<LookForTroubleStep>(StepNames.LookForTrouble)
-                        .To<CombatRoomStep>(CreateCombatStep, CanTransitionToCombat))
-                    .Transition(x => x
-                        .From<LootTheRoomStep>(StepNames.LootTheRoom)
-                        .To<CharityStep>(CreateCharity, CanTransitionToCharity))
-                    .Transition(x => x
-                        .From<RunAwayStep>(StepNames.RunAway)
-                        .To<DeathStep>(CreateDeathStep, CanTransitionToDeathStep))
-                    .Transition(x => x
-                        .From<CharityStep>(StepNames.Charity)
-                        .To<EndStep>(CreateEndStep, CanTransitionToEnd))
-                    .Transition(x => x
-                        .From<DeathStep>(StepNames.Death)
-                        .To<EndStep>(CreateEndStep, CanTransitionToEnd))
-                    .Build();
+                var playerTurn = CreatePlayerTurn(table);
 
                 // NOTE: wait for each player to actually end the turn by executing action
-                var initialStep = new SetupAvatarStep();
-                table = await decisionGraph.Resolve(table, initialStep);
-
-                history = history.Push(table);
+                var initialStep = new ReviveAndSetupAvatarStep(table.Players.Current);
+                table = await playerTurn.Resolve(table, initialStep);
 
                 // NOTE: clear/reset the state befor moving to next turn
                 table.Dungeon.Reset();
@@ -75,6 +63,47 @@ namespace Munchkin.Infrastructure.Services
             }
 
             return table;
+        }
+
+        private DecisionGraph CreatePlayerTurn(Table table)
+        {
+            return DecisionGraph
+                .Empty()
+                .Transition(x => x
+                    .From<ReviveAndSetupAvatarStep>(StepNames.ReviveAndSetupAvatar)
+                    .To<KickOpenTheDoorStep>(s => new KickOpenTheDoorStep(table.Players.Current)))
+                .Transition(x => x
+                    .From<KickOpenTheDoorStep>(StepNames.KickOpenTheDoor)
+                    .To<CombatRoomStep>(CreateCombatStep, CanTransitionToCombat)
+                    .To<CurseStep>(CreateCurseRoomStep, CanTransitionToCurse)
+                    .To<EmptyRoomStep>(CreateEmptyRoom, CardIsNotMonsterAndNoteCurse))
+                .Transition(x => x
+                    .From<CurseStep>(StepNames.Curse)
+                    .To<EmptyRoomStep>(CreateEmptyRoom, CanTransitionToEmptyRoom))
+                .Transition(x => x
+                    .From<CombatRoomStep>(StepNames.Combat)
+                    .To<RunAwayStep>(CreateRunAway, CanTransitionToRunAway)
+                    .To<CharityStep>(CreateCharity, CanTransitionToCharity))
+                .Transition(x => x
+                    .From<EmptyRoomStep>(StepNames.EmptyRoom)
+                    .To<LookForTroubleStep>(CreateLookForTrouble, CanTransitionToLookForTrouble)
+                    .To<LootTheRoomStep>(CreateLootTheRoom, CanTransitionToLootTheRoom))
+                .Transition(x => x
+                    .From<LookForTroubleStep>(StepNames.LookForTrouble)
+                    .To<CombatRoomStep>(CreateCombatStep, CanTransitionToCombat))
+                .Transition(x => x
+                    .From<LootTheRoomStep>(StepNames.LootTheRoom)
+                    .To<CharityStep>(CreateCharity, CanTransitionToCharity))
+                .Transition(x => x
+                    .From<RunAwayStep>(StepNames.RunAway)
+                    .To<DeathStep>(CreateDeathStep, CanTransitionToDeathStep))
+                .Transition(x => x
+                    .From<CharityStep>(StepNames.Charity)
+                    .To<EndStep>(CreateEndStep, CanTransitionToEnd))
+                .Transition(x => x
+                    .From<DeathStep>(StepNames.Death)
+                    .To<EndStep>(CreateEndStep, CanTransitionToEnd))
+                .Build();
         }
 
         private bool CanTransitionToCombat(KickOpenTheDoorStep source) => source.Card is MonsterCard;

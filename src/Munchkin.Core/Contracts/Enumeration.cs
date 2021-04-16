@@ -17,12 +17,6 @@ namespace Munchkin.Core.Contracts
             Name = name;
         }
 
-        public int Id { get; }
-
-        public string Name { get; }
-
-        public override string ToString() => Name;
-
         public static ICollection<T> GetAll<T>() where T : Enumeration, new()
         {
             // TODO: check the possibility to create an instance internally
@@ -51,6 +45,16 @@ namespace Munchkin.Core.Contracts
         {
             return GetAll<T>().FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase));
         }
+
+        public static bool operator ==(Enumeration lhs, Enumeration rhs) => lhs is null ? rhs is null : lhs.Equals(rhs);
+
+        public static bool operator !=(Enumeration lhs, Enumeration rhs) => !(lhs == rhs);
+
+        public int Id { get; }
+
+        public string Name { get; }
+
+        public override string ToString() => Name;
 
         public override bool Equals(object obj)
         {

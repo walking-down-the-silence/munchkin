@@ -1,7 +1,6 @@
 ﻿using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model.Actions;
 using Munchkin.Core.Model.Enums;
 using Munchkin.Core.Model.Requests;
 using System;

@@ -15,8 +15,7 @@
             LootTheRoom,
             RevivePlayerAvatar,
             RunAway,
-            SetupAvatar,
-            SetupTable
+            ReviveAndSetupAvatar
         };
 
         public const string Charity = "Charity";
@@ -41,8 +40,6 @@
 
         public const string RunAway = "Run Away";
 
-        public const string SetupAvatar = "Setup Avatar";
-
-        public const string SetupTable = "Setup Table";
+        public const string ReviveAndSetupAvatar = "Revive & Setup Avatar";
     }
 }

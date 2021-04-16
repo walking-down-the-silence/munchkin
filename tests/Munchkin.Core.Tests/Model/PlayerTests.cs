@@ -314,10 +314,13 @@ namespace Munchkin.Core.Tests.Model
             return new Player("Johny Cash", EGender.Male);
         }
 
-        private Table SetupTable(IEnumerable<Player> players, ITreasuresFactory treasureFactory, IDoorsFactory doorFactory, int winningLevel)
+        private Table SetupTable(
+            IEnumerable<Player> players,
+            ITreasuresFactory treasureFactory,
+            IDoorsFactory doorFactory,
+            int winningLevel)
         {
-            var mediator = Mock.Of<IMediator>();
-            var table = new Table(mediator);
+            var table = Table.Empty();
             table.SetWinningLevel(winningLevel);
 
             if (treasureFactory != null)
@@ -339,10 +342,13 @@ namespace Munchkin.Core.Tests.Model
             return table;
         }
 
-        private Table SetupTableNoRevive(IEnumerable<Player> players, ITreasuresFactory treasureFactory, IDoorsFactory doorFactory, int winningLevel)
+        private Table SetupTableNoRevive(
+            IEnumerable<Player> players,
+            ITreasuresFactory treasureFactory,
+            IDoorsFactory doorFactory,
+            int winningLevel)
         {
-            var mediator = Mock.Of<IMediator>();
-            var table = new Table(mediator);
+            var table = Table.Empty();
             table.SetWinningLevel(winningLevel);
 
             if (treasureFactory != null)

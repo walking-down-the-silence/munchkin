@@ -69,7 +69,7 @@ namespace Munchkin.Core.Tests.Contracts.Stages
         public async void ExecuteAsync_WithNotNullParameter_ShouldntThrowArgumentNullException()
         {
             // Arrange
-            var table = new Table(Mock.Of<IMediator>());
+            var table = Table.Empty();
             var step1 = Mock.Of<IStep<Table>>();
             var step2 = Mock.Of<IStep<Table>>();
             var decisionTree = DecisionTree
@@ -89,7 +89,7 @@ namespace Munchkin.Core.Tests.Contracts.Stages
         public async void ExecuteAsync_WithNotNullParameter_ShouldResolveNestedSteps()
         {
             // Arrange
-            var table = new Table(Mock.Of<IMediator>());
+            var table = Table.Empty();
             var step1 = new Mock<IStep<Table>>();
             var step2 = new Mock<IStep<Table>>();
             var decisionTree = DecisionTree
@@ -110,7 +110,7 @@ namespace Munchkin.Core.Tests.Contracts.Stages
         public async void ExecuteAsync_WithStepsUnderCondition_ShouldResolve2OutOf3Steps()
         {
             // Arrange
-            var table = new Table(Mock.Of<IMediator>());
+            var table = Table.Empty();
             var step1 = new Mock<IStep<Table>>();
             var step2 = new Mock<IStep<Table>>();
             var step3 = new Mock<IStep<Table>>();
