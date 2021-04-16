@@ -1,8 +1,5 @@
-﻿using MediatR;
-using Moq;
-using Munchkin.Core.Model;
+﻿using Munchkin.Core.Model;
 using Munchkin.Core.Model.Enums;
-using System;
 using System.Linq;
 using Xunit;
 
@@ -11,18 +8,10 @@ namespace Munchkin.Core.Tests.Model
     public class TableTests
     {
         [Fact]
-        public void Ctor_WithNullParameters_ThrowsArgumentNullException()
-        {
-            // Arrange, Act, Assert
-            Assert.Throws<ArgumentNullException>(() => new Table(null));
-        }
-
-        [Fact]
-        public void Ctor_WithNotNullParameters_ShouldHaveEmptyDecks()
+        public void Empty_ShouldHaveEmptyDecks()
         {
             // Arrange
-            var mediator = Mock.Of<IMediator>();
-            var table = new Table(mediator);
+            var table = Table.Empty();
 
             // Assert
             Assert.Empty(table.Players);
@@ -36,12 +25,9 @@ namespace Munchkin.Core.Tests.Model
         public void JoinPlayer_WithTwoPlayers_ShouldHaveNotEmptyPlayerList()
         {
             // Arrange
-            var mediator = Mock.Of<IMediator>();
             var player1 = new Player("Frank Sinatra", EGender.Male);
             var player2 = new Player("Johny Cash", EGender.Male);
-            var treasureFactory = new MunchkinOriginalTreasuresFactory();
-            var doorFactory = new MunchkinOriginalDoorsFactory();
-            var table = new Table(mediator);
+            var table = Table.Empty();
 
             // Act
             table.JoinPlayer(player1);
@@ -59,9 +45,8 @@ namespace Munchkin.Core.Tests.Model
         public void AddTreasures_WithTwoPlayers_ShouldHaveNotEmptyTreasureDeck()
         {
             // Arrange
-            var mediator = Mock.Of<IMediator>();
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
-            var table = new Table(mediator);
+            var table = Table.Empty();
 
             // Act
             table.AddTreasures(treasureFactory.GetTreasureCards().ToArray());
@@ -77,9 +62,8 @@ namespace Munchkin.Core.Tests.Model
         public void AddDoors_WithTwoPlayers_ShouldHaveNotEmptyDoorDeck()
         {
             // Arrange
-            var mediator = Mock.Of<IMediator>();
             var doorFactory = new MunchkinOriginalDoorsFactory();
-            var table = new Table(mediator);
+            var table = Table.Empty();
 
             // Act
             table.AddDoors(doorFactory.GetDoorsCards().ToArray());

@@ -66,7 +66,7 @@ namespace Munchkin.Core.Tests.Contracts.Stages
         public void Execute_WithKickDownTheDoorStep_AndTruthfulCondition_ShouldReturnCombatStepInstance()
         {
             // Arrange
-            var table = new Table(Mock.Of<IMediator>());
+            var table = Table.Empty();
             var player = new Player("Johny Cash", Core.Model.Enums.EGender.Male);
             var monsterCard = new BandOf3872Orcs();
             var step1 = new KickOpenTheDoorStep(player);
@@ -87,7 +87,7 @@ namespace Munchkin.Core.Tests.Contracts.Stages
         public void Execute_WithKickDownTheDoorStep_AndFalseCondition_ShouldReturnNull()
         {
             // Arrange
-            var table = new Table(Mock.Of<IMediator>());
+            var table = Table.Empty();
             var player = new Player("Johny Cash", Core.Model.Enums.EGender.Male);
             var monsterCard = new BandOf3872Orcs();
             var step1 = new KickOpenTheDoorStep(player);

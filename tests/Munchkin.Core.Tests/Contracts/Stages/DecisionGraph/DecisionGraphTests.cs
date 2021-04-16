@@ -100,7 +100,7 @@ namespace Munchkin.Core.Tests.Contracts.Stages
         public async void Build_WithTruthfulConditionInTransition_ShouldCallResolveOnEachStep()
         {
             // Arrange
-            var table = new Table(Mock.Of<IMediator>());
+            var table = Table.Empty();
             var player = new Player("Johny Cash", Core.Model.Enums.EGender.Male);
 
             var decitionTreeBuilder = DecisionGraph.Empty();
@@ -128,7 +128,7 @@ namespace Munchkin.Core.Tests.Contracts.Stages
         public async void Build_WithFalseConditionInTransition_ShouldCallResolveOnFirstStepOnly()
         {
             // Arrange
-            var table = new Table(Mock.Of<IMediator>());
+            var table = Table.Empty();
             var player = new Player("Johny Cash", Core.Model.Enums.EGender.Male);
 
             var decitionTreeBuilder = DecisionGraph.Empty();
