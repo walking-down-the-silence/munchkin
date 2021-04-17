@@ -25,7 +25,7 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Gets the list of players
         /// </summary>
-        public CircularList<Player> Players { get; }
+        public CircularList<Player> Players { get; private set; }
 
         /// <summary>
         /// Gets the treasures card deck
@@ -74,21 +74,33 @@ namespace Munchkin.Core.Model
         public void SetWinningLevel(int winningLevel) => WinningLevel = winningLevel;
 
         /// <summary>
-        /// Assigns the player to the gaming table.
+        /// Assigns the players to the gaming table.
         /// </summary>
-        /// <param name="player">The player to assign.</param>
-        public void JoinPlayer(Player player) => Players.Add(player);
+        /// <param name="players">The collection of players to assign.</param>
+        public Table WithPlayers(IReadOnlyCollection<Player> players)
+        {
+            Players = new CircularList<Player>(players);
+            return this;
+        }
 
         /// <summary>
         /// Appends the treasure cards to the deck. Can be used for additional expansions.
         /// </summary>
         /// <param name="cards">Cars to add.</param>
-        public void AddTreasures(IReadOnlyCollection<TreasureCard> cards) => TreasureCardDeck = new CardDeck<TreasureCard>(cards);
+        public Table WithTreasureDeck(IReadOnlyCollection<TreasureCard> cards)
+        {
+            TreasureCardDeck = new CardDeck<TreasureCard>(cards);
+            return this;
+        }
 
         /// <summary>
         /// Appends the door cards to the deck. Can be used for additional expansions.
         /// </summary>
         /// <param name="cards">Cards to add.</param>
-        public void AddDoors(IReadOnlyCollection<DoorsCard> cards) => DoorsCardDeck = new CardDeck<DoorsCard>(cards);
+        public Table WithDoorDeck(IReadOnlyCollection<DoorsCard> cards)
+        {
+            DoorsCardDeck = new CardDeck<DoorsCard>(cards);
+            return this;
+        }
     }
 }

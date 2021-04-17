@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace Munchkin.Core.Contracts
 {
-    public interface IDoorsFactory
+    public interface IDoorDeckFactory
     {
-        IEnumerable<DoorsCard> GetDoorsCards();
+        IReadOnlyCollection<DoorsCard> GetDoorsCards();
     }
 }

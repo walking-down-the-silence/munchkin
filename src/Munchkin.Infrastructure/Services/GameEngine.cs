@@ -8,6 +8,7 @@ using Munchkin.Core.Model;
 using Munchkin.Core.Model.Enums;
 using Munchkin.Core.Model.Stages;
 using Munchkin.Infrastructure.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,32 +16,29 @@ namespace Munchkin.Infrastructure.Services
 {
     public class GameEngine
     {
-        private readonly GameRoom _gameRoom;
         private readonly IMediator _mediator;
-        private readonly ITreasuresFactory _treasuresFactory;
-        private readonly IDoorsFactory _doorsFactory;
+        private readonly IReadOnlyCollection<IExpansion> _expansions;
+        private readonly IReadOnlyCollection<Player> _players;
 
         public GameEngine(
-            GameRoom gameRoom,
             IMediator mediator,
-            ITreasuresFactory treasuresFactory,
-            IDoorsFactory doorsFactory)
+            IReadOnlyCollection<IExpansion> expansions,
+            IReadOnlyCollection<Player> players)
         {
             _mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
-            _treasuresFactory = treasuresFactory;
-            _doorsFactory = doorsFactory;
-            _gameRoom = gameRoom ?? throw new System.ArgumentNullException(nameof(gameRoom));
+            _expansions = expansions ?? throw new System.ArgumentNullException(nameof(expansions));
+            _players = players ?? throw new System.ArgumentNullException(nameof(players));
         }
 
-        public async Task<Table> NextTurn()
+        public async Task<Table> RunAsync()
         {
             // NOTE: setup the table before the game starts
-            var players = _gameRoom.Players.Select(p => new Player(p.UserName, EGender.Male));
-            var playersList = new CircularList<Player>();
+            var playersList = new CircularList<Player>(_players);
 
-            var table = Table.Empty();
-            table.AddTreasures(_treasuresFactory.GetTreasureCards().ToList());
-            table.AddDoors(_doorsFactory.GetDoorsCards().ToList());
+            var table = _expansions
+                .Aggregate(Table.Empty(), (table, expansion) => table
+                    .WithTreasureDeck(expansion.TreasureDeck.GetTreasureCards())
+                    .WithDoorDeck(expansion.DoorDeck.GetDoorsCards()));
 
             // NOTE: shuffle the decks for randomness
             table.DoorsCardDeck.Shuffle();

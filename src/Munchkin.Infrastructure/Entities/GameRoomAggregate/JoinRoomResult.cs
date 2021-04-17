@@ -14,6 +14,8 @@ namespace Munchkin.Infrastructure.Models
 
         public static JoinRoomResult RoomFull => new(3, "Room Is Full");
 
-        public static JoinRoomResult InvalidUser => new(4, "Invalid User");
+        public static JoinRoomResult RoomEmpty => new(4, "Room Is Empty");
+
+        public static JoinRoomResult InvalidUser => new(5, "Invalid User");
     }
 }

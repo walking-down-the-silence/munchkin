@@ -1,56 +1,78 @@
 ﻿using Munchkin.Infrastructure.Entities.UserAggregate;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Munchkin.Infrastructure.Models
 {
     public class GameRoom
     {
         private readonly List<User> _players = new();
+        private readonly List<ExpansionOption> _expansionOptions = new();
+        private readonly Dictionary<string, ExpansionOption> _selectedOptions = new();
 
-        private GameRoom()
+        public GameRoom()
         {
-        }
-
-        public static GameRoom Create(User user)
-        {
-            if (user is null)
-            {
-                throw new System.ArgumentNullException(nameof(user));
-            }
-
-            var gameRoom = new GameRoom();
-            var joinResponse = gameRoom.JoinRoom(user);
-            return gameRoom;
         }
 
         public bool IsEmpty => _players.Count == 0;
 
         public IReadOnlyCollection<User> Players => _players;
 
-        public JoinRoomResult JoinRoom(User player)
+        public IReadOnlyCollection<ExpansionOption> SelectedExpansions => _selectedOptions.Values;
+
+        public (GameRoom, JoinRoomResult) JoinRoom(User player)
         {
             if (player is null)
             {
-                return JoinRoomResult.InvalidUser;
+                return (this, JoinRoomResult.InvalidUser);
             }
 
             _players.Add(player);
-            return JoinRoomResult.JoinedRoom;
+            return (this, JoinRoomResult.JoinedRoom);
         }
 
-        public JoinRoomResult LeaveRoom(User player)
+        public (GameRoom, JoinRoomResult) LeaveRoom(User player)
         {
             if (player is null)
-            {
-                return JoinRoomResult.InvalidUser;
-            }
+                return (this, JoinRoomResult.InvalidUser);
+
+            if (!_players.Any())
+                return (this, JoinRoomResult.RoomEmpty);
 
             if (_players.Remove(player))
-            {
-                return JoinRoomResult.LeftRoom;
-            }
+                return (this, JoinRoomResult.LeftRoom);
 
-            return JoinRoomResult.InvalidUser;
+            return (this, JoinRoomResult.InvalidUser);
+        }
+
+        public GameRoom SetAvailableExpansions(ExpansionOption[] avaialableExpansions)
+        {
+            if (avaialableExpansions is null) return this;
+
+            _expansionOptions.Clear();
+            _expansionOptions.AddRange(avaialableExpansions);
+            return this;
+        }
+
+        public (GameRoom, SelectExpansionResult) SelectExpansion(string code)
+        {
+            if (string.IsNullOrWhiteSpace(code))
+                return (this, SelectExpansionResult.InvalidOptionCode);
+
+            var expansion = _expansionOptions.FirstOrDefault(x => string.Equals(x.Code, code, StringComparison.OrdinalIgnoreCase));
+            _selectedOptions[code] = expansion;
+            return (this, SelectExpansionResult.OptionSelected);
+        }
+
+        public (GameRoom, SelectExpansionResult) UnselectExpansion(string code)
+        {
+            if (string.IsNullOrWhiteSpace(code))
+                return (this, SelectExpansionResult.InvalidOptionCode);
+
+            var expansion = _expansionOptions.FirstOrDefault(x => string.Equals(x.Code, code, StringComparison.OrdinalIgnoreCase));
+            _selectedOptions.Remove(code);
+            return (this, SelectExpansionResult.OptionUnselected);
         }
     }
 }

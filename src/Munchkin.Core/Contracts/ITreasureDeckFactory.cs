@@ -3,8 +3,8 @@ using Munchkin.Core.Contracts.Cards;
 
 namespace Munchkin.Core.Contracts
 {
-    public interface ITreasuresFactory
+    public interface ITreasureDeckFactory
     {
-        IEnumerable<TreasureCard> GetTreasureCards();
+        IReadOnlyCollection<TreasureCard> GetTreasureCards();
     }
 }

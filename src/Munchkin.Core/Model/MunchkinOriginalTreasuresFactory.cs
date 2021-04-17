@@ -2,12 +2,18 @@ using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Engine.Original.Treasures;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Munchkin.Core.Model
 {
-    public class MunchkinOriginalTreasuresFactory : ITreasuresFactory
+    public class MunchkinOriginalTreasuresFactory : ITreasureDeckFactory
     {
-        public IEnumerable<TreasureCard> GetTreasureCards()
+        public IReadOnlyCollection<TreasureCard> GetTreasureCards()
+        {
+            return CreateCardCollection().ToArray();
+        }
+
+        private IEnumerable<TreasureCard> CreateCardCollection()
         {
             // level ups
             yield return new LevelUpTreasure("1,000 Gold Pieces");
