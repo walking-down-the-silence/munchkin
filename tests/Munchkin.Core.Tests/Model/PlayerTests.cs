@@ -2,6 +2,7 @@
 using Moq;
 using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Enums;
 using Munchkin.Engine.Original.Doors;
@@ -316,8 +317,8 @@ namespace Munchkin.Core.Tests.Model
 
         private Table SetupTable(
             IEnumerable<Player> players,
-            ITreasuresFactory treasureFactory,
-            IDoorsFactory doorFactory,
+            ITreasureDeckFactory treasureFactory,
+            IDoorDeckFactory doorFactory,
             int winningLevel)
         {
             var table = Table.Empty();
@@ -325,27 +326,24 @@ namespace Munchkin.Core.Tests.Model
 
             if (treasureFactory != null)
             {
-                table.AddTreasures(treasureFactory.GetTreasureCards().ToArray());
+                table.WithTreasureDeck(treasureFactory.GetTreasureCards().ToArray());
             }
 
             if (doorFactory != null)
             {
-                table.AddDoors(doorFactory.GetDoorsCards().ToArray());
+                table.WithDoorDeck(doorFactory.GetDoorsCards().ToArray());
             }
 
-            foreach (var player in players)
-            {
-                table.JoinPlayer(player);
-                player.Revive(table);
-            }
+            table = table.WithPlayers(players.ToArray());
+            table.Players.ForEach(player => player.Revive(table));
 
             return table;
         }
 
         private Table SetupTableNoRevive(
             IEnumerable<Player> players,
-            ITreasuresFactory treasureFactory,
-            IDoorsFactory doorFactory,
+            ITreasureDeckFactory treasureFactory,
+            IDoorDeckFactory doorFactory,
             int winningLevel)
         {
             var table = Table.Empty();
@@ -353,18 +351,15 @@ namespace Munchkin.Core.Tests.Model
 
             if (treasureFactory != null)
             {
-                table.AddTreasures(treasureFactory.GetTreasureCards().ToArray());
+                table.WithTreasureDeck(treasureFactory.GetTreasureCards().ToArray());
             }
 
             if (doorFactory != null)
             {
-                table.AddDoors(doorFactory.GetDoorsCards().ToArray());
+                table.WithDoorDeck(doorFactory.GetDoorsCards().ToArray());
             }
 
-            foreach (var player in players)
-            {
-                table.JoinPlayer(player);
-            }
+            table = table.WithPlayers(players.ToArray());
 
             return table;
         }

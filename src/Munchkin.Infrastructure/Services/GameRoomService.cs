@@ -13,8 +13,9 @@ namespace Munchkin.Infrastructure.Services
                 throw new ArgumentNullException(nameof(user));
             }
 
-            var gameRoom = GameRoom.Create(user);
-            return gameRoom;
+            var gameRoom = new GameRoom();
+            var (result, joinResponse) = gameRoom.JoinRoom(user);
+            return joinResponse == JoinRoomResult.JoinedRoom ? result : default;
         }
     }
 }

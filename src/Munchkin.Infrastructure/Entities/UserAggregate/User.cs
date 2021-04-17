@@ -18,5 +18,7 @@ namespace Munchkin.Infrastructure.Entities.UserAggregate
         public int UserId { get; }
 
         public string UserName { get; }
+
+        public bool IsMale { get; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Munchkin.Core.Model;
 using Munchkin.Core.Model.Enums;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -27,18 +28,22 @@ namespace Munchkin.Core.Tests.Model
             // Arrange
             var player1 = new Player("Frank Sinatra", EGender.Male);
             var player2 = new Player("Johny Cash", EGender.Male);
+            var players = new List<Player>
+            {
+                player1,
+                player2
+            };
             var table = Table.Empty();
 
             // Act
-            table.JoinPlayer(player1);
-            table.JoinPlayer(player2);
+            Table result = table.WithPlayers(players);
 
             // Assert
-            Assert.Equal(2, table.Players.Count);
-            Assert.Empty(table.TreasureCardDeck);
-            Assert.Empty(table.DoorsCardDeck);
-            Assert.Empty(table.DiscardedTreasureCards);
-            Assert.Empty(table.DiscardedDoorsCards);
+            Assert.Equal(2, result.Players.Count);
+            Assert.Empty(result.TreasureCardDeck);
+            Assert.Empty(result.DoorsCardDeck);
+            Assert.Empty(result.DiscardedTreasureCards);
+            Assert.Empty(result.DiscardedDoorsCards);
         }
 
         [Fact]
@@ -49,9 +54,10 @@ namespace Munchkin.Core.Tests.Model
             var table = Table.Empty();
 
             // Act
-            table.AddTreasures(treasureFactory.GetTreasureCards().ToArray());
+            Table result = table.WithTreasureDeck(treasureFactory.GetTreasureCards().ToArray());
 
             // Assert
+            Assert.NotNull(result);
             Assert.NotEmpty(table.TreasureCardDeck);
             Assert.Empty(table.DoorsCardDeck);
             Assert.Empty(table.DiscardedTreasureCards);
@@ -66,9 +72,10 @@ namespace Munchkin.Core.Tests.Model
             var table = Table.Empty();
 
             // Act
-            table.AddDoors(doorFactory.GetDoorsCards().ToArray());
+            Table result = table.WithDoorDeck(doorFactory.GetDoorsCards().ToArray());
 
             // Assert
+            Assert.NotNull(result);
             Assert.Empty(table.TreasureCardDeck);
             Assert.NotEmpty(table.DoorsCardDeck);
             Assert.Empty(table.DiscardedTreasureCards);

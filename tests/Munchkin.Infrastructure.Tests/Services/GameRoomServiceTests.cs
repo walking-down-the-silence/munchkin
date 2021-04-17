@@ -3,6 +3,7 @@ using Munchkin.Infrastructure.Models;
 using Munchkin.Infrastructure.Services;
 using System;
 using Xunit;
+
 namespace Munchkin.Infrastructure.Tests.Services
 {
     public class GameRoomServiceTests

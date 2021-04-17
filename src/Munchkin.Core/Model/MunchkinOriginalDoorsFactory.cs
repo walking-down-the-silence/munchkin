@@ -2,12 +2,18 @@
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Engine.Original.Doors;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Munchkin.Core.Model
 {
-    public class MunchkinOriginalDoorsFactory : IDoorsFactory
+    public class MunchkinOriginalDoorsFactory : IDoorDeckFactory
     {
-        public IEnumerable<DoorsCard> GetDoorsCards()
+        public IReadOnlyCollection<DoorsCard> GetDoorsCards()
+        {
+            return CreateCardCollection().ToArray();
+        }
+
+        private IEnumerable<DoorsCard> CreateCardCollection()
         {
             yield return new Halfbreed();
             yield return new Halfbreed();
