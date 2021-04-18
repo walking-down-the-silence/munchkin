@@ -17,6 +17,7 @@ namespace Munchkin.Runtime
         private readonly IMediator _mediator;
         private readonly IReadOnlyCollection<IExpansion> _expansions;
         private readonly IReadOnlyCollection<Player> _players;
+        private Table _table;
 
         public GameEngine(
             IMediator mediator,
@@ -28,37 +29,40 @@ namespace Munchkin.Runtime
             _players = players ?? throw new System.ArgumentNullException(nameof(players));
         }
 
+        public Table Table => _table;
+
         public async Task<Table> RunAsync()
         {
             // NOTE: setup the table before the game starts
             var playersList = new CircularList<Player>(_players);
 
-            var table = _expansions
-                .Aggregate(Table.Empty(), (table, expansion) => table
+            _table = Table.Empty().WithRequestSink(_mediator);
+            _table = _expansions
+                .Aggregate(_table, (table, expansion) => table
                     .WithTreasureDeck(expansion.TreasureDeck.GetTreasureCards())
                     .WithDoorDeck(expansion.DoorDeck.GetDoorsCards()));
 
             // NOTE: shuffle the decks for randomness
-            table.DoorsCardDeck.Shuffle();
-            table.TreasureCardDeck.Shuffle();
+            _table.DoorsCardDeck.Shuffle();
+            _table.TreasureCardDeck.Shuffle();
 
             // NOTE: give all players initial cards
-            table.Players.ForEach(player => player.Revive(table));
+            _table.Players.ForEach(player => player.Revive(_table));
 
-            while (!table.IsGameWon)
+            while (!_table.IsGameWon)
             {
-                var playerTurn = CreatePlayerTurn(table);
+                var playerTurn = CreatePlayerTurn(_table);
 
                 // NOTE: wait for each player to actually end the turn by executing action
-                var initialStep = new ReviveAndSetupAvatarStep(table.Players.Current);
-                table = await playerTurn.Resolve(table, initialStep);
+                var initialStep = new ReviveAndSetupAvatarStep(_table.Players.Current);
+                _table = await playerTurn.Resolve(_table, initialStep);
 
                 // NOTE: clear/reset the state befor moving to next turn
-                table.Dungeon.Reset();
-                table.Players.Next();
+                _table.Dungeon.Reset();
+                _table.Players.Next();
             }
 
-            return table;
+            return _table;
         }
 
         private DecisionGraph CreatePlayerTurn(Table table)

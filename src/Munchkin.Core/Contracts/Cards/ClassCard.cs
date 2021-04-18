@@ -10,7 +10,7 @@ namespace Munchkin.Core.Contracts.Cards
 
         public virtual void Equip(Table table, Player player)
         {
-            player.PutInPlayAsEquipped(this);
+            player.Equip(this);
         }
     }
 }

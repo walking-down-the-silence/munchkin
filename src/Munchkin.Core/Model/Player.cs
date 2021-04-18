@@ -26,9 +26,7 @@ namespace Munchkin.Core.Model
         public Player(string name, EGender gender)
         {
             if (string.IsNullOrWhiteSpace(name))
-            {
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
 
             Name = name;
             Gender = gender;
@@ -101,7 +99,7 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Puts a card in play as equipped
         /// </summary>
-        public void PutInPlayAsEquipped(Card card)
+        public void Equip(Card card)
         {
             if (card is not null)
             {
@@ -114,7 +112,7 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Puts a card in play as not equipped
         /// </summary>
-        public void PutInPlayAsCarried(Card card)
+        public void PutInBackpack(Card card)
         {
             if (card is not null)
             {

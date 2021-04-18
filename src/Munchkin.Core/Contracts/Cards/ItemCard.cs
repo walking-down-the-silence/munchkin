@@ -44,7 +44,7 @@ namespace Munchkin.Core.Contracts.Cards
 
         public virtual void Equip(Table state, Player player)
         {
-            player.PutInPlayAsEquipped(this);
+            player.Equip(this);
         }
     }
 }

@@ -60,7 +60,7 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Request sink that is used for player interaction when a selection or decision is needed
         /// </summary>
-        public IMediator RequestSink { get; }
+        public IMediator RequestSink { get; private set; }
 
         /// <summary>
         /// Gets if any of the players has won the game.
@@ -72,6 +72,16 @@ namespace Munchkin.Core.Model
         /// </summary>
         /// <param name="winningLevel">Target level.</param>
         public void SetWinningLevel(int winningLevel) => WinningLevel = winningLevel;
+
+        /// <summary>
+        /// Sets the requests sink instance used to communicate with outside world.
+        /// </summary>
+        /// <param name="requestSink">The request sink implementation instance.</param>
+        public Table WithRequestSink(IMediator requestSink)
+        {
+            RequestSink = requestSink;
+            return this;
+        }
 
         /// <summary>
         /// Assigns the players to the gaming table.

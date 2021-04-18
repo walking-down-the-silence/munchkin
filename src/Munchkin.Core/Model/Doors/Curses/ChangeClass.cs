@@ -23,7 +23,7 @@ namespace Munchkin.Engine.Original.Doors
             var firstDiscardedClass = context.DiscardedDoorsCards.TakeFirst<ClassCard>();
             if (firstDiscardedClass != null)
             {
-                context.Players.Current.PutInPlayAsEquipped(firstDiscardedClass);
+                context.Players.Current.Equip(firstDiscardedClass);
             }
 
             // TODO: resolve all other cards that don't match the new class

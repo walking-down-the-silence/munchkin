@@ -76,7 +76,7 @@ namespace Munchkin.Core.Tests.Model
             var player = CreatePlayerJohny();
 
             // Act
-            player.PutInPlayAsEquipped(null);
+            player.Equip(null);
 
             // Assert
             Assert.Empty(player.YourHand);
@@ -93,7 +93,7 @@ namespace Munchkin.Core.Tests.Model
 
             // Act
             player.TakeInHand(card);
-            player.PutInPlayAsEquipped(card);
+            player.Equip(card);
 
             // Assert
             Assert.Empty(player.YourHand);
@@ -108,7 +108,7 @@ namespace Munchkin.Core.Tests.Model
             var player = CreatePlayerJohny();
 
             // Act
-            player.PutInPlayAsCarried(null);
+            player.PutInBackpack(null);
 
             // Assert
             Assert.Empty(player.YourHand);
@@ -125,7 +125,7 @@ namespace Munchkin.Core.Tests.Model
 
             // Act
             player.TakeInHand(card);
-            player.PutInPlayAsCarried(card);
+            player.PutInBackpack(card);
 
             // Assert
             Assert.Empty(player.YourHand);
@@ -215,7 +215,7 @@ namespace Munchkin.Core.Tests.Model
 
             // Act
             var treasureCards = player.YourHand.OfType<TreasureCard>().ToList();
-            treasureCards.ForEach(card => player.PutInPlayAsEquipped(card));
+            treasureCards.ForEach(card => player.Equip(card));
             player.DiscardEquipped(table);
 
             // Assert
@@ -237,7 +237,7 @@ namespace Munchkin.Core.Tests.Model
 
             // Act
             var card = player.YourHand.OfType<TreasureCard>().First();
-            player.PutInPlayAsCarried(card);
+            player.PutInBackpack(card);
 
             // Assert
             Assert.Empty(player.Equipped);
@@ -257,7 +257,7 @@ namespace Munchkin.Core.Tests.Model
 
             // Act
             var card = player.YourHand.OfType<TreasureCard>().First();
-            player.PutInPlayAsEquipped(card);
+            player.Equip(card);
 
             // Assert
             Assert.NotEmpty(player.Equipped);
@@ -295,10 +295,10 @@ namespace Munchkin.Core.Tests.Model
             var table = SetupTable(players, treasureFactory, doorFactory, 10);
 
             // Act
-            player.PutInPlayAsEquipped(new ElfRace());
-            player.PutInPlayAsEquipped(new WarriorClass());
-            player.PutInPlayAsEquipped(new SuperMunchkin());
-            player.PutInPlayAsEquipped(new Halfbreed());
+            player.Equip(new ElfRace());
+            player.Equip(new WarriorClass());
+            player.Equip(new SuperMunchkin());
+            player.Equip(new Halfbreed());
             await player.Kill(table);
 
             // Assert

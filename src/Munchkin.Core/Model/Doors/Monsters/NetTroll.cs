@@ -25,7 +25,7 @@ namespace Munchkin.Engine.Original.Doors
                 var response = await state.RequestSink.Send(request);
                 var card = await response.Task;
                 state.Players.Current.Discard(state, card);
-                players.Current.PutInPlayAsCarried(card);
+                players.Current.PutInBackpack(card);
             }
         }
     }

@@ -23,7 +23,7 @@ namespace Munchkin.Engine.Original.Doors
             var firstDiscardedRace = context.DiscardedDoorsCards.TakeFirst<RaceCard>();
             if (firstDiscardedRace != null)
             {
-                context.Players.Current.PutInPlayAsEquipped(firstDiscardedRace);
+                context.Players.Current.Equip(firstDiscardedRace);
             }
 
             // TODO: resolve all other cards that don't match new race

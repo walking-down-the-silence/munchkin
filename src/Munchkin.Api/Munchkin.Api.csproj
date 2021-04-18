@@ -13,7 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\Munchkin.Core\Munchkin.Core.csproj" />
+    <ProjectReference Include="..\Munchkin.Infrastructure\Munchkin.Infrastructure.csproj" />
+    <ProjectReference Include="..\Munchkin.Runtime\Munchkin.Runtime.csproj" />
   </ItemGroup>
 
 </Project>
