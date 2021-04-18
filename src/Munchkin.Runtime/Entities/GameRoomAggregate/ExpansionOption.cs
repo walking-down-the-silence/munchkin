@@ -1,4 +1,4 @@
-﻿namespace Munchkin.Infrastructure
+﻿namespace Munchkin.Runtime.Entities.GameRoomAggregate
 {
     public class ExpansionOption
     {

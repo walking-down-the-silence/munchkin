@@ -1,6 +1,6 @@
 ﻿using Munchkin.Core.Contracts;
 
-namespace Munchkin.Infrastructure.Models
+namespace Munchkin.Runtime.Entities.GameRoomAggregate
 {
     public class SelectExpansionResult : Enumeration
     {

@@ -1,9 +1,9 @@
-using Munchkin.Infrastructure.Entities.UserAggregate;
-using Munchkin.Infrastructure.Models;
+using Munchkin.Runtime.Entities.GameRoomAggregate;
+using Munchkin.Runtime.Entities.UserAggregate;
 using System.Linq;
 using Xunit;
 
-namespace Munchkin.Infrastructure.Tests
+namespace Munchkin.Runtime.Tests.Entities.GameRoomAggregate
 {
     public class GameRoomTests
     {

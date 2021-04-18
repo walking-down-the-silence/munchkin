@@ -1,9 +1,9 @@
-﻿using Munchkin.Infrastructure.Entities.UserAggregate;
+﻿using Munchkin.Runtime.Entities.UserAggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Munchkin.Infrastructure.Models
+namespace Munchkin.Runtime.Entities.GameRoomAggregate
 {
     public class GameRoom
     {

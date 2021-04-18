@@ -2,6 +2,7 @@
 using Munchkin.Core.Contracts.PlayerInteraction;
 using Munchkin.Core.Model.Actions;
 using Munchkin.Core.Model.Requests;
+using Munchkin.Runtime.Entities.Actions;
 using System.Threading;
 using System.Threading.Tasks;
 

@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Munchkin.Infrastructure\Munchkin.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Munchkin.Runtime\Munchkin.Runtime.csproj" />
   </ItemGroup>
 
 </Project>

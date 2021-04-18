@@ -1,9 +1,10 @@
 ﻿using Munchkin.Core.Contracts;
 using Munchkin.Core.Model;
+using Munchkin.Runtime.Entities.Actions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Munchkin.Infrastructure
+namespace Munchkin.Infrastructure.Repositories
 {
     public class PlayerActionRepository : IPlayerActionRepository
     {
@@ -57,7 +58,7 @@ namespace Munchkin.Infrastructure
             return Task.CompletedTask;
         }
 
-        public Task<ActionCollection> GetActionsByPlayer(Player player)
+        public Task<PlayerActionGroup> GetActionsByPlayer(Player player)
         {
             if (player is null)
                 throw new System.ArgumentNullException(nameof(player));
@@ -65,7 +66,7 @@ namespace Munchkin.Infrastructure
             var actions = _playerActions.ContainsKey(player)
                 ? _playerActions[player]
                 : new List<IAction<Table>>();
-            ActionCollection actionCollection = new(player, actions);
+            PlayerActionGroup actionCollection = new(player, actions);
 
             return Task.FromResult(actionCollection);
         }

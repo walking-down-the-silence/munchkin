@@ -2,7 +2,7 @@
 using Munchkin.Core.Model;
 using System.Threading.Tasks;
 
-namespace Munchkin.Infrastructure
+namespace Munchkin.Runtime.Entities.Actions
 {
     public interface IPlayerActionRepository
     {
@@ -12,6 +12,6 @@ namespace Munchkin.Infrastructure
 
         Task DeleteActionFromPlayer(Player player, IAction<Table> action);
 
-        Task<ActionCollection> GetActionsByPlayer(Player player);
+        Task<PlayerActionGroup> GetActionsByPlayer(Player player);
     }
 }

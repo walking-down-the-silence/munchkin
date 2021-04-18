@@ -2,11 +2,11 @@
 using Munchkin.Core.Model;
 using System.Collections.Generic;
 
-namespace Munchkin.Infrastructure
+namespace Munchkin.Runtime.Entities.Actions
 {
-    public class ActionCollection
+    public class PlayerActionGroup
     {
-        public ActionCollection(Player player, IReadOnlyCollection<IAction<Table>> actions)
+        public PlayerActionGroup(Player player, IReadOnlyCollection<IAction<Table>> actions)
         {
             Player = player ?? throw new System.ArgumentNullException(nameof(player));
             Actions = actions ?? throw new System.ArgumentNullException(nameof(actions));

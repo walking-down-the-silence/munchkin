@@ -1,7 +1,12 @@
 ﻿using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Enums;
-using Munchkin.Infrastructure.Models;
+using Munchkin.Runtime;
+using Munchkin.Runtime.Entities.GameRoomAggregate;
+using Munchkin.Runtime.Entities.UserAggregate;
+using System;
 using System.Linq;
 
 namespace Munchkin.Infrastructure.Services
@@ -9,22 +14,29 @@ namespace Munchkin.Infrastructure.Services
     public class GameEngineService
     {
         private readonly IMediator _mediator;
-        private readonly IExpansionRegister _expansionRegister;
+        private readonly IServiceProvider _expansionProvider;
 
         public GameEngineService(
             IMediator mediator,
-            IExpansionRegister expansionRegister)
+            IServiceProvider expansionRegister)
         {
-            _mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
-            _expansionRegister = expansionRegister ?? throw new System.ArgumentNullException(nameof(expansionRegister));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _expansionProvider = expansionRegister ?? throw new ArgumentNullException(nameof(expansionRegister));
         }
 
         public GameEngine CreateEngine(GameRoom gameRoom)
         {
-            var players = gameRoom.Players.Select(p => new Player(p.UserName, p.IsMale ? EGender.Male : EGender.Female)).ToArray();
-            var expansions = gameRoom.SelectedExpansions;
-            var selectedExpansions = _expansionRegister.SearchExpansions(x => expansions.Any(y => string.Equals(y.Title, x.Title)));
+            var players = gameRoom.Players.Select(ToPlayer).ToArray();
+            var selectedExpansions = _expansionProvider
+                .GetServices<IExpansion>()
+                .Where(x => gameRoom.SelectedExpansions.Any(y => string.Equals(y.Code, x.Code)))
+                .ToArray();
             return new GameEngine(_mediator, selectedExpansions, players);
+        }
+
+        private static Player ToPlayer(User p)
+        {
+            return new Player(p.UserName, p.IsMale ? EGender.Male : EGender.Female);
         }
     }
 }

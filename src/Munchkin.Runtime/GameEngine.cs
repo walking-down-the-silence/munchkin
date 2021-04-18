@@ -5,14 +5,12 @@ using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Stages;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
-using Munchkin.Core.Model.Enums;
 using Munchkin.Core.Model.Stages;
-using Munchkin.Infrastructure.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Munchkin.Infrastructure.Services
+namespace Munchkin.Runtime
 {
     public class GameEngine
     {
@@ -44,7 +42,7 @@ namespace Munchkin.Infrastructure.Services
             table.DoorsCardDeck.Shuffle();
             table.TreasureCardDeck.Shuffle();
 
-            // give all players initial cards
+            // NOTE: give all players initial cards
             table.Players.ForEach(player => player.Revive(table));
 
             while (!table.IsGameWon)
@@ -69,38 +67,38 @@ namespace Munchkin.Infrastructure.Services
                 .Empty()
                 .Transition(x => x
                     .From<ReviveAndSetupAvatarStep>(StepNames.ReviveAndSetupAvatar)
-                    .To<KickOpenTheDoorStep>(s => new KickOpenTheDoorStep(table.Players.Current)))
+                    .To(s => new KickOpenTheDoorStep(table.Players.Current)))
                 .Transition(x => x
                     .From<KickOpenTheDoorStep>(StepNames.KickOpenTheDoor)
-                    .To<CombatRoomStep>(CreateCombatStep, CanTransitionToCombat)
-                    .To<CurseStep>(CreateCurseRoomStep, CanTransitionToCurse)
-                    .To<EmptyRoomStep>(CreateEmptyRoom, CardIsNotMonsterAndNoteCurse))
+                    .To(CreateCombatStep, CanTransitionToCombat)
+                    .To(CreateCurseRoomStep, CanTransitionToCurse)
+                    .To(CreateEmptyRoom, CardIsNotMonsterAndNoteCurse))
                 .Transition(x => x
                     .From<CurseStep>(StepNames.Curse)
-                    .To<EmptyRoomStep>(CreateEmptyRoom, CanTransitionToEmptyRoom))
+                    .To(CreateEmptyRoom, CanTransitionToEmptyRoom))
                 .Transition(x => x
                     .From<CombatRoomStep>(StepNames.Combat)
-                    .To<RunAwayStep>(CreateRunAway, CanTransitionToRunAway)
-                    .To<CharityStep>(CreateCharity, CanTransitionToCharity))
+                    .To(CreateRunAway, CanTransitionToRunAway)
+                    .To(CreateCharity, CanTransitionToCharity))
                 .Transition(x => x
                     .From<EmptyRoomStep>(StepNames.EmptyRoom)
-                    .To<LookForTroubleStep>(CreateLookForTrouble, CanTransitionToLookForTrouble)
-                    .To<LootTheRoomStep>(CreateLootTheRoom, CanTransitionToLootTheRoom))
+                    .To(CreateLookForTrouble, CanTransitionToLookForTrouble)
+                    .To(CreateLootTheRoom, CanTransitionToLootTheRoom))
                 .Transition(x => x
                     .From<LookForTroubleStep>(StepNames.LookForTrouble)
-                    .To<CombatRoomStep>(CreateCombatStep, CanTransitionToCombat))
+                    .To(CreateCombatStep, CanTransitionToCombat))
                 .Transition(x => x
                     .From<LootTheRoomStep>(StepNames.LootTheRoom)
-                    .To<CharityStep>(CreateCharity, CanTransitionToCharity))
+                    .To(CreateCharity, CanTransitionToCharity))
                 .Transition(x => x
                     .From<RunAwayStep>(StepNames.RunAway)
-                    .To<DeathStep>(CreateDeathStep, CanTransitionToDeathStep))
+                    .To(CreateDeathStep, CanTransitionToDeathStep))
                 .Transition(x => x
                     .From<CharityStep>(StepNames.Charity)
-                    .To<EndStep>(CreateEndStep, CanTransitionToEnd))
+                    .To(CreateEndStep, CanTransitionToEnd))
                 .Transition(x => x
                     .From<DeathStep>(StepNames.Death)
-                    .To<EndStep>(CreateEndStep, CanTransitionToEnd))
+                    .To(CreateEndStep, CanTransitionToEnd))
                 .Build();
         }
 
