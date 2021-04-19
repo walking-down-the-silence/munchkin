@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Munchkin.Api.ViewModels;
 using Munchkin.Infrastructure.Services;
 using System.Threading.Tasks;
 
@@ -45,23 +46,40 @@ namespace Munchkin.Api.Controllers
             return Ok();
         }
 
-        [HttpPut("{gameId}/players/{playerId}/equipped/{cardId}")]
-        public async Task<IActionResult> EquipItem(int gameId, int playerId, int cardId)
-        {
-            await _playerService.EquipItem(gameId, playerId, cardId);
-            return Ok();
-        }
-
         [HttpGet("{gameId}/players/{playerId}/backpack")]
         public async Task<IActionResult> CardsInBackpack(int gameId, int playerId)
         {
             return Ok();
         }
 
-        [HttpPut("{gameId}/players/{playerId}/backpack/{cardId}")]
-        public async Task<IActionResult> PutInBackpack(int gameId, int playerId, int cardId)
+        [HttpPut("{gameId}/players/{playerId}/cards/{cardId}/storage")]
+        public async Task<IActionResult> EquipItem(int gameId, int playerId, int cardId, [FromBody] CardStorageReferenceVM vm)
         {
-            await _playerService.PutInBackpack(gameId, playerId, cardId);
+            await _playerService.EquipItem(gameId, playerId, cardId);
+            return Ok();
+        }
+
+        [HttpGet("{gameId}/discarded-treasures")]
+        public async Task<IActionResult> GetDiscardedTreasuresCards(int gameId)
+        {
+            return Ok();
+        }
+
+        [HttpGet("{gameId}/discarded-doors")]
+        public async Task<IActionResult> GetDiscardedDoorsCards(int gameId)
+        {
+            return Ok();
+        }
+
+        [HttpPut("{gameId}/treasures/{cardId}/owner")]
+        public async Task<IActionResult> ChangeTreasureCardOwner(int gameId, int playerId, [FromBody] CardOwnerReferenceVM vm)
+        {
+            return Ok();
+        }
+
+        [HttpPut("{gameId}/doors/{cardId}/owner")]
+        public async Task<IActionResult> ChangeDoorCardOwner(int gameId, int playerId, [FromBody] CardOwnerReferenceVM vm)
+        {
             return Ok();
         }
     }
