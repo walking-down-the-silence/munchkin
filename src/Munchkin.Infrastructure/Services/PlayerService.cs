@@ -16,7 +16,7 @@ namespace Munchkin.Infrastructure.Services
             _gameEngineRepository = gameEngineRepository ?? throw new ArgumentNullException(nameof(gameEngineRepository));
         }
 
-        public async Task EquipItem(int gameId, int playerId, int cardId)
+        public async Task ChangeCardStorage(int gameId, int playerId, int cardId, string storageType)
         {
             var game = await _gameEngineRepository.GetGameByIdAsync(gameId);
 
@@ -35,29 +35,24 @@ namespace Munchkin.Infrastructure.Services
             if (card is null)
                 throw new ArgumentNullException(nameof(card));
 
-            player.Equip(card);
+            switch(storageType.Trim().ToLower())
+            {
+                case StorageTypes.PlayerBackpack:
+                    player.PutInBackpack(card);
+                    break;
+                case StorageTypes.PlayerHand:
+                    player.Equip(card);
+                    break;
+                case StorageTypes.GameTable:
+                    break;
+            }
         }
 
-        public async Task PutInBackpack(int gameId, int playerId, int cardId)
+        public static class StorageTypes
         {
-            var game = await _gameEngineRepository.GetGameByIdAsync(gameId);
-
-            if (game is null)
-                throw new ArgumentNullException(nameof(game));
-
-            // TODO: find player by id instead of First()
-            var player = game.Table.Players.First();
-
-            if (player is null)
-                throw new ArgumentNullException(nameof(player));
-
-            // TODO: find player card by id instead of First()
-            var card = player.AllCards().First();
-
-            if (card is null)
-                throw new ArgumentNullException(nameof(card));
-
-            player.PutInBackpack(card);
+            public const string PlayerBackpack = "player.backpack";
+            public const string PlayerHand = "player.hand";
+            public const string GameTable = "game.table";
         }
     }
 }

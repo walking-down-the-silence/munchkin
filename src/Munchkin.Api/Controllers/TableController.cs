@@ -53,9 +53,9 @@ namespace Munchkin.Api.Controllers
         }
 
         [HttpPut("{gameId}/players/{playerId}/cards/{cardId}/storage")]
-        public async Task<IActionResult> EquipItem(int gameId, int playerId, int cardId, [FromBody] CardStorageReferenceVM vm)
+        public async Task<IActionResult> ChangeCardStorage(int gameId, int playerId, int cardId, [FromBody] CardStorageReferenceVM vm)
         {
-            await _playerService.EquipItem(gameId, playerId, cardId);
+            await _playerService.ChangeCardStorage(gameId, playerId, cardId, vm.StorageType);
             return Ok();
         }
 
