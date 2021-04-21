@@ -4,7 +4,7 @@ using Munchkin.Runtime.Entities.Actions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Munchkin.Infrastructure.Repositories
+namespace Munchkin.Runtime.Client.Repositories
 {
     public class PlayerActionRepository : IPlayerActionRepository
     {

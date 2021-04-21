@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Munchkin.Console
+namespace Munchkin.Core.Contracts.Flows
 {
     public static class Flow
     {

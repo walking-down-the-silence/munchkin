@@ -1,5 +1,6 @@
 ﻿using Munchkin.Runtime.Abstractions.GameRoomAggregate;
 using Munchkin.Runtime.Abstractions.UserAggregate;
+using Orleans;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Runtime.Entities.GameRoomAggregate
 {
-    public class GameRoom : IGameRoom
+    public class GameRoom : Grain, IGameRoom
     {
         private readonly List<User> _players = new();
         private readonly List<ExpansionOption> _expansionOptions = new();

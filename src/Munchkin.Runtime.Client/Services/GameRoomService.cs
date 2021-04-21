@@ -1,10 +1,9 @@
 ﻿using Munchkin.Runtime.Abstractions.GameRoomAggregate;
 using Munchkin.Runtime.Abstractions.UserAggregate;
-using Munchkin.Runtime.Entities.GameRoomAggregate;
 using System;
 using System.Threading.Tasks;
 
-namespace Munchkin.Infrastructure.Services
+namespace Munchkin.Runtime.Client.Services
 {
     public class GameRoomService
     {
@@ -28,7 +27,8 @@ namespace Munchkin.Infrastructure.Services
                 return null;
             }
 
-            IGameRoom gameRoom = new GameRoom();
+            // TODO: replace the game room id with correct one
+            IGameRoom gameRoom = await _gameRoomRepository.GetGameRoomByIdAsync(1);
             var joinResponse = await gameRoom.JoinRoom(user);
             gameRoom = await _gameRoomRepository.SaveGameRoomAsync(gameRoom);
             return joinResponse == JoinRoomResult.JoinedRoom ? gameRoom : default;

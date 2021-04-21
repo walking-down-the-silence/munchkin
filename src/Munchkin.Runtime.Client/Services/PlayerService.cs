@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Munchkin.Infrastructure.Services
+namespace Munchkin.Runtime.Client.Services
 {
     public class PlayerService
     {
@@ -35,7 +35,7 @@ namespace Munchkin.Infrastructure.Services
             if (card is null)
                 throw new ArgumentNullException(nameof(card));
 
-            switch(storageType.Trim().ToLower())
+            switch (storageType.Trim().ToLower())
             {
                 case StorageTypes.PlayerBackpack:
                     player.PutInBackpack(card);

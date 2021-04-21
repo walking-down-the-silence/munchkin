@@ -9,12 +9,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Munchkin.Core\Munchkin.Core.csproj" />
-    <ProjectReference Include="..\Munchkin.Infrastructure\Munchkin.Infrastructure.csproj" />
+    <ProjectReference Include="..\Munchkin.Runtime.Client\Munchkin.Runtime.Client.csproj" />
     <ProjectReference Include="..\Munchkin.Runtime\Munchkin.Runtime.csproj" />
   </ItemGroup>
 

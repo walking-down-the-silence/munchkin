@@ -2,11 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using Munchkin.Core.Contracts;
 using Munchkin.Core.Model;
-using Munchkin.Infrastructure.Repositories;
-using Munchkin.Infrastructure.Services;
+using Munchkin.Runtime.Client.Repositories;
+using Munchkin.Runtime.Client.Services;
 using Munchkin.Runtime.Entities.Actions;
 
-namespace Munchkin.Infrastructure
+namespace Munchkin.Runtime.Client
 {
     public static class MunchkinOriginalModule
     {

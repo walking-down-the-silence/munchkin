@@ -1,10 +1,11 @@
 ﻿using Munchkin.Runtime.Abstractions.UserAggregate;
+using Orleans;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Munchkin.Runtime.Abstractions.GameRoomAggregate
 {
-    public interface IGameRoom
+    public interface IGameRoom : IGrainWithIntegerKey
     {
         Task<bool> IsEmpty();
 

@@ -1,11 +1,11 @@
-﻿using Munchkin.Infrastructure.Services;
-using Munchkin.Runtime.Abstractions.GameRoomAggregate;
+﻿using Munchkin.Runtime.Abstractions.GameRoomAggregate;
 using Munchkin.Runtime.Abstractions.UserAggregate;
+using Munchkin.Runtime.Client.Services;
 using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Munchkin.Infrastructure.Tests.Services
+namespace Munchkin.Runtime.Client.Tests.Services
 {
     public class GameRoomServiceTests
     {

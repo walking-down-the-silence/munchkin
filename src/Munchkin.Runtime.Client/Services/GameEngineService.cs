@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Munchkin.Core.Contracts;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Enums;
-using Munchkin.Runtime;
 using Munchkin.Runtime.Abstractions;
 using Munchkin.Runtime.Abstractions.GameRoomAggregate;
 using Munchkin.Runtime.Abstractions.UserAggregate;
@@ -12,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Munchkin.Infrastructure.Services
+namespace Munchkin.Runtime.Client.Services
 {
     public class GameEngineService
     {
@@ -48,7 +47,8 @@ namespace Munchkin.Infrastructure.Services
                 .Where(x => selectedExpansionOptions.Any(y => string.Equals(y.Code, x.Code)))
                 .ToArray();
 
-            IGameEngine gameEngine = new GameEngine(_mediator, selectedExpansions, players);
+            // TODO: replace game engine instantiation with proper solution
+            IGameEngine gameEngine = null;//new GameEngine(_mediator, selectedExpansions, players);
             gameEngine = await _gameEngineRepository.SaveGameAsync(gameEngine);
 
             return gameEngine;

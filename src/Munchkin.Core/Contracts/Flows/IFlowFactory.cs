@@ -1,4 +1,4 @@
-﻿namespace Munchkin.Console
+﻿namespace Munchkin.Core.Contracts.Flows
 {
     public interface IFlowFactory<TContext>
     {
