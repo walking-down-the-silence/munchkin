@@ -4,8 +4,9 @@ using Munchkin.Core.Contracts;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Enums;
 using Munchkin.Runtime;
-using Munchkin.Runtime.Entities.GameRoomAggregate;
-using Munchkin.Runtime.Entities.UserAggregate;
+using Munchkin.Runtime.Abstractions;
+using Munchkin.Runtime.Abstractions.GameRoomAggregate;
+using Munchkin.Runtime.Abstractions.UserAggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,20 +33,22 @@ namespace Munchkin.Infrastructure.Services
             _gameRoomRepository = gameRoomRepository ?? throw new ArgumentNullException(nameof(gameRoomRepository));
         }
 
-        public async Task<GameEngine> CreateEngine(int gameRoomId)
+        public async Task<IGameEngine> CreateEngine(int gameRoomId)
         {
             var gameRoom = await _gameRoomRepository.GetGameRoomByIdAsync(gameRoomId);
 
             if (gameRoom is null)
                 throw new ArgumentNullException(nameof(gameRoom));
 
-            var players = gameRoom.Players.Select(ToPlayer).ToArray();
+            var users = await gameRoom.GetPlayers();
+            var players = users.Select(ToPlayer).ToArray();
+            var selectedExpansionOptions = await gameRoom.GetSelectedExpansions();
             var selectedExpansions = _expansionProvider
                 .GetServices<IExpansion>()
-                .Where(x => gameRoom.SelectedExpansions.Any(y => string.Equals(y.Code, x.Code)))
+                .Where(x => selectedExpansionOptions.Any(y => string.Equals(y.Code, x.Code)))
                 .ToArray();
-            var gameEngine = new GameEngine(_mediator, selectedExpansions, players);
 
+            IGameEngine gameEngine = new GameEngine(_mediator, selectedExpansions, players);
             gameEngine = await _gameEngineRepository.SaveGameAsync(gameEngine);
 
             return gameEngine;

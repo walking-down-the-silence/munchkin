@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Munchkin.Runtime.Entities.UserAggregate
+namespace Munchkin.Runtime.Abstractions.UserAggregate
 {
     public class User
     {

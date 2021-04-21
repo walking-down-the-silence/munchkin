@@ -1,5 +1,6 @@
-﻿using Munchkin.Runtime.Entities.GameRoomAggregate;
-using Munchkin.Runtime.Entities.UserAggregate;
+﻿using Munchkin.Runtime.Abstractions.GameRoomAggregate;
+using Munchkin.Runtime.Abstractions.UserAggregate;
+using Munchkin.Runtime.Entities.GameRoomAggregate;
 using System;
 using System.Threading.Tasks;
 
@@ -8,53 +9,69 @@ namespace Munchkin.Infrastructure.Services
     public class GameRoomService
     {
         private readonly IGameRoomRepository _gameRoomRepository;
+        private readonly IUserRepository _userRepository;
 
-        public GameRoomService(IGameRoomRepository gameRoomRepository)
+        public GameRoomService(
+            IGameRoomRepository gameRoomRepository,
+            IUserRepository userRepository)
         {
             _gameRoomRepository = gameRoomRepository ?? throw new ArgumentNullException(nameof(gameRoomRepository));
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
-        public async Task<GameRoom> CreateRoomAsLeader(User user)
+        public async Task<IGameRoom> CreateRoomAsLeader(int userId)
         {
-            if (user is null)
-                throw new ArgumentNullException(nameof(user));
+            var user = await _userRepository.GetUserByIdAsync(userId);
 
-            var gameRoom = new GameRoom();
-            var (result, joinResponse) = gameRoom.JoinRoom(user);
-            result = await _gameRoomRepository.SaveGameRoomAsync(result);
-            return joinResponse == JoinRoomResult.JoinedRoom ? result : default;
+            if (user is null)
+            {
+                return null;
+            }
+
+            IGameRoom gameRoom = new GameRoom();
+            var joinResponse = await gameRoom.JoinRoom(user);
+            gameRoom = await _gameRoomRepository.SaveGameRoomAsync(gameRoom);
+            return joinResponse == JoinRoomResult.JoinedRoom ? gameRoom : default;
         }
 
-        public async Task<JoinRoomResult> JoinTheRoom(int gameRoomId, User user)
+        public async Task<JoinRoomResult> JoinTheRoom(int gameRoomId, int userId)
         {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+
             if (user is null)
-                throw new ArgumentNullException(nameof(user));
+            {
+                return JoinRoomResult.InvalidUser;
+            }
 
             var gameRoom = await _gameRoomRepository.GetGameRoomByIdAsync(gameRoomId);
-            var (result, joinResponse) = gameRoom.JoinRoom(user);
+            var joinResponse = await gameRoom.JoinRoom(user);
 
             if (joinResponse == JoinRoomResult.JoinedRoom)
             {
-                _ = await _gameRoomRepository.SaveGameRoomAsync(result);
+                _ = await _gameRoomRepository.SaveGameRoomAsync(gameRoom);
             }
 
             return joinResponse;
         }
 
-        public async Task<JoinRoomResult> LeaveTheRoom(int gameRoomId, User user)
+        public async Task<JoinRoomResult> LeaveTheRoom(int gameRoomId, int userId)
         {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+
             if (user is null)
-                throw new ArgumentNullException(nameof(user));
+            {
+                return JoinRoomResult.InvalidUser;
+            }
 
             var gameRoom = await _gameRoomRepository.GetGameRoomByIdAsync(gameRoomId);
-            var (result, joinResponse) = gameRoom.LeaveRoom(user);
+            var joinResponse = await gameRoom.LeaveRoom(user);
 
             if (joinResponse == JoinRoomResult.LeftRoom)
             {
-                result = await _gameRoomRepository.SaveGameRoomAsync(result);
+                gameRoom = await _gameRoomRepository.SaveGameRoomAsync(gameRoom);
             }
 
-            if (result.IsEmpty)
+            if (await gameRoom.IsEmpty())
             {
                 _ = await _gameRoomRepository.DropGameRoomAsync(gameRoomId);
             }

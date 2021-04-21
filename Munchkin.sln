@@ -19,7 +19,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Munchkin.Runtime", "src\Mun
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Munchkin.Runtime.Tests", "tests\Munchkin.Runtime.Tests\Munchkin.Runtime.Tests.csproj", "{57156602-319C-4D60-9AB1-E19785090A43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Munchkin.Api", "src\Munchkin.Api\Munchkin.Api.csproj", "{64027F34-A903-4DFE-85A9-AFF702DBFF80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Munchkin.Api", "src\Munchkin.Api\Munchkin.Api.csproj", "{64027F34-A903-4DFE-85A9-AFF702DBFF80}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Munchkin.Runtime.Client", "src\Munchkin.Runtime.Client\Munchkin.Runtime.Client.csproj", "{DD202AD8-CBA9-42DD-A4A0-AA8471E5BBD7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Munchkin.Runtime.Silo", "src\Munchkin.Runtime.Silo\Munchkin.Runtime.Silo.csproj", "{F934A725-DA89-490A-A40C-3DACAC334FFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Munchkin.Runtime.Abstractions", "src\Munchkin.Runtime.Abstractions\Munchkin.Runtime.Abstractions.csproj", "{5948CE68-FF40-4109-AF0D-FF5E384E24DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +61,18 @@ Global
 		{64027F34-A903-4DFE-85A9-AFF702DBFF80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64027F34-A903-4DFE-85A9-AFF702DBFF80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64027F34-A903-4DFE-85A9-AFF702DBFF80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD202AD8-CBA9-42DD-A4A0-AA8471E5BBD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD202AD8-CBA9-42DD-A4A0-AA8471E5BBD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD202AD8-CBA9-42DD-A4A0-AA8471E5BBD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD202AD8-CBA9-42DD-A4A0-AA8471E5BBD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F934A725-DA89-490A-A40C-3DACAC334FFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F934A725-DA89-490A-A40C-3DACAC334FFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F934A725-DA89-490A-A40C-3DACAC334FFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F934A725-DA89-490A-A40C-3DACAC334FFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5948CE68-FF40-4109-AF0D-FF5E384E24DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5948CE68-FF40-4109-AF0D-FF5E384E24DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5948CE68-FF40-4109-AF0D-FF5E384E24DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5948CE68-FF40-4109-AF0D-FF5E384E24DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +85,9 @@ Global
 		{564F5ADF-47DE-4A98-88C1-7F0379D2D08F} = {55AAE376-7F20-4323-9439-822B879D18BD}
 		{57156602-319C-4D60-9AB1-E19785090A43} = {BDF876A2-B5A1-42A3-90C0-7D0A7F4B4E91}
 		{64027F34-A903-4DFE-85A9-AFF702DBFF80} = {55AAE376-7F20-4323-9439-822B879D18BD}
+		{DD202AD8-CBA9-42DD-A4A0-AA8471E5BBD7} = {55AAE376-7F20-4323-9439-822B879D18BD}
+		{F934A725-DA89-490A-A40C-3DACAC334FFF} = {55AAE376-7F20-4323-9439-822B879D18BD}
+		{5948CE68-FF40-4109-AF0D-FF5E384E24DD} = {55AAE376-7F20-4323-9439-822B879D18BD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D6ACC538-B9BF-4082-867E-BF1D08CB949D}

@@ -6,10 +6,17 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="3.4.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="3.4.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Munchkin.Core\Munchkin.Core.csproj" />
+    <ProjectReference Include="..\Munchkin.Runtime.Abstractions\Munchkin.Runtime.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

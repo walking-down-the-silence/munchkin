@@ -6,13 +6,14 @@ using Munchkin.Core.Contracts.Stages;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Stages;
+using Munchkin.Runtime.Abstractions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Munchkin.Runtime
 {
-    public class GameEngine
+    public class GameEngine : IGameEngine
     {
         private readonly IMediator _mediator;
         private readonly IReadOnlyCollection<IExpansion> _expansions;

@@ -1,7 +1,6 @@
-﻿using Moq;
-using Munchkin.Infrastructure.Services;
-using Munchkin.Runtime.Entities.GameRoomAggregate;
-using Munchkin.Runtime.Entities.UserAggregate;
+﻿using Munchkin.Infrastructure.Services;
+using Munchkin.Runtime.Abstractions.GameRoomAggregate;
+using Munchkin.Runtime.Abstractions.UserAggregate;
 using System;
 using System.Threading.Tasks;
 using Xunit;
@@ -11,40 +10,39 @@ namespace Munchkin.Infrastructure.Tests.Services
     public class GameRoomServiceTests
     {
         [Fact]
-        public void CreateRoom_WithNullParameter_ShoudThrowArgumentNullException()
-        {
-            // Arrange
-            var gameRoomRepository = Mock.Of<IGameRoomRepository>();
-            var gameRoomService = new GameRoomService(gameRoomRepository);
-
-            // Act, Assert
-            Assert.ThrowsAsync<ArgumentNullException>(() => gameRoomService.CreateRoomAsLeader(null));
-        }
-
-        [Fact]
         public async void CreateRoom_WithNotNullParameter_ShouldCreateGameRoom()
         {
             // Arrange
-            var user = new User(1, "Johny Cash");
-
+            int userId = 1;
+            var userRepository = new UserRepositoryDummy();
             var gameRoomRepository = new GameRoomRepositoryDummy();
-            var gameRoomService = new GameRoomService(gameRoomRepository);
+            var gameRoomService = new GameRoomService(gameRoomRepository, userRepository);
 
             // Act
-            GameRoom gameRoom = await gameRoomService.CreateRoomAsLeader(user);
+            var gameRoom = await gameRoomService.CreateRoomAsLeader(userId);
+            var players = await gameRoom.GetPlayers();
+
 
             // Assert
             Assert.NotNull(gameRoom);
-            Assert.Single(gameRoom.Players);
+            Assert.Single(players);
+        }
+
+        private class UserRepositoryDummy : IUserRepository
+        {
+            public Task<User> GetUserByIdAsync(int userId)
+            {
+                return Task.FromResult(new User(userId, "Johny Cash"));
+            }
         }
 
         private class GameRoomRepositoryDummy : IGameRoomRepository
         {
             public Task<bool> DropGameRoomAsync(int gameRoomId) => throw new NotImplementedException();
 
-            public Task<GameRoom> GetGameRoomByIdAsync(int gameRoomId) => throw new NotImplementedException();
+            public Task<IGameRoom> GetGameRoomByIdAsync(int gameRoomId) => throw new NotImplementedException();
 
-            public Task<GameRoom> SaveGameRoomAsync(GameRoom gameRoom) => Task.FromResult(gameRoom);
+            public Task<IGameRoom> SaveGameRoomAsync(IGameRoom gameRoom) => Task.FromResult(gameRoom);
         }
     }
 }
