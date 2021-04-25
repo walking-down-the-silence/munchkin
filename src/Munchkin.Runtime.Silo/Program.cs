@@ -1,9 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Munchkin.Runtime.Entities.GameRoomAggregate;
 using Orleans;
 using Orleans.Configuration;
 using Orleans.Hosting;
-using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Munchkin.Runtime.Silo
@@ -12,29 +13,34 @@ namespace Munchkin.Runtime.Silo
     {
         public static async Task Main(string[] args)
         {
-            var builder = new SiloHostBuilder()
-                .UseLocalhostClustering()
-                .Configure<ClusterOptions>(options =>
+            var builder = new HostBuilder()
+                .UseOrleans(siloBuilder =>
                 {
-                    options.ClusterId = "munchkin.cluster.development";
-                    options.ServiceId = "munchkin";
-                })
-                .AddMemoryGrainStorageAsDefault()
-                .ConfigureApplicationParts(parts =>
-                {
-                    parts.AddApplicationPart(typeof(GameRoom).Assembly).WithReferences();
-                })
-                .ConfigureLogging(logging =>
-                {
-                    logging.AddConsole();
+                    siloBuilder
+                        .UseLocalhostClustering()
+                        .Configure<ClusterOptions>(options =>
+                        {
+                            options.ClusterId = "munchkin.cluster.development";
+                            options.ServiceId = "munchkin";
+                        })
+                        .Configure<EndpointOptions>(options =>
+                        {
+                            options.AdvertisedIPAddress = IPAddress.Loopback;
+                        })
+                        .ConfigureApplicationParts(parts =>
+                        {
+                            parts.AddApplicationPart(typeof(GameRoom).Assembly).WithReferences();
+                        })
+                        .ConfigureLogging(logging =>
+                        {
+                            logging.AddConsole();
+                        })
+                        .AddMemoryGrainStorageAsDefault();
                 });
 
-            var silo = builder.Build();
-            await silo.StartAsync();
 
-            Console.ReadKey();
-
-            await silo.StopAsync();
+            var host = builder.Build();
+            await host.RunAsync();
         }
     }
 }

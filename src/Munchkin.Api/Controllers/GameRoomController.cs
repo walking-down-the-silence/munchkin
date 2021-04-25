@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Munchkin.Api.ViewModels;
 using System.Threading.Tasks;
 
 namespace Munchkin.Api.Controllers
@@ -7,37 +8,32 @@ namespace Munchkin.Api.Controllers
     [ApiController]
     public class GameRoomController : ControllerBase
     {
-        // POST api/game-room
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] GameRoomCreateAsLeaderVM vm)
         {
             return Ok();
         }
 
-        // GET api/game-room
         [HttpGet]
         public async Task<IActionResult> Get()
         {
             return Ok();
         }
 
-        // GET api/game-room/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("{gameRoomId}")]
+        public async Task<IActionResult> Get(int gameRoomId)
         {
             return Ok();
         }
 
-        // PUT api/game-room/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] string value)
+        [HttpPut("{gameRoomId}")]
+        public async Task<IActionResult> Put(int gameRoomId, [FromBody] string value)
         {
             return Ok();
         }
 
-        // DELETE api/game-room/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("{gameRoomId}")]
+        public async Task<IActionResult> Delete(int gameRoomId)
         {
             return NoContent();
         }
