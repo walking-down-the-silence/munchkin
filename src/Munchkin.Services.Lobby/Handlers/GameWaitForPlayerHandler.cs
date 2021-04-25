@@ -6,7 +6,7 @@ using Munchkin.Runtime.Entities.Actions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Munchkin.Runtime.Client.Handlers
+namespace Munchkin.Services.Lobby.Handlers
 {
     internal class GameWaitForPlayerHandler : IRequestHandler<GameWaitForPlayerRequest, Response<Unit>>
     {

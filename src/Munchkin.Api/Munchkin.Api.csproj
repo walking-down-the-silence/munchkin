@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="9.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.Orleans.Core" Version="3.4.2" />
     <PackageReference Include="Microsoft.Orleans.Server" Version="3.4.2" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
@@ -16,8 +18,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Munchkin.Core\Munchkin.Core.csproj" />
+    <ProjectReference Include="..\Munchkin.Expansion.Deluxe\Munchkin.Expansion.Deluxe.csproj" />
     <ProjectReference Include="..\Munchkin.Runtime.Client\Munchkin.Runtime.Client.csproj" />
     <ProjectReference Include="..\Munchkin.Runtime\Munchkin.Runtime.csproj" />
+    <ProjectReference Include="..\Munchkin.Services.Lobby\Munchkin.Services.Lobby.csproj" />
   </ItemGroup>
 
 </Project>

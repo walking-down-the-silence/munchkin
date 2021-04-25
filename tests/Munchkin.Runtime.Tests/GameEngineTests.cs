@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Moq;
 using Munchkin.Core.Contracts;
+using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Enums;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Munchkin.Runtime.Tests
@@ -25,7 +27,7 @@ namespace Munchkin.Runtime.Tests
                 player3
             };
 
-            var expansion1 = new MunchkinOriginal();
+            var expansion1 = new MunchkinOriginalExpansion();
             var expansions = new IExpansion[] { expansion1 };
 
             var gameEngine = new GameEngine(mediatr, expansions, players);
@@ -35,6 +37,33 @@ namespace Munchkin.Runtime.Tests
 
             // Assert
             //Assert.NotNull(result);
+        }
+
+        private class MunchkinOriginalExpansion : IExpansion
+        {
+            public string Code => "munchkin.original";
+
+            public string Title => "Munchkin";
+
+            public IDoorDeckFactory DoorDeck => new MunchkinOriginalDoordeckFactory();
+
+            public ITreasureDeckFactory TreasureDeck => new MunchkinOriginalTreasureDeckFactory();
+        }
+
+        private class MunchkinOriginalDoordeckFactory : IDoorDeckFactory
+        {
+            public IReadOnlyCollection<DoorsCard> GetDoorsCards()
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
+        private class MunchkinOriginalTreasureDeckFactory : ITreasureDeckFactory
+        {
+            public IReadOnlyCollection<TreasureCard> GetTreasureCards()
+            {
+                throw new System.NotImplementedException();
+            }
         }
     }
 }

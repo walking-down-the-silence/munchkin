@@ -1,7 +1,7 @@
 ﻿using Munchkin.Runtime.Abstractions.GameRoomAggregate;
 using Munchkin.Runtime.Abstractions.UserAggregate;
-using Munchkin.Runtime.Client.Services;
-using System;
+using Munchkin.Runtime.Entities.GameRoomAggregate;
+using Munchkin.Services.Lobby.Services;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -38,9 +38,9 @@ namespace Munchkin.Runtime.Client.Tests.Services
 
         private class GameRoomRepositoryDummy : IGameRoomRepository
         {
-            public Task<bool> DropGameRoomAsync(int gameRoomId) => throw new NotImplementedException();
+            public Task<bool> DropGameRoomAsync(int gameRoomId) => Task.FromResult(true);
 
-            public Task<IGameRoom> GetGameRoomByIdAsync(int gameRoomId) => throw new NotImplementedException();
+            public Task<IGameRoom> GetGameRoomByIdAsync(int gameRoomId) => Task.FromResult<IGameRoom>(new GameRoom());
 
             public Task<IGameRoom> SaveGameRoomAsync(IGameRoom gameRoom) => Task.FromResult(gameRoom);
         }

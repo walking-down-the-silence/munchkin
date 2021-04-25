@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Munchkin.Api.ViewModels;
-using Munchkin.Runtime.Client.Services;
+using Munchkin.Services.Lobby.Services;
 using System.Threading.Tasks;
 
 namespace Munchkin.Api.Controllers

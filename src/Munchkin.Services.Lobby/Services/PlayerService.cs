@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Munchkin.Runtime.Client.Services
+namespace Munchkin.Services.Lobby.Services
 {
     public class PlayerService
     {

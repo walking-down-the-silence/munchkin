@@ -5,7 +5,7 @@ using Munchkin.Core.Model.Requests;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Munchkin.Runtime.Client.Handlers
+namespace Munchkin.Services.Lobby.Handlers
 {
     public class PlayerSelectCardHandler : IRequestHandler<PlayerSelectSingleCardRequest, Response<Card>>
     {
