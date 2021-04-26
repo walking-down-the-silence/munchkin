@@ -1,5 +1,6 @@
 ﻿using Munchkin.Runtime.Abstractions.GameRoomAggregate;
 using Munchkin.Runtime.Abstractions.UserAggregate;
+using Orleans;
 using System;
 using System.Threading.Tasks;
 
@@ -7,15 +8,15 @@ namespace Munchkin.Services.Lobby.Services
 {
     public class GameRoomService
     {
-        private readonly IGameRoomRepository _gameRoomRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IClusterClient _clusterClient;
 
         public GameRoomService(
-            IGameRoomRepository gameRoomRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IClusterClient clusterClient)
         {
-            _gameRoomRepository = gameRoomRepository ?? throw new ArgumentNullException(nameof(gameRoomRepository));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _clusterClient = clusterClient ?? throw new ArgumentNullException(nameof(clusterClient));
         }
 
         public async Task<IGameRoom> CreateRoomAsLeader(int userId)
@@ -27,11 +28,15 @@ namespace Munchkin.Services.Lobby.Services
                 return null;
             }
 
-            // TODO: replace the game room id with correct one
-            IGameRoom gameRoom = await _gameRoomRepository.GetGameRoomByIdAsync(1);
+            var gameRoom = _clusterClient.GetGrain<IGameRoom>(userId);
             var joinResponse = await gameRoom.JoinRoom(user);
-            gameRoom = await _gameRoomRepository.SaveGameRoomAsync(gameRoom);
             return joinResponse == JoinRoomResult.JoinedRoom ? gameRoom : default;
+        }
+
+        public Task<IGameRoom> GetGameRoom(int gameRoomId)
+        {
+            var gameRoom = _clusterClient.GetGrain<IGameRoom>(gameRoomId);
+            return Task.FromResult(gameRoom);
         }
 
         public async Task<JoinRoomResult> JoinTheRoom(int gameRoomId, int userId)
@@ -43,14 +48,8 @@ namespace Munchkin.Services.Lobby.Services
                 return JoinRoomResult.InvalidUser;
             }
 
-            var gameRoom = await _gameRoomRepository.GetGameRoomByIdAsync(gameRoomId);
+            var gameRoom = _clusterClient.GetGrain<IGameRoom>(gameRoomId);
             var joinResponse = await gameRoom.JoinRoom(user);
-
-            if (joinResponse == JoinRoomResult.JoinedRoom)
-            {
-                _ = await _gameRoomRepository.SaveGameRoomAsync(gameRoom);
-            }
-
             return joinResponse;
         }
 
@@ -63,19 +62,8 @@ namespace Munchkin.Services.Lobby.Services
                 return JoinRoomResult.InvalidUser;
             }
 
-            var gameRoom = await _gameRoomRepository.GetGameRoomByIdAsync(gameRoomId);
+            var gameRoom = _clusterClient.GetGrain<IGameRoom>(gameRoomId);
             var joinResponse = await gameRoom.LeaveRoom(user);
-
-            if (joinResponse == JoinRoomResult.LeftRoom)
-            {
-                gameRoom = await _gameRoomRepository.SaveGameRoomAsync(gameRoom);
-            }
-
-            if (await gameRoom.IsEmpty())
-            {
-                _ = await _gameRoomRepository.DropGameRoomAsync(gameRoomId);
-            }
-
             return joinResponse;
         }
     }

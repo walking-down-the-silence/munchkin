@@ -3,6 +3,7 @@ using Munchkin.Runtime.Abstractions.UserAggregate;
 using Munchkin.Runtime.Entities.GameRoomAggregate;
 using Munchkin.Services.Lobby.Services;
 using System.Threading.Tasks;
+using Orleans.TestingHost;
 using Xunit;
 
 namespace Munchkin.Runtime.Client.Tests.Services
@@ -13,15 +14,14 @@ namespace Munchkin.Runtime.Client.Tests.Services
         public async void CreateRoom_WithNotNullParameter_ShouldCreateGameRoom()
         {
             // Arrange
+            using var cluster = CreateTestCluster();
             int userId = 1;
             var userRepository = new UserRepositoryDummy();
-            var gameRoomRepository = new GameRoomRepositoryDummy();
-            var gameRoomService = new GameRoomService(gameRoomRepository, userRepository);
+            var gameRoomService = new GameRoomService(userRepository, cluster.Client);
 
             // Act
             var gameRoom = await gameRoomService.CreateRoomAsLeader(userId);
             var players = await gameRoom.GetPlayers();
-
 
             // Assert
             Assert.NotNull(gameRoom);
@@ -43,6 +43,15 @@ namespace Munchkin.Runtime.Client.Tests.Services
             public Task<IGameRoom> GetGameRoomByIdAsync(int gameRoomId) => Task.FromResult<IGameRoom>(new GameRoom());
 
             public Task<IGameRoom> SaveGameRoomAsync(IGameRoom gameRoom) => Task.FromResult(gameRoom);
+        }
+
+        private TestCluster CreateTestCluster()
+        {
+            var builder = new TestClusterBuilder();
+            var cluster = builder.Build();
+            cluster.Deploy();
+
+            return cluster;
         }
     }
 }
