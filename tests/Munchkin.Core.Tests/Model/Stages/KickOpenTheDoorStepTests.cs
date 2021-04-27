@@ -89,7 +89,7 @@ namespace Munchkin.Core.Tests.Model.Stages
         }
 
         [Fact]
-        public async Task OnResolve_WhenCardIsNotAMonsterButIsACurse_ShouldTakeConsequences()
+        public async Task OnResolve_WhenCardIsNotAMonsterButIsACurse_ShouldPutInPlay()
         {
             // Arrange
             var player = CreatePlayerJohny();
