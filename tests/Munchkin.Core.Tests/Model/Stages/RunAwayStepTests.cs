@@ -23,8 +23,8 @@ namespace Munchkin.Core.Tests.Model.Stages
             // Arrange
             Player fightingPlayer = null;
             Player helpingPlayer = new("Johny Cash", EGender.Male);
-            var card = new BandOf3872Orcs();
-            var monsters = new List<MonsterCard>() { card };
+            var mosterCard = new BandOf3872Orcs();
+            var monsters = new List<MonsterCard>() { mosterCard };
 
             // Act
             var exception = Record.Exception(() => new RunAwayStep(fightingPlayer, helpingPlayer, monsters));
@@ -41,8 +41,8 @@ namespace Munchkin.Core.Tests.Model.Stages
             // Arrange
             Player fightingPlayer = new("Johny Cash", EGender.Male);
             Player helpingPlayer = null;
-            var card = new BandOf3872Orcs();
-            var monsters = new List<MonsterCard>() { card };
+            var mosterCard = new BandOf3872Orcs();
+            var monsters = new List<MonsterCard>() { mosterCard };
 
             // Act
             var exception = Record.Exception(() => new RunAwayStep(fightingPlayer, helpingPlayer, monsters));
@@ -59,7 +59,7 @@ namespace Munchkin.Core.Tests.Model.Stages
             // Arrange
             Player fightingPlayer = new("Johny Cash", EGender.Male);
             Player helpingPlayer = new("Bruce Willis", EGender.Male);
-            var card = new BandOf3872Orcs();
+            var mosterCard = new BandOf3872Orcs();
             List<MonsterCard> monsters = null;
 
             // Act
@@ -77,11 +77,11 @@ namespace Munchkin.Core.Tests.Model.Stages
             // Arrange
             Player fightingPlayer = new("Johny Cash", EGender.Male);
             Player helpingPlayer = new("Bruce Willis", EGender.Male);
-            var card = new BandOf3872Orcs();
-            var doorsCards = new List<MonsterCard>() { card };
+            var mosterCard = new BandOf3872Orcs();
+            var monsters = new List<MonsterCard>() { mosterCard };
 
             // Act
-            var exception = Record.Exception(() => new RunAwayStep(fightingPlayer, helpingPlayer, doorsCards));
+            var exception = Record.Exception(() => new RunAwayStep(fightingPlayer, helpingPlayer, monsters));
 
             // Act, Assert
             Assert.Null(exception);
