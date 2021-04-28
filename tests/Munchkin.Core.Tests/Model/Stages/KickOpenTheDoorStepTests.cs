@@ -10,6 +10,8 @@ using Xunit;
 
 namespace Munchkin.Core.Tests.Model.Stages
 {
+    // those tests are not covering table.Dungeon.RemovePlayedCard(doorsCard); 
+    // Card property is not covered as well
     public class KickOpenTheDoorStepTests
     {
         [Fact]
