@@ -12,7 +12,7 @@ namespace Munchkin.Core.Model.Stages
         protected override async Task<Table> OnResolve(Table table)
         {
             // TODO: allow other players to take a card from dead players avatar
-            var end = new EndStep();
+            var end = new PlayerTurnEndStep();
             return await end.Resolve(table);
         }
     }

@@ -63,6 +63,7 @@ namespace Munchkin.Core.Tests.Model.Stages
 
             // Assert
             Assert.NotNull(result);
+            // TODO: add check for card on the table 
             Assert.Contains(card, table.Players.Current.YourHand);
         }
 
