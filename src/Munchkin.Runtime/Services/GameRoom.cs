@@ -10,7 +10,7 @@ namespace Munchkin.Runtime.Entities.GameRoomAggregate
 {
     public class GameRoom : Grain, IGameRoom
     {
-        private readonly List<User> _players = new();
+        private readonly Dictionary<int, User> _players = new();
         private readonly List<ExpansionOption> _expansionOptions = new();
         private readonly Dictionary<string, ExpansionOption> _selectedOptions = new();
 
@@ -22,7 +22,7 @@ namespace Munchkin.Runtime.Entities.GameRoomAggregate
 
         public Task<IReadOnlyCollection<User>> GetUsers()
         {
-            IReadOnlyCollection<User> players = _players;
+            IReadOnlyCollection<User> players = _players.Values;
             return Task.FromResult(players);
         }
 
@@ -33,7 +33,7 @@ namespace Munchkin.Runtime.Entities.GameRoomAggregate
                 return Task.FromResult(JoinRoomResult.InvalidUser);
             }
 
-            _players.Add(player);
+            _players[player.UserId] = player;
             return Task.FromResult(JoinRoomResult.JoinedRoom);
         }
 
@@ -45,7 +45,7 @@ namespace Munchkin.Runtime.Entities.GameRoomAggregate
             if (!_players.Any())
                 return Task.FromResult(JoinRoomResult.RoomEmpty);
 
-            if (_players.Remove(player))
+            if (_players.Remove(player.UserId))
                 return Task.FromResult(JoinRoomResult.LeftRoom);
 
             return Task.FromResult(JoinRoomResult.InvalidUser);
