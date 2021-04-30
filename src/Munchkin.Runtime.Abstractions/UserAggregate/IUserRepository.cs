@@ -5,5 +5,7 @@ namespace Munchkin.Runtime.Abstractions.UserAggregate
     public interface IUserRepository
     {
         Task<User> GetUserByIdAsync(int userId);
+
+        Task SaveUserAsync(User user);
     }
 }

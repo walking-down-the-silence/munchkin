@@ -9,15 +9,15 @@ namespace Munchkin.Runtime.Abstractions.GameRoomAggregate
     {
         Task<bool> IsEmpty();
 
-        Task<IReadOnlyCollection<User>> GetPlayers();
+        Task<IReadOnlyCollection<User>> GetUsers();
 
         Task<JoinRoomResult> JoinRoom(User user);
 
         Task<JoinRoomResult> LeaveRoom(User player);
 
-        Task<IReadOnlyCollection<ExpansionOption>> GetSelectedExpansions();
+        Task SetAvailableExpansions(ExpansionOption[] avaialableExpansions);
 
-        Task<IGameRoom> SetAvailableExpansions(ExpansionOption[] avaialableExpansions);
+        Task<IReadOnlyCollection<ExpansionSelection>> GetExpansionSelections();
 
         Task<SelectExpansionResult> SelectExpansion(string code);
 

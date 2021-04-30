@@ -13,7 +13,7 @@ namespace Munchkin.Runtime.Tests.Entities.GameRoomAggregate
         {
             // Arrange
             var gameRoom = new GameRoom();
-            var players = await gameRoom.GetPlayers();
+            var players = await gameRoom.GetUsers();
             var isEmpty = await gameRoom.IsEmpty();
 
             // Assert
@@ -31,7 +31,7 @@ namespace Munchkin.Runtime.Tests.Entities.GameRoomAggregate
 
             // Act
             var joinResponse = await gameRoom.JoinRoom(null);
-            var players = await gameRoom.GetPlayers();
+            var players = await gameRoom.GetUsers();
             var isEmpty = await gameRoom.IsEmpty();
 
             // Assert
@@ -44,13 +44,13 @@ namespace Munchkin.Runtime.Tests.Entities.GameRoomAggregate
         public async void JoinRoom_WithNotNullParameter_ShouldJoinAndHaveExactlyTwoPlayers()
         {
             // Arrange
-            var user = new User(1, "Johny Cash");
+            var user = new User(1, "Johny Cash", true);
             var gameRoom = new GameRoom();
             var expectedResponse = JoinRoomResult.JoinedRoom;
 
             // Act
             var joinResponse = await gameRoom.JoinRoom(user);
-            var players = await gameRoom.GetPlayers();
+            var players = await gameRoom.GetUsers();
             var isEmpty = await gameRoom.IsEmpty();
 
             // Assert
@@ -68,7 +68,7 @@ namespace Munchkin.Runtime.Tests.Entities.GameRoomAggregate
 
             // Act
             var joinResponse = await gameRoom.LeaveRoom(null);
-            var players = await gameRoom.GetPlayers();
+            var players = await gameRoom.GetUsers();
             var isEmpty = await gameRoom.IsEmpty();
 
             // Assert
@@ -81,13 +81,13 @@ namespace Munchkin.Runtime.Tests.Entities.GameRoomAggregate
         public async void LeaveRoom_OnEmptyRoomWithUser_ShouldLeaveAndGameRoomBecomeEmpty()
         {
             // Arrange
-            var user1 = new User(1, "Johny Cash");
+            var user1 = new User(1, "Johny Cash", true);
             var gameRoom = new GameRoom();
             var expectedResponse = JoinRoomResult.RoomEmpty;
 
             // Act
             var leaveResponse = await gameRoom.LeaveRoom(user1);
-            var players = await gameRoom.GetPlayers();
+            var players = await gameRoom.GetUsers();
             var isEmpty = await gameRoom.IsEmpty();
 
             // Assert
@@ -100,14 +100,14 @@ namespace Munchkin.Runtime.Tests.Entities.GameRoomAggregate
         public async void LeaveRoom_WithNotNullParameter_ShouldLeaveAndGameRoomBecomeEmpty()
         {
             // Arrange
-            var user = new User(1, "Johny Cash");
+            var user = new User(1, "Johny Cash", true);
             var gameRoom = new GameRoom();
             var expectedResponse = JoinRoomResult.LeftRoom;
 
             // Act
             _ = gameRoom.JoinRoom(user);
             var leaveResponse = await gameRoom.LeaveRoom(user);
-            var players = await gameRoom.GetPlayers();
+            var players = await gameRoom.GetUsers();
             var isEmpty = await gameRoom.IsEmpty();
 
             // Assert
@@ -128,12 +128,11 @@ namespace Munchkin.Runtime.Tests.Entities.GameRoomAggregate
             // Act
             _ = gameRoom.SetAvailableExpansions(avaialableExpansions);
             var selectedResponse = await gameRoom.SelectExpansion(expansionOption.Code);
-            var selectedExpansions = await gameRoom.GetSelectedExpansions();
+            var selectedExpansions = await gameRoom.GetExpansionSelections();
 
             // Assert
             Assert.Equal(expectedResponse, selectedResponse);
-            Assert.Single(selectedExpansions);
-            Assert.Equal(expansionOption, selectedExpansions.First());
+            Assert.Single(selectedExpansions.Where(x => x.Selected));
         }
 
         [Fact]
@@ -146,14 +145,14 @@ namespace Munchkin.Runtime.Tests.Entities.GameRoomAggregate
             var expectedResponse = SelectExpansionResult.OptionUnselected;
 
             // Act
-            _ = await gameRoom.SetAvailableExpansions(avaialableExpansions);
+            await gameRoom.SetAvailableExpansions(avaialableExpansions);
             _ = await gameRoom.SelectExpansion(expansionOption.Code);
             var selectedResponse = await gameRoom.UnselectExpansion(expansionOption.Code);
-            var selectedExpansions = await gameRoom.GetSelectedExpansions();
+            var selectedExpansions = await gameRoom.GetExpansionSelections();
 
             // Assert
             Assert.Equal(expectedResponse, selectedResponse);
-            Assert.Empty(selectedExpansions);
+            Assert.Empty(selectedExpansions.Where(x => x.Selected));
         }
     }
 }

@@ -13,12 +13,13 @@ namespace Munchkin.Services.Lobby
         public static IServiceCollection AddMunchkinGameServices(this IServiceCollection services)
         {
             return services
-                .AddTransient<IUserRepository, UserRepository>()
+                .AddSingleton<IUserRepository, UserRepository>()
                 .AddTransient<IPlayerActionRepository, PlayerActionRepository>()
                 .AddTransient<IGameRoomRepository, GameRoomRepository>()
                 .AddTransient<IGameEngineRepository, GameEngineRepository>()
                 .AddTransient<GameRoomService>()
-                .AddTransient<GameEngineService>();
+                .AddTransient<GameEngineService>()
+                .AddTransient<UserService>();
         }
     }
 }

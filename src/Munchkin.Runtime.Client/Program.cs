@@ -27,7 +27,7 @@ namespace Munchkin.Runtime.Client
             using var client = builder.Build();
             await client.Connect();
 
-            var user = new User(1, "Johny Cash");
+            var user = new User(1, "Johny Cash", true);
 
             var gameRoom = client.GetGrain<IGameRoom>(1);
             var joinRoomResult = await gameRoom.JoinRoom(user);

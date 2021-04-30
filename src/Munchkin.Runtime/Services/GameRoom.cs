@@ -20,7 +20,7 @@ namespace Munchkin.Runtime.Entities.GameRoomAggregate
 
         public Task<bool> IsEmpty() => Task.FromResult(_players.Count == 0);
 
-        public Task<IReadOnlyCollection<User>> GetPlayers()
+        public Task<IReadOnlyCollection<User>> GetUsers()
         {
             IReadOnlyCollection<User> players = _players;
             return Task.FromResult(players);
@@ -51,13 +51,7 @@ namespace Munchkin.Runtime.Entities.GameRoomAggregate
             return Task.FromResult(JoinRoomResult.InvalidUser);
         }
 
-        public Task<IReadOnlyCollection<ExpansionOption>> GetSelectedExpansions()
-        {
-            IReadOnlyCollection<ExpansionOption> values = _selectedOptions.Values;
-            return Task.FromResult(values);
-        }
-
-        public Task<IGameRoom> SetAvailableExpansions(ExpansionOption[] avaialableExpansions)
+        public Task SetAvailableExpansions(ExpansionOption[] avaialableExpansions)
         {
             if (avaialableExpansions is null)
             {
@@ -66,7 +60,15 @@ namespace Munchkin.Runtime.Entities.GameRoomAggregate
 
             _expansionOptions.Clear();
             _expansionOptions.AddRange(avaialableExpansions);
-            return Task.FromResult<IGameRoom>(this);
+            return Task.CompletedTask;
+        }
+
+        public Task<IReadOnlyCollection<ExpansionSelection>> GetExpansionSelections()
+        {
+            IReadOnlyCollection<ExpansionSelection> expansionOptions = _expansionOptions
+                .Select(x => new ExpansionSelection(x.Code, x.Title, _selectedOptions.ContainsKey(x.Code)))
+                .ToArray();
+            return Task.FromResult(expansionOptions);
         }
 
         public Task<SelectExpansionResult> SelectExpansion(string code)

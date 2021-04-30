@@ -39,9 +39,11 @@ namespace Munchkin.Services.Lobby.Services
             if (gameRoom is null)
                 throw new ArgumentNullException(nameof(gameRoom));
 
-            var users = await gameRoom.GetPlayers();
+            var users = await gameRoom.GetUsers();
             var players = users.Select(ToPlayer).ToArray();
-            var selectedExpansionOptions = await gameRoom.GetSelectedExpansions();
+            var selectedExpansionOptions = await gameRoom
+                .GetExpansionSelections()
+                .ContinueWith(x => x.Result.Where(y => y.Selected).ToArray());
             var selectedExpansions = _expansionProvider
                 .GetServices<IExpansion>()
                 .Where(x => selectedExpansionOptions.Any(y => string.Equals(y.Code, x.Code)))

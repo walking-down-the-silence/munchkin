@@ -4,7 +4,7 @@ namespace Munchkin.Runtime.Abstractions.UserAggregate
 {
     public class User
     {
-        public User(int userId, string userName)
+        public User(int userId, string userName, bool isMale)
         {
             if (string.IsNullOrWhiteSpace(userName))
             {
@@ -13,6 +13,7 @@ namespace Munchkin.Runtime.Abstractions.UserAggregate
 
             UserId = userId;
             UserName = userName;
+            IsMale = isMale;
         }
 
         public int UserId { get; }

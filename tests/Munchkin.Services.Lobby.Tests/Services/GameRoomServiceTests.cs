@@ -5,6 +5,8 @@ using Munchkin.Services.Lobby.Services;
 using System.Threading.Tasks;
 using Orleans.TestingHost;
 using Xunit;
+using Microsoft.Extensions.DependencyInjection;
+using Munchkin.Services.Lobby;
 
 namespace Munchkin.Runtime.Client.Tests.Services
 {
@@ -14,14 +16,18 @@ namespace Munchkin.Runtime.Client.Tests.Services
         public async void CreateRoom_WithNotNullParameter_ShouldCreateGameRoom()
         {
             // Arrange
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddMunchkinGameServices();
+            using var serviceProvider = serviceCollection.BuildServiceProvider();
+
             using var cluster = CreateTestCluster();
             int userId = 1;
             var userRepository = new UserRepositoryDummy();
-            var gameRoomService = new GameRoomService(userRepository, cluster.Client);
+            var gameRoomService = new GameRoomService(userRepository, cluster.Client, serviceProvider);
 
             // Act
             var gameRoom = await gameRoomService.CreateRoomAsLeader(userId);
-            var players = await gameRoom.GetPlayers();
+            var players = await gameRoom.GetUsers();
 
             // Assert
             Assert.NotNull(gameRoom);
@@ -32,7 +38,12 @@ namespace Munchkin.Runtime.Client.Tests.Services
         {
             public Task<User> GetUserByIdAsync(int userId)
             {
-                return Task.FromResult(new User(userId, "Johny Cash"));
+                return Task.FromResult(new User(userId, "Johny Cash", true));
+            }
+
+            public Task SaveUserAsync(User user)
+            {
+                throw new System.NotImplementedException();
             }
         }
 
