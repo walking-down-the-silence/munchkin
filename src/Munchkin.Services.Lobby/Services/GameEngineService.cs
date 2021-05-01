@@ -56,6 +56,11 @@ namespace Munchkin.Services.Lobby.Services
             return gameEngine;
         }
 
+        public Task<IGameEngine> GetGameEngineAsync(int gameId)
+        {
+            return _gameEngineRepository.GetGameByIdAsync(gameId);
+        }
+
         public async Task<IReadOnlyCollection<Player>> GetPlayersAsync(int gameId)
         {
             var game = await _gameEngineRepository.GetGameByIdAsync(gameId);
@@ -77,9 +82,9 @@ namespace Munchkin.Services.Lobby.Services
             return game.Table.Players.First();
         }
 
-        private static Player ToPlayer(User p)
+        private static Player ToPlayer(User user)
         {
-            return new Player(p.UserName, p.IsMale ? EGender.Male : EGender.Female);
+            return new Player(user.UserName, user.IsMale ? EGender.Male : EGender.Female);
         }
     }
 }
