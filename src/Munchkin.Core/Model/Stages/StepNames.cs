@@ -9,7 +9,7 @@
             Curse,
             Death,
             EmptyRoom,
-            End,
+            PlayerTurnEnd,
             KickOpenTheDoor,
             LookForTrouble,
             LootTheRoom,
@@ -28,7 +28,7 @@
 
         public const string EmptyRoom = "Empty Room";
 
-        public const string End = "End";
+        public const string PlayerTurnEnd = "Player Turn End";
 
         public const string KickOpenTheDoor = "Kick Open The Door";
 

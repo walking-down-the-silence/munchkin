@@ -4,17 +4,17 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
 {
-    public class EndStep : StepBase<Table>
+    public class PlayerTurnEndStep : StepBase<Table>
     {
-        public EndStep() : base(StepNames.End)
+        public PlayerTurnEndStep() : base(StepNames.PlayerTurnEnd)
         {
         }
 
-        protected override async Task<Table> OnResolve(Table table)
+        protected override Task<Table> OnResolve(Table table)
         {
             table.Dungeon.PlayedCards.ForEach(card => card.Discard(table));
             table.Dungeon.Reset();
-            return await Task.FromResult(table);
+            return Task.FromResult(table);
         }
     }
 }

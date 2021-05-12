@@ -27,7 +27,7 @@ namespace Munchkin.Core.Model.Stages
         {
             table = await HandlePlayerDecisionToRunAway(table, FightingPlayer);
             table = await HandlePlayerDecisionToRunAway(table, HelpingPlayer);
-            var stage = new EndStep();
+            var stage = new PlayerTurnEndStep();
             return await stage.Resolve(table);
         }
 

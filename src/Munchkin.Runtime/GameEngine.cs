@@ -95,7 +95,7 @@ namespace Munchkin.Runtime
                     .To(CreateDeathStep, CanTransitionToDeathStep))
                 .Transition(x => x
                     .From<CharityStep>(StepNames.Charity)
-                    .To(CreateEndStep, CanTransitionToEnd))
+                    .To(CreatePlayerTurnEndStep, CanTransitionToEnd))
                 .Transition(x => x
                     .From<DeathStep>(StepNames.Death)
                     .To(CreateEndStep, CanTransitionToEnd))
@@ -146,11 +146,11 @@ namespace Munchkin.Runtime
 
         private bool CanTransitionToDeathStep(RunAwayStep step) => true;
 
-        private EndStep CreateEndStep(CharityStep step) => new();
+        private PlayerTurnEndStep CreatePlayerTurnEndStep(CharityStep step) => new();
 
         private bool CanTransitionToEnd(CharityStep step) => true;
 
-        private EndStep CreateEndStep(DeathStep step) => new();
+        private PlayerTurnEndStep CreateEndStep(DeathStep step) => new();
 
         private bool CanTransitionToEnd(DeathStep step) => true;
     }

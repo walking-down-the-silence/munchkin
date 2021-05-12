@@ -12,7 +12,7 @@ namespace Munchkin.Core.Model.Stages
         protected override async Task<Table> OnResolve(Table table)
         {
             // TODO: implement the charity loop
-            var stage = new EndStep();
+            var stage = new PlayerTurnEndStep();
             return await stage.Resolve(table);
         }
     }
