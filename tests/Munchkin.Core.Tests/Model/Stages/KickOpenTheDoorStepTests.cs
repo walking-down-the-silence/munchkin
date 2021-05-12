@@ -10,8 +10,6 @@ using Xunit;
 
 namespace Munchkin.Core.Tests.Model.Stages
 {
-    // those tests are not covering table.Dungeon.RemovePlayedCard(doorsCard); 
-    // Card property is not covered as well
     public class KickOpenTheDoorStepTests
     {
         [Fact]
@@ -63,7 +61,7 @@ namespace Munchkin.Core.Tests.Model.Stages
 
             // Assert
             Assert.NotNull(result);
-            // TODO: add check for card on the table 
+            Assert.DoesNotContain(card, table.DoorsCardDeck);
             Assert.Contains(card, table.Players.Current.YourHand);
         }
 
@@ -88,6 +86,7 @@ namespace Munchkin.Core.Tests.Model.Stages
 
             // Assert
             Assert.NotNull(result);
+            Assert.DoesNotContain(card, table.DoorsCardDeck);
             Assert.Contains(card, table.Dungeon.PlayedCards);
         }
 
@@ -112,6 +111,7 @@ namespace Munchkin.Core.Tests.Model.Stages
 
             // Assert
             Assert.NotNull(result);
+            Assert.DoesNotContain(card, table.DoorsCardDeck);
             Assert.Contains(card, table.Dungeon.PlayedCards);
         }
 
