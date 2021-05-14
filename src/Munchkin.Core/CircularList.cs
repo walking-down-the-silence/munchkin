@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Munchkin.Core
 {
-    public class CircularList<T> : ICollection<T>
+    public class CircularList<T> : ICircularCollection<T>
     {
         private readonly List<T> _innerList;
         private int _currentHeroIndex;

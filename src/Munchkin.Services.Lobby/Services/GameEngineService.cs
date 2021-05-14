@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Munchkin.Core.Contracts;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Enums;
+using Munchkin.Extensions.Threading;
 using Munchkin.Runtime.Abstractions;
 using Munchkin.Runtime.Abstractions.GameRoomAggregate;
 using Munchkin.Runtime.Abstractions.UserAggregate;
@@ -39,11 +40,14 @@ namespace Munchkin.Services.Lobby.Services
             if (gameRoom is null)
                 throw new ArgumentNullException(nameof(gameRoom));
 
-            var users = await gameRoom.GetUsers();
-            var players = users.Select(ToPlayer).ToArray();
+            var players = await gameRoom
+                .GetUsers()
+                .Select(x => x.Select(ToPlayer).ToArray());
+
             var selectedExpansionOptions = await gameRoom
                 .GetExpansionSelections()
-                .ContinueWith(x => x.Result.Where(y => y.Selected).ToArray());
+                .Select(x => x.Where(y => y.Selected).ToArray());
+
             var selectedExpansions = _expansionProvider
                 .GetServices<IExpansion>()
                 .Where(x => selectedExpansionOptions.Any(y => string.Equals(y.Code, x.Code)))

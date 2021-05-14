@@ -6,7 +6,7 @@ namespace Munchkin.Core.Contracts.States
 {
     public abstract class State : IState
     {
-        private readonly List<Attributes.Attribute> _attributes = new List<Attributes.Attribute>();
+        private readonly List<Attributes.Attribute> _attributes = new();
 
         /// <summary>
         /// All the attributes that the state has.
@@ -38,6 +38,9 @@ namespace Munchkin.Core.Contracts.States
         /// <summary>
         /// Clears the state attributes.
         /// </summary>
-        public virtual void Reset() => _attributes.Clear();
+        public virtual void Reset()
+        {
+            _attributes.Clear();
+        }
     }
 }

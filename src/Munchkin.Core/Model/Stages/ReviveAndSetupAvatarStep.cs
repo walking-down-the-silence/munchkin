@@ -1,4 +1,5 @@
 ﻿using Munchkin.Core.Contracts.Stages;
+using Munchkin.Core.Extensions;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Stages
@@ -23,7 +24,7 @@ namespace Munchkin.Core.Model.Stages
             }
 
             // NOTE: wait for players to play cards and setup the avatar
-            table = await table.Dungeon.WaitForAllPlayers();
+            table = await table.WaitForAllPlayers();
 
             return table;
         }

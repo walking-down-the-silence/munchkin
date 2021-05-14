@@ -6,6 +6,7 @@ using Munchkin.Core.Contracts.Stages;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Stages;
+using Munchkin.Extensions.Threading;
 using Munchkin.Runtime.Abstractions;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,11 +38,15 @@ namespace Munchkin.Runtime
             // NOTE: setup the table before the game starts
             var playersList = new CircularList<Player>(_players);
 
-            _table = Table.Empty().WithRequestSink(_mediator);
-            _table = _expansions
-                .Aggregate(_table, (table, expansion) => table
-                    .WithTreasureDeck(expansion.TreasureDeck.GetTreasureCards())
-                    .WithDoorDeck(expansion.DoorDeck.GetDoorsCards()));
+            _table = await Table.Empty().Unit()
+                .SelectMany(x => x.WithRequestSink(_mediator))
+                .SelectMany(x => x.WithWinningLevel(10))
+                .SelectMany(x => x.WithPlayers(_players));
+
+            _table = await _expansions
+                .Aggregate(_table.Unit(), (table, expansion) => table
+                    .SelectMany(x => x.WithTreasureDeck(expansion.TreasureDeck.GetTreasureCards()))
+                    .SelectMany(x => x.WithDoorDeck(expansion.DoorDeck.GetDoorsCards())));
 
             // NOTE: shuffle the decks for randomness
             _table.DoorsCardDeck.Shuffle();
@@ -50,7 +55,7 @@ namespace Munchkin.Runtime
             // NOTE: give all players initial cards
             _table.Players.ForEach(player => player.Revive(_table));
 
-            while (!_table.IsGameWon)
+            while (!_table.IsGameOver())
             {
                 var playerTurn = CreatePlayerTurn(_table);
 

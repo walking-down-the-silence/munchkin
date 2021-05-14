@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Munchkin.Core.Model
 {
-    public class CardDeck<TCard> : IEnumerable<TCard> where TCard : Card
+    public class CardDeck<TCard> : ICardDeck<TCard> where TCard : Card
     {
         private readonly List<TCard> _cards;
 
@@ -54,10 +54,6 @@ namespace Munchkin.Core.Model
 
         public IEnumerable<TCard> TakeRange(int count) => Enumerable.Range(0, count).Select(item => Take());
 
-        public void Put(TCard card) => _cards.Add(card);
-
-        public void PutRange(IEnumerable<TCard> items) => _cards.AddRange(items);
-
         public TResult TakeFirst<TResult>() where TResult : TCard
         {
             var found = _cards.OfType<TResult>().LastOrDefault();
@@ -81,6 +77,10 @@ namespace Munchkin.Core.Model
 
             return default;
         }
+
+        public void Put(TCard card) => _cards.Add(card);
+
+        public void PutRange(IEnumerable<TCard> items) => _cards.AddRange(items);
 
         public IEnumerator<TCard> GetEnumerator() => _cards.GetEnumerator();
 

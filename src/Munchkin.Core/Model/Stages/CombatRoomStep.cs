@@ -70,7 +70,7 @@ namespace Munchkin.Core.Model.Stages
             // TODO: add "Ask For Help" action to list of available ones
 
             // NOTE: this stage is blocked until each player agrees to end the combat
-            await table.Dungeon.WaitForAllPlayers();
+            await table.WaitForAllPlayers();
 
             if (!table.Dungeon.PlayersAreWinningCombat())
             {

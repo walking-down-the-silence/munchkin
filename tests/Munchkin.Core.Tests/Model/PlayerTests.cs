@@ -9,6 +9,7 @@ using Munchkin.Engine.Original.Doors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Munchkin.Core.Tests.Model
@@ -162,14 +163,14 @@ namespace Munchkin.Core.Tests.Model
         }
 
         [Fact]
-        public void Discard_WithValidCard_ShouldHaveNotEmptyDoorsDiscardPile()
+        public async void Discard_WithValidCard_ShouldHaveNotEmptyDoorsDiscardPile()
         {
             // Arrange
             var player = CreatePlayerJohny();
             var players = new[] { player };
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var doorFactory = new MunchkinOriginalDoorsFactory();
-            var table = SetupTable(players, treasureFactory, doorFactory, 10);
+            var table = await SetupTable(players, treasureFactory, doorFactory, 10);
 
             // Act
             var card = player.YourHand.OfType<DoorsCard>().First();
@@ -183,14 +184,14 @@ namespace Munchkin.Core.Tests.Model
         }
 
         [Fact]
-        public void DiscardHand_WithTable_ShouldHaveEmptyHandAndNotEmptyDiscardPiles()
+        public async void DiscardHand_WithTable_ShouldHaveEmptyHandAndNotEmptyDiscardPiles()
         {
             // Arrange
             var player = CreatePlayerJohny();
             var players = new[] { player };
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var doorFactory = new MunchkinOriginalDoorsFactory();
-            var table = SetupTable(players, treasureFactory, doorFactory, 10);
+            var table = await SetupTable(players, treasureFactory, doorFactory, 10);
 
             // Act
             player.DiscardHand(table);
@@ -204,14 +205,14 @@ namespace Munchkin.Core.Tests.Model
         }
 
         [Fact]
-        public void DiscardEquipped_WithTable_ShouldHaveEmptyHandAndNotEmptyDiscardPiles()
+        public async void DiscardEquipped_WithTable_ShouldHaveEmptyHandAndNotEmptyDiscardPiles()
         {
             // Arrange
             var player = CreatePlayerJohny();
             var players = new[] { player };
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var doorFactory = new MunchkinOriginalDoorsFactory();
-            var table = SetupTable(players, treasureFactory, doorFactory, 10);
+            var table = await SetupTable(players, treasureFactory, doorFactory, 10);
 
             // Act
             var treasureCards = player.YourHand.OfType<TreasureCard>().ToList();
@@ -226,14 +227,14 @@ namespace Munchkin.Core.Tests.Model
         }
 
         [Fact]
-        public void PutInPlayAsCarried_WithCardFromHand_ShouldHaveNotEmptyBackpack()
+        public async void PutInPlayAsCarried_WithCardFromHand_ShouldHaveNotEmptyBackpack()
         {
             // Arrange
             var player = CreatePlayerJohny();
             var players = new[] { player };
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var doorFactory = new MunchkinOriginalDoorsFactory();
-            var table = SetupTable(players, treasureFactory, doorFactory, 10);
+            var table = await SetupTable(players, treasureFactory, doorFactory, 10);
 
             // Act
             var card = player.YourHand.OfType<TreasureCard>().First();
@@ -246,14 +247,14 @@ namespace Munchkin.Core.Tests.Model
         }
 
         [Fact]
-        public void PutInPlayAsEquipped_WithCardFromHand_ShouldHaveNotEmptyEquipped()
+        public async void PutInPlayAsEquipped_WithCardFromHand_ShouldHaveNotEmptyEquipped()
         {
             // Arrange
             var player = CreatePlayerJohny();
             var players = new[] { player };
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var doorFactory = new MunchkinOriginalDoorsFactory();
-            var table = SetupTable(players, treasureFactory, doorFactory, 10);
+            var table = await SetupTable(players, treasureFactory, doorFactory, 10);
 
             // Act
             var card = player.YourHand.OfType<TreasureCard>().First();
@@ -266,14 +267,14 @@ namespace Munchkin.Core.Tests.Model
         }
 
         [Fact]
-        public void Revive_WithTable_ShouldHaveNotEmptyHand()
+        public async void Revive_WithTable_ShouldHaveNotEmptyHand()
         {
             // Arrange
             var player = CreatePlayerJohny();
             var players = new[] { player };
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var doorFactory = new MunchkinOriginalDoorsFactory();
-            var table = SetupTableNoRevive(players, treasureFactory, doorFactory, 10);
+            var table = await SetupTableNoRevive(players, treasureFactory, doorFactory, 10);
 
             // Act
             player.Revive(table);
@@ -292,7 +293,7 @@ namespace Munchkin.Core.Tests.Model
             var players = new[] { player };
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var doorFactory = new MunchkinOriginalDoorsFactory();
-            var table = SetupTable(players, treasureFactory, doorFactory, 10);
+            var table = await SetupTable(players, treasureFactory, doorFactory, 10);
 
             // Act
             player.Equip(new ElfRace());
@@ -315,51 +316,51 @@ namespace Munchkin.Core.Tests.Model
             return new Player("Johny Cash", EGender.Male);
         }
 
-        private Table SetupTable(
+        private async Task<Table> SetupTable(
             IEnumerable<Player> players,
             ITreasureDeckFactory treasureFactory,
             IDoorDeckFactory doorFactory,
             int winningLevel)
         {
             var table = Table.Empty();
-            table.SetWinningLevel(winningLevel);
+            table = await table.WithWinningLevel(winningLevel);
 
             if (treasureFactory != null)
             {
-                table.WithTreasureDeck(treasureFactory.GetTreasureCards().ToArray());
+                table = await table.WithTreasureDeck(treasureFactory.GetTreasureCards().ToArray());
             }
 
             if (doorFactory != null)
             {
-                table.WithDoorDeck(doorFactory.GetDoorsCards().ToArray());
+                table = await table.WithDoorDeck(doorFactory.GetDoorsCards().ToArray());
             }
 
-            table = table.WithPlayers(players.ToArray());
+            table = await table.WithPlayers(players.ToArray());
             table.Players.ForEach(player => player.Revive(table));
 
             return table;
         }
 
-        private Table SetupTableNoRevive(
+        private async Task<Table> SetupTableNoRevive(
             IEnumerable<Player> players,
             ITreasureDeckFactory treasureFactory,
             IDoorDeckFactory doorFactory,
             int winningLevel)
         {
             var table = Table.Empty();
-            table.SetWinningLevel(winningLevel);
+            table = await table.WithWinningLevel(winningLevel);
 
             if (treasureFactory != null)
             {
-                table.WithTreasureDeck(treasureFactory.GetTreasureCards().ToArray());
+                table = await table.WithTreasureDeck(treasureFactory.GetTreasureCards().ToArray());
             }
 
             if (doorFactory != null)
             {
-                table.WithDoorDeck(doorFactory.GetDoorsCards().ToArray());
+                table = await table.WithDoorDeck(doorFactory.GetDoorsCards().ToArray());
             }
 
-            table = table.WithPlayers(players.ToArray());
+            table = await table.WithPlayers(players.ToArray());
 
             return table;
         }

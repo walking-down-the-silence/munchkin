@@ -23,7 +23,7 @@ namespace Munchkin.Core.Tests.Model
         }
 
         [Fact]
-        public void JoinPlayer_WithTwoPlayers_ShouldHaveNotEmptyPlayerList()
+        public async void JoinPlayer_WithTwoPlayers_ShouldHaveNotEmptyPlayerList()
         {
             // Arrange
             var player1 = new Player("Frank Sinatra", EGender.Male);
@@ -36,7 +36,7 @@ namespace Munchkin.Core.Tests.Model
             var table = Table.Empty();
 
             // Act
-            Table result = table.WithPlayers(players);
+            Table result = await table.WithPlayers(players);
 
             // Assert
             Assert.Equal(2, result.Players.Count);
@@ -47,14 +47,14 @@ namespace Munchkin.Core.Tests.Model
         }
 
         [Fact]
-        public void AddTreasures_WithTwoPlayers_ShouldHaveNotEmptyTreasureDeck()
+        public async void AddTreasures_WithTwoPlayers_ShouldHaveNotEmptyTreasureDeck()
         {
             // Arrange
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var table = Table.Empty();
 
             // Act
-            Table result = table.WithTreasureDeck(treasureFactory.GetTreasureCards().ToArray());
+            Table result = await table.WithTreasureDeck(treasureFactory.GetTreasureCards().ToArray());
 
             // Assert
             Assert.NotNull(result);
@@ -65,14 +65,14 @@ namespace Munchkin.Core.Tests.Model
         }
 
         [Fact]
-        public void AddDoors_WithTwoPlayers_ShouldHaveNotEmptyDoorDeck()
+        public async void AddDoors_WithTwoPlayers_ShouldHaveNotEmptyDoorDeck()
         {
             // Arrange
             var doorFactory = new MunchkinOriginalDoorsFactory();
             var table = Table.Empty();
 
             // Act
-            Table result = table.WithDoorDeck(doorFactory.GetDoorsCards().ToArray());
+            Table result = await table.WithDoorDeck(doorFactory.GetDoorsCards().ToArray());
 
             // Assert
             Assert.NotNull(result);

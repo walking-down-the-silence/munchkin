@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Munchkin.Core.Contracts.Cards;
+using Munchkin.Extensions.Threading;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model
 {
@@ -12,7 +13,7 @@ namespace Munchkin.Core.Model
     {
         private Table()
         {
-            Dungeon = new Dungeon(this);
+            Dungeon = new Dungeon();
             Players = new CircularList<Player>();
             TreasureCardDeck = new CardDeck<TreasureCard>();
             DoorsCardDeck = new CardDeck<DoorsCard>();
@@ -25,27 +26,27 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Gets the list of players
         /// </summary>
-        public CircularList<Player> Players { get; private set; }
+        public ICircularCollection<Player> Players { get; private set; }
 
         /// <summary>
         /// Gets the treasures card deck
         /// </summary>
-        public CardDeck<TreasureCard> TreasureCardDeck { get; private set; }
+        public ICardDeck<TreasureCard> TreasureCardDeck { get; private set; }
 
         /// <summary>
         /// Gets the doors card deck
         /// </summary>
-        public CardDeck<DoorsCard> DoorsCardDeck { get; private set; }
+        public ICardDeck<DoorsCard> DoorsCardDeck { get; private set; }
 
         /// <summary>
         /// Gets the discarded treasure cards
         /// </summary>
-        public CardDeck<TreasureCard> DiscardedTreasureCards { get; }
+        public ICardDeck<TreasureCard> DiscardedTreasureCards { get; }
 
         /// <summary>
         /// Gets the discarded door cards
         /// </summary>
-        public CardDeck<DoorsCard> DiscardedDoorsCards { get; }
+        public ICardDeck<DoorsCard> DiscardedDoorsCards { get; }
 
         /// <summary>
         /// Dungeon state representing all goods in this dungeon
@@ -63,54 +64,68 @@ namespace Munchkin.Core.Model
         public IMediator RequestSink { get; private set; }
 
         /// <summary>
-        /// Gets if any of the players has won the game.
-        /// </summary>
-        public bool IsGameWon => Players.Any(x => x.Level >= WinningLevel);
-
-        /// <summary>
         /// Sets the target level required to win the game.
         /// </summary>
         /// <param name="winningLevel">Target level.</param>
-        public void SetWinningLevel(int winningLevel) => WinningLevel = winningLevel;
+        public Task<Table> WithWinningLevel(int winningLevel)
+        {
+            WinningLevel = winningLevel;
+            return this.Unit();
+        }
 
         /// <summary>
         /// Sets the requests sink instance used to communicate with outside world.
         /// </summary>
         /// <param name="requestSink">The request sink implementation instance.</param>
-        public Table WithRequestSink(IMediator requestSink)
+        public Task<Table> WithRequestSink(IMediator requestSink)
         {
             RequestSink = requestSink;
-            return this;
+            return this.Unit();
         }
 
         /// <summary>
         /// Assigns the players to the gaming table.
         /// </summary>
         /// <param name="players">The collection of players to assign.</param>
-        public Table WithPlayers(IReadOnlyCollection<Player> players)
+        public Task<Table> WithPlayers(IReadOnlyCollection<Player> players)
         {
+            if (players is null)
+            {
+                throw new System.ArgumentNullException(nameof(players));
+            }
+
             Players = new CircularList<Player>(players);
-            return this;
+            return this.Unit();
         }
 
         /// <summary>
         /// Appends the treasure cards to the deck. Can be used for additional expansions.
         /// </summary>
         /// <param name="cards">Cars to add.</param>
-        public Table WithTreasureDeck(IReadOnlyCollection<TreasureCard> cards)
+        public Task<Table> WithTreasureDeck(IReadOnlyCollection<TreasureCard> cards)
         {
+            if (cards is null)
+            {
+                throw new System.ArgumentNullException(nameof(cards));
+            }
+
             TreasureCardDeck = new CardDeck<TreasureCard>(cards);
-            return this;
+            return this.Unit();
         }
 
         /// <summary>
         /// Appends the door cards to the deck. Can be used for additional expansions.
         /// </summary>
         /// <param name="cards">Cards to add.</param>
-        public Table WithDoorDeck(IReadOnlyCollection<DoorsCard> cards)
+        public Task<Table> WithDoorDeck(IReadOnlyCollection<DoorsCard> cards)
         {
+            if (cards is null)
+            {
+                throw new System.ArgumentNullException(nameof(cards));
+            }
+
             DoorsCardDeck = new CardDeck<DoorsCard>(cards);
-            return this;
+            return this.Unit();
         }
     }
 }
