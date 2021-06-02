@@ -1,7 +1,7 @@
 ﻿using Munchkin.Core.Contracts.Attributes;
 using System.Collections.Generic;
 
-namespace Munchkin.Core.Contracts.States
+namespace Munchkin.Core.Contracts
 {
     /// <summary>
     /// Defines the state with a set of attributes/values.

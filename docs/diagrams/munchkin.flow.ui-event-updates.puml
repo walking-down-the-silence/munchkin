@@ -1,0 +1,53 @@
+@startuml munchkin.flow.ui-event-update
+
+skinparam BoxPadding 20
+skinparam ParticipantPadding 20
+
+box ui
+participant "Table Component" as ui_table_component
+participant "Table Service" as ui_table_service
+participant "Table State" as ui_table_state
+end box
+
+box service
+participant "Table Controller" as api_controller
+participant "WebSocket" as api_websocket
+participant "Table Service" as api_table_service
+participant "Table Repository" as api_table_repo
+participant "Table" as api_table
+end box
+
+box persistance
+participant "Event Store" as event_store
+end box
+
+ui_table_component --> ui_table_service : trigger ui action async
+    ui_table_service -> api_controller ++ : play a card command
+        api_controller -> api_table_service ++ : play a card action
+            api_table_service -> api_table_repo ++ : get table
+                api_table_repo -> event_store ++ : get table events
+                return table events
+                
+                create api_table
+                api_table_repo -> api_table : create instance
+                api_table_repo -> api_table ++ : replay events
+                return success
+            return table instance
+
+            api_table_service ->  api_table ++ : execute and modify state
+            return updated table, event collection
+
+            api_table_service -> api_table_repo ++ : save uncommitted events
+            return success
+
+            api_table_service -> api_websocket ++ : send uncommitted events
+            return success
+        return 200 Ok
+    return 200 Ok
+
+    ui_table_service -> ui_table_state ++ : dispatch action per event
+    return updated table state
+
+ui_table_component <-- ui_table_state : render ui
+
+@enduml
