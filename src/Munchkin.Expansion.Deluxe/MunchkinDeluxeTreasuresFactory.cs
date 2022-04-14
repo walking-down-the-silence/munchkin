@@ -4,7 +4,7 @@ using Munchkin.Engine.Original.Treasures;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Munchkin.Core.Model
+namespace Munchkin.Expansion.Deluxe
 {
     public class MunchkinDeluxeTreasuresFactory : ITreasureDeckFactory
     {

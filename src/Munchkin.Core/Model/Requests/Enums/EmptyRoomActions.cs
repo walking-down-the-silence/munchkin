@@ -2,9 +2,9 @@
 
 namespace Munchkin.Core.Model.Requests
 {
-    public class EmptyRoomActions : Enumeration
+    public sealed record EmptyRoomActions : Enumeration
     {
-        private EmptyRoomActions(int id, string name) : base(id, name)
+        private EmptyRoomActions(int code, string name) : base(code, name)
         {
         }
 

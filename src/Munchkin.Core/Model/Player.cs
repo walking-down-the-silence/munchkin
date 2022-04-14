@@ -2,12 +2,10 @@
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Enums;
-using Munchkin.Core.Model.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model
 {
@@ -23,19 +21,19 @@ namespace Munchkin.Core.Model
         private bool _isDead;
         private int _level = 1;
 
-        public Player(string name, EGender gender)
+        public Player(string nickname, EGender gender)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            if (string.IsNullOrWhiteSpace(nickname))
+                throw new ArgumentException($"'{nameof(nickname)}' cannot be null or whitespace.", nameof(nickname));
 
-            Name = name;
+            Nickname = nickname;
             Gender = gender;
         }
 
         /// <summary>
         /// Gets the players name
         /// </summary>
-        public string Name { get; }
+        public string Nickname { get; }
 
         /// <summary>
         /// Gets the players gender
@@ -125,11 +123,10 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Discards a card from the player and puts back into the discard pile.
         /// </summary>
-        public void Discard(Table table, Card card)
+        public void Discard(Card card)
         {
-            if (table is not null && card is not null)
+            if (card is not null)
             {
-                card.Discard(table);
                 _yourHand.Remove(card);
                 _backpack.Remove(card);
                 _equipped.Remove(card);
@@ -140,21 +137,16 @@ namespace Munchkin.Core.Model
         /// Discards whole hand from the player and puts back into the discard pile.
         /// </summary>
         /// <param name="table"> Table instance with all the state. </param>
-        public void DiscardHand(Table table)
+        public void DiscardHand()
         {
-            _yourHand.OfType<DoorsCard>().ForEach(card => card.Discard(table));
-            _yourHand.OfType<TreasureCard>().ForEach(card => card.Discard(table));
             _yourHand.Clear();
         }
 
         /// <summary>
         /// Discards all equipped cards from the player and puts back into the discard pile.
         /// </summary>
-        /// <param name="table"> Table instance with all the state. </param>
-        public void DiscardEquipped(Table table)
+        public void DiscardEquipped()
         {
-            _equipped.OfType<DoorsCard>().ToList().ForEach(card => card.Discard(table));
-            _equipped.OfType<TreasureCard>().ToList().ForEach(card => card.Discard(table));
             _equipped.Clear();
         }
 
@@ -162,15 +154,16 @@ namespace Munchkin.Core.Model
         /// Revive the players hero and give intital cards.
         /// </summary>
         /// <param name="table"> Table instance with all the state. </param>
-        public void Revive(Table table)
+        public void Revive(IReadOnlyCollection<DoorsCard> doors, IReadOnlyCollection<TreasureCard> treasures)
         {
-            var doorCards = table.DoorsCardDeck.TakeRange(4);
-            var treasureCards = table.TreasureCardDeck.TakeRange(4);
+            if (!doors.Any())
+                throw new ArgumentException("Player should be revived with 4 door cards.", nameof(doors));
 
-            Enumerable.Empty<Card>()
-                .Concat(doorCards)
-                .Concat(treasureCards)
-                .ForEach(TakeInHand);
+            if (!treasures.Any())
+                throw new ArgumentException("Player should be revived with 4 treasure cards.", nameof(treasures));
+
+            doors.ForEach(TakeInHand);
+            treasures.ForEach(TakeInHand);
 
             _isDead = false;
         }
@@ -178,12 +171,12 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Kills the player's hero.
         /// </summary>
-        /// <param name="table"> Table instance with all the state. </param>
-        public async Task Kill(Table table)
+        /// <returns> A collection of cards that should be discarded. </returns>
+        public IReadOnlyCollection<Card> Kill()
         {
             _isDead = true;
 
-            // Step 1: leave the safe cards, level and active curses
+            // NOTE: Leave the cards of class, race, and active curses.
             var playerCards = Enumerable.Empty<Card>()
                 .Concat(YourHand)
                 .Concat(Equipped
@@ -195,25 +188,10 @@ namespace Munchkin.Core.Model
                 .Concat(Backpack)
                 .ToList();
 
-            playerCards.ForEach(card => card.Discard(table));
-
-
-            // TODO: move this from the card to the stage
-            // TODO: Step 2: send a request to each player to select the cards from dead player
-
-            foreach (var player in table.Players.Where(player => !player.IsDead))
-            {
-                var selectCardRequest = new PlayerSelectSingleCardRequest(player, table, _yourHand);
-                var selectCardResponse = await table.RequestSink.Send(selectCardRequest);
-                var selectedCard = await selectCardResponse.Task;
-
-                // TODO: consider how to remove selected card from pool of options
-                _yourHand.Remove(selectedCard);
-                player.TakeInHand(selectedCard);
-            }
-
             _yourHand.Clear();
             _backpack.Clear();
+
+            return playerCards;
         }
     }
 }

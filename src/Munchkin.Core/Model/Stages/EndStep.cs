@@ -13,7 +13,7 @@ namespace Munchkin.Core.Model.Stages
         protected override async Task<Table> OnResolve(Table table)
         {
             table.Dungeon.PlayedCards.ForEach(card => card.Discard(table));
-            table.Dungeon.Reset();
+            //table.Dungeon.Reset();
             return await Task.FromResult(table);
         }
     }

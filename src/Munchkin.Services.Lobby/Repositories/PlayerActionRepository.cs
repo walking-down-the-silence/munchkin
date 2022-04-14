@@ -1,6 +1,6 @@
 ﻿using Munchkin.Core.Contracts;
 using Munchkin.Core.Model;
-using Munchkin.Runtime.Entities.Actions;
+using Munchkin.Runtime.Abstractions.Actions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

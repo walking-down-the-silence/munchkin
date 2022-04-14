@@ -2,9 +2,9 @@
 
 namespace Munchkin.Core.Model.Requests
 {
-    public class YesNoActions : Enumeration
+    public sealed record YesNoActions : Enumeration
     {
-        private YesNoActions(int id, string name) : base(id, name)
+        private YesNoActions(int code, string name) : base(code, name)
         {
         }
 

@@ -2,7 +2,7 @@
 using Munchkin.Core.Model;
 using System.Threading.Tasks;
 
-namespace Munchkin.Runtime.Entities.Actions
+namespace Munchkin.Runtime.Abstractions.Actions
 {
     public interface IPlayerActionRepository
     {

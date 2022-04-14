@@ -2,9 +2,9 @@
 
 namespace Munchkin.Core.Model.Requests
 {
-    public class DiscardHandOrLoose2LevelsActions : Enumeration
+    public sealed record DiscardHandOrLoose2LevelsActions : Enumeration
     {
-        private DiscardHandOrLoose2LevelsActions(int id, string name) : base(id, name)
+        private DiscardHandOrLoose2LevelsActions(int code, string name) : base(code, name)
         {
         }
 

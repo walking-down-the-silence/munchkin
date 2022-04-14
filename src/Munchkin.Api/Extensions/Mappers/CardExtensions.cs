@@ -15,7 +15,7 @@ namespace Munchkin.Api.Extensions.Mappers
                 Owner = new CardOwnerVM
                 {
                     OwnerId = 0,
-                    Name = card.Owner?.Name ?? "<null>"
+                    Name = card.Owner?.Nickname ?? "<null>"
                 }
             };
         }

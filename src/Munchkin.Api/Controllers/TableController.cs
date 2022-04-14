@@ -9,102 +9,117 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Api.Controllers
 {
-    [Route("api/table")]
+    [Route("api/tables")]
     [ApiController]
     public class TableController : ControllerBase
     {
-        private readonly GameEngineService _gameEngineService;
-        private readonly PlayerService _playerService;
+        private readonly TableService _tableService;
 
-        public TableController(
-            GameEngineService gameEngineService,
-            PlayerService playerService)
+        public TableController(TableService gameRoomService)
         {
-            _gameEngineService = gameEngineService ?? throw new System.ArgumentNullException(nameof(gameEngineService));
-            _playerService = playerService ?? throw new System.ArgumentNullException(nameof(playerService));
+            _tableService = gameRoomService ?? throw new System.ArgumentNullException(nameof(gameRoomService));
+        }
+
+        [ProducesResponseType(typeof(TableVM), StatusCodes.Status200OK)]
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] TableCreateAsLeaderVM vm)
+        {
+            var gameRoom = await _tableService.CreateTableAsLeader(vm.LeaderNickname);
+            var gameRoomVm = await gameRoom.ToVM();
+            return Ok(gameRoomVm);
+        }
+
+        [ProducesResponseType(typeof(TableVM), StatusCodes.Status200OK)]
+        [HttpGet("{tableId}")]
+        public async Task<IActionResult> Get(string tableId)
+        {
+            var gameRoom = await _tableService.GetTable(tableId);
+            var gameRoomVm = await gameRoom.ToVM();
+            return Ok(gameRoomVm);
         }
 
         [ProducesResponseType(typeof(ICollection<PlayerVM>), StatusCodes.Status200OK)]
-        [HttpGet("{gameId}/players")]
-        public async Task<IActionResult> Get(int gameId)
+        [HttpGet("{tableId}/players")]
+        public async Task<IActionResult> GetPlayers(string tableId)
         {
-            var players = await _gameEngineService.GetPlayersAsync(gameId);
+            var players = await _tableService.GetPlayersAsync(tableId);
             var playerVms = players.Select(x => x.ToVM()).ToArray();
             return Ok(playerVms);
         }
 
         [ProducesResponseType(typeof(PlayerVM), StatusCodes.Status200OK)]
-        [HttpGet("{gameId}/players/{playerId}")]
-        public async Task<IActionResult> Get(int gameId, int playerId)
+        [HttpGet("{tableId}/players/{playerId}")]
+        public async Task<IActionResult> Get(string tableId, string playerId)
         {
-            var player = await _gameEngineService.GetPlayerByIdAsync(gameId, playerId);
+            var player = await _tableService.GetPlayerByIdAsync(tableId, playerId);
             var playerVm = player.ToVM();
             return Ok(playerVm);
         }
 
-        [ProducesResponseType(typeof(ICollection<CardVM>), StatusCodes.Status200OK)]
-        [HttpGet("{gameId}/players/{playerId}/hand")]
-        public async Task<IActionResult> CardsInHand(int gameId, int playerId)
+        [ProducesResponseType(typeof(TableJoinResultVM), StatusCodes.Status200OK)]
+        [HttpPut("{tableId}/players/{playerId}")]
+        public async Task<IActionResult> Put(string tableId, string playerId)
         {
-            var player = await _gameEngineService.GetPlayerByIdAsync(gameId, playerId);
-            var cardVms = player.YourHand.Select(x => x.ToVM()).ToArray();
-            return Ok(cardVms);
+            var joinResponse = await _tableService.JoinTable(tableId, playerId);
+            return Ok(joinResponse);
+        }
+
+        [ProducesResponseType(typeof(TableJoinResultVM), StatusCodes.Status200OK)]
+        [HttpDelete("{tableId}/players/{playerId}")]
+        public async Task<IActionResult> Delete(string tableId, string playerId)
+        {
+            var joinResponse = await _tableService.LeaveTable(tableId, playerId);
+            return Ok(joinResponse);
+        }
+
+        [ProducesResponseType(typeof(ICollection<TableExpansionSelectionVM>), StatusCodes.Status200OK)]
+        [HttpGet("{tableId}/expansions")]
+        public async Task<IActionResult> GetAvailableExpansions(string tableId)
+        {
+            var expansionSelections = await _tableService.GetExpansionSelections(tableId);
+            var expansionSelectionsVms = expansionSelections.Select(x => x.ToVM()).ToArray();
+            return Ok(expansionSelectionsVms);
+        }
+
+        [ProducesResponseType(typeof(TableExpansionSelectionVM), StatusCodes.Status200OK)]
+        [HttpPut("{tableId}/expansions/{code}/selected")]
+        public async Task<IActionResult> SelectExapansion(string tableId, string code)
+        {
+            var selectionResponse = await _tableService.MarkExpansionSelection(tableId, code, true);
+            var selectionResponseVm = selectionResponse;
+            return Ok(selectionResponseVm);
         }
 
         [ProducesResponseType(typeof(ICollection<CardVM>), StatusCodes.Status200OK)]
-        [HttpGet("{gameId}/players/{playerId}/equipped")]
-        public async Task<IActionResult> EquippedCards(int gameId, int playerId)
+        [HttpGet("{tableId}/discarded-treasures")]
+        public async Task<IActionResult> GetDiscardedTreasuresCards(string tableId)
         {
-            var player = await _gameEngineService.GetPlayerByIdAsync(gameId, playerId);
-            var cardVms = player.Equipped.Select(x => x.ToVM()).ToArray();
-            return Ok(cardVms);
-        }
-
-        [ProducesResponseType(typeof(ICollection<CardVM>), StatusCodes.Status200OK)]
-        [HttpGet("{gameId}/players/{playerId}/backpack")]
-        public async Task<IActionResult> CardsInBackpack(int gameId, int playerId)
-        {
-            var player = await _gameEngineService.GetPlayerByIdAsync(gameId, playerId);
-            var cardVms = player.Backpack.Select(x => x.ToVM()).ToArray();
-            return Ok(cardVms);
-        }
-
-        [ProducesResponseType(typeof(CardOwnerVM), StatusCodes.Status200OK)]
-        [HttpPut("{gameId}/players/{playerId}/cards/{cardId}/storage")]
-        public async Task<IActionResult> ChangeCardStorage(int gameId, int playerId, int cardId, [FromBody] CardStorageReferenceVM vm)
-        {
-            await _playerService.ChangeCardStorage(gameId, playerId, cardId, vm.StorageType);
+            //var table = await _tableService.GetTable(tableId);
+            //var cardVms = table.DiscardedTreasureCards.Select(x => x.ToVM()).ToArray();
+            //return Ok(cardVms);
             return Ok();
         }
 
         [ProducesResponseType(typeof(ICollection<CardVM>), StatusCodes.Status200OK)]
-        [HttpGet("{gameId}/discarded-treasures")]
-        public async Task<IActionResult> GetDiscardedTreasuresCards(int gameId)
+        [HttpGet("{tableId}/discarded-doors")]
+        public async Task<IActionResult> GetDiscardedDoorsCards(string tableId)
         {
-            var gameEngine = await _gameEngineService.GetGameEngineAsync(gameId);
-            var cardVms = gameEngine.Table.DiscardedTreasureCards.Select(x => x.ToVM()).ToArray();
-            return Ok(cardVms);
-        }
-
-        [ProducesResponseType(typeof(ICollection<CardVM>), StatusCodes.Status200OK)]
-        [HttpGet("{gameId}/discarded-doors")]
-        public async Task<IActionResult> GetDiscardedDoorsCards(int gameId)
-        {
-            var gameEngine = await _gameEngineService.GetGameEngineAsync(gameId);
-            var cardVms = gameEngine.Table.DiscardedDoorsCards.Select(x => x.ToVM()).ToArray();
-            return Ok(cardVms);
+            //var table = await _tableService.GetTable(tableId);
+            //var cardVms = table.DiscardedDoorsCards.Select(x => x.ToVM()).ToArray();
+            //return Ok(cardVms);
+            return Ok();
         }
 
         [ProducesResponseType(typeof(CardOwnerVM), StatusCodes.Status200OK)]
-        [HttpPut("{gameId}/treasures/{cardId}/owner")]
-        public async Task<IActionResult> ChangeTreasureCardOwner(int gameId, int cardId, [FromBody] CardOwnerReferenceVM vm)
+        [HttpPut("{tableId}/treasures/{cardId}/owner")]
+        public async Task<IActionResult> ChangeTreasureCardOwner(string tableId, int cardId, [FromBody] CardOwnerReferenceVM vm)
         {
             return Ok();
         }
 
         [ProducesResponseType(typeof(CardOwnerVM), StatusCodes.Status200OK)]
-        [HttpPut("{gameId}/doors/{cardId}/owner")]
-        public async Task<IActionResult> ChangeDoorCardOwner(int gameId, int cardId, [FromBody] CardOwnerReferenceVM vm)
+        [HttpPut("{tableId}/doors/{cardId}/owner")]
+        public async Task<IActionResult> ChangeDoorCardOwner(string tableId, int cardId, [FromBody] CardOwnerReferenceVM vm)
         {
             return Ok();
         }

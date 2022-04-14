@@ -1,10 +1,9 @@
-﻿using MediatR;
-using Moq;
-using Munchkin.Core.Contracts;
+﻿using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Enums;
+using Munchkin.Core.Model.Stages;
 using Munchkin.Engine.Original.Doors;
 using System;
 using System.Collections.Generic;
@@ -30,7 +29,7 @@ namespace Munchkin.Core.Tests.Model
             var player = CreatePlayerJohny();
 
             // Act, Assert
-            Assert.NotNull(player.Name);
+            Assert.NotNull(player.Nickname);
             Assert.Equal(EGender.Male, player.Gender);
             Assert.Equal(1, player.Level);
             Assert.False(player.IsDead);
@@ -174,13 +173,12 @@ namespace Munchkin.Core.Tests.Model
 
             // Act
             var card = player.YourHand.OfType<DoorsCard>().First();
-            player.Discard(table, card);
+            player.Discard(card);
 
             // Assert
             Assert.Empty(player.Equipped);
             Assert.Empty(player.Backpack);
             Assert.Equal(7, player.YourHand.Count);
-            Assert.NotEmpty(table.DiscardedDoorsCards);
         }
 
         [Fact]
@@ -194,14 +192,12 @@ namespace Munchkin.Core.Tests.Model
             var table = await SetupTable(players, treasureFactory, doorFactory, 10);
 
             // Act
-            player.DiscardHand(table);
+            player.DiscardHand();
 
             // Assert
             Assert.Empty(player.Equipped);
             Assert.Empty(player.Backpack);
             Assert.Empty(player.YourHand);
-            Assert.NotEmpty(table.DiscardedTreasureCards);
-            Assert.NotEmpty(table.DiscardedDoorsCards);
         }
 
         [Fact]
@@ -217,13 +213,11 @@ namespace Munchkin.Core.Tests.Model
             // Act
             var treasureCards = player.YourHand.OfType<TreasureCard>().ToList();
             treasureCards.ForEach(card => player.Equip(card));
-            player.DiscardEquipped(table);
 
             // Assert
             Assert.Empty(player.Equipped);
             Assert.Empty(player.Backpack);
             Assert.NotEmpty(player.YourHand);
-            Assert.NotEmpty(table.DiscardedTreasureCards);
         }
 
         [Fact]
@@ -275,9 +269,11 @@ namespace Munchkin.Core.Tests.Model
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var doorFactory = new MunchkinOriginalDoorsFactory();
             var table = await SetupTableNoRevive(players, treasureFactory, doorFactory, 10);
+            var doors = table.DoorsCardDeck.TakeRange(4).ToList();
+            var treasures = table.TreasureCardDeck.TakeRange(4).ToList();
 
             // Act
-            player.Revive(table);
+            player.Revive(doors, treasures);
 
             // Assert
             Assert.NotEmpty(player.YourHand);
@@ -300,7 +296,7 @@ namespace Munchkin.Core.Tests.Model
             player.Equip(new WarriorClass());
             player.Equip(new SuperMunchkin());
             player.Equip(new Halfbreed());
-            await player.Kill(table);
+            player.Kill();
 
             // Assert
             Assert.Empty(player.YourHand);
@@ -336,7 +332,7 @@ namespace Munchkin.Core.Tests.Model
             }
 
             table = await table.WithPlayers(players.ToArray());
-            table.Players.ForEach(player => player.Revive(table));
+            table.Players.ForEach(player => PlayerAvatar.Revive(table, player));
 
             return table;
         }

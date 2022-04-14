@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Munchkin.Core.Contracts;
-using Munchkin.Core.Model;
 
 namespace Munchkin.Expansion.Deluxe
 {

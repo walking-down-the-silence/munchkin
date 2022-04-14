@@ -10,8 +10,7 @@ namespace Munchkin.Core.Extensions
         public static async Task<TResult> SendAsync<TResult>(this IRequest<Response<TResult>> request, Table table)
         {
             var response = await table.RequestSink.Send(request);
-            var result = await response.Task;
-            return result;
+            return await response.Task;
         }
     }
 }

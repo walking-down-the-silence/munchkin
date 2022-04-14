@@ -1,12 +1,13 @@
-﻿using Munchkin.Runtime.Abstractions.GameRoomAggregate;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Munchkin.Core.Model;
+using Munchkin.Core.Model.Enums;
 using Munchkin.Runtime.Abstractions.UserAggregate;
-using Munchkin.Runtime.Entities.GameRoomAggregate;
-using Munchkin.Services.Lobby.Services;
-using System.Threading.Tasks;
-using Orleans.TestingHost;
-using Xunit;
-using Microsoft.Extensions.DependencyInjection;
 using Munchkin.Services.Lobby;
+using Munchkin.Services.Lobby.Repositories;
+using Munchkin.Services.Lobby.Services;
+using Orleans.TestingHost;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace Munchkin.Runtime.Client.Tests.Services
 {
@@ -21,42 +22,30 @@ namespace Munchkin.Runtime.Client.Tests.Services
             using var serviceProvider = serviceCollection.BuildServiceProvider();
 
             using var cluster = CreateTestCluster();
-            int userId = 1;
-            var userRepository = new UserRepositoryDummy();
-            var gameRoomService = new GameRoomService(userRepository, cluster.Client, serviceProvider);
+            var tableId = "table_1";
+            var tableRepository = new TableRepository(cluster.Client);
+            var playerRepository = new PlayerRepositoryDummy();
+            var gameRoomService = new TableService(playerRepository, tableRepository, serviceProvider);
 
             // Act
-            var gameRoom = await gameRoomService.CreateRoomAsLeader(userId);
-            var players = await gameRoom.GetUsers();
+            var gameRoom = await gameRoomService.CreateTableAsLeader(tableId);
+            var players = await gameRoom.GetPlayers();
 
             // Assert
             Assert.NotNull(gameRoom);
             Assert.Single(players);
         }
 
-        private class UserRepositoryDummy : IUserRepository
+        private class PlayerRepositoryDummy : IPlayerRepository
         {
-            public Task<User> GetUserByIdAsync(int userId)
-            {
-                return Task.FromResult(new User(userId, "Johny Cash", true));
-            }
+            public Task<Player> GetPlayerByNicknameAsync(string nickname) =>
+                Task.FromResult(new Player(nickname, EGender.Male));
 
-            public Task SaveUserAsync(User user)
-            {
+            public Task SavePlayerAsync(Player user) =>
                 throw new System.NotImplementedException();
-            }
         }
 
-        private class GameRoomRepositoryDummy : IGameRoomRepository
-        {
-            public Task<bool> DropGameRoomAsync(int gameRoomId) => Task.FromResult(true);
-
-            public Task<IGameRoom> GetGameRoomByIdAsync(int gameRoomId) => Task.FromResult<IGameRoom>(new GameRoom());
-
-            public Task<IGameRoom> SaveGameRoomAsync(IGameRoom gameRoom) => Task.FromResult(gameRoom);
-        }
-
-        private TestCluster CreateTestCluster()
+        private static TestCluster CreateTestCluster()
         {
             var builder = new TestClusterBuilder();
             var cluster = builder.Build();

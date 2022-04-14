@@ -1,5 +1,8 @@
 ﻿using Munchkin.Core.Extensions;
-using Munchkin.Runtime.Abstractions;
+using Munchkin.Core.Model;
+using Munchkin.Core.Model.Enums;
+using Munchkin.Runtime.Abstractions.GameEngines;
+using Munchkin.Runtime.Abstractions.UserAggregate;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,16 +12,32 @@ namespace Munchkin.Services.Lobby.Services
     public class PlayerService
     {
         private readonly IGameEngineRepository _gameEngineRepository;
+        private readonly IPlayerRepository _userRepository;
 
         public PlayerService(
-            IGameEngineRepository gameEngineRepository)
+            IGameEngineRepository gameEngineRepository,
+            IPlayerRepository clusterClient)
         {
             _gameEngineRepository = gameEngineRepository ?? throw new ArgumentNullException(nameof(gameEngineRepository));
+            _userRepository = clusterClient ?? throw new ArgumentNullException(nameof(clusterClient));
         }
 
-        public async Task ChangeCardStorage(int gameId, int playerId, int cardId, string storageType)
+        public async Task<Player> CreatePlayerAsync(string nickname, bool isMale)
         {
-            var game = await _gameEngineRepository.GetGameByIdAsync(gameId);
+            var gender = isMale ? EGender.Male : EGender.Female;
+            var player = new Player(nickname, gender);
+            await _userRepository.SavePlayerAsync(player);
+            return player;
+        }
+
+        public Task<Player> GetUserByNicknameAsync(string nickname)
+        {
+            return _userRepository.GetPlayerByNicknameAsync(nickname);
+        }
+
+        public async Task ChangeCardStorage(string tableId, string playerId, int cardId, string storageType)
+        {
+            var game = await _gameEngineRepository.GetGameByIdAsync(tableId);
 
             if (game is null)
                 throw new ArgumentNullException(nameof(game));

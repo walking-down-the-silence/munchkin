@@ -1,13 +1,13 @@
 ﻿using Munchkin.Api.ViewModels;
-using Munchkin.Runtime.Abstractions.GameRoomAggregate;
+using Munchkin.Core.Model.Expansions;
 
 namespace Munchkin.Api.Extensions.Mappers
 {
     public static class ExpansionSelectionExtensions
     {
-        public static GameRoomExpansionSelectionVM ToVM(this ExpansionSelection expansionSelection)
+        public static TableExpansionSelectionVM ToVM(this ExpansionSelection expansionSelection)
         {
-            return new GameRoomExpansionSelectionVM
+            return new TableExpansionSelectionVM
             {
                 Code = expansionSelection.Code,
                 Title = expansionSelection.Title,

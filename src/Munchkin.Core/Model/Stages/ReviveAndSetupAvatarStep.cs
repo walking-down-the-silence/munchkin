@@ -20,11 +20,11 @@ namespace Munchkin.Core.Model.Stages
             // NOTE: revive the current player if dead
             if (_currentPlayer.IsDead)
             {
-                _currentPlayer.Revive(table);
+                PlayerAvatar.Revive(table, _currentPlayer);
             }
 
             // NOTE: wait for players to play cards and setup the avatar
-            table = await table.WaitForAllPlayers();
+            table = await table.WaitForAllPlayersAsync();
 
             return table;
         }

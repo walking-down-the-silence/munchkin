@@ -1,4 +1,5 @@
 ﻿using Munchkin.Core.Contracts;
+using Munchkin.Core.Model.Stages;
 
 namespace Munchkin.Core.Model.Effects
 {
@@ -6,7 +7,7 @@ namespace Munchkin.Core.Model.Effects
     {
         public Table Apply(Table state)
         {
-            state.Players.Current.Kill(state);
+            PlayerAvatar.Kill(state, state.Players.Current);
             return state;
         }
     }

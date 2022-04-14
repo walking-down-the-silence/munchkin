@@ -61,26 +61,26 @@ namespace Munchkin.Core.Model.Stages
         protected override async Task<Table> OnResolve(Table table)
         {
             // TODO: calculate and set the hero strength and other properties
-            table.Dungeon.AddProperty(new PlayerStrengthBonusAttribute(0));
-            table.Dungeon.AddProperty(new MonsterStrengthBonusAttribute(_monsterCard.Level));
-            table.Dungeon.AddProperty(new RunAwayBonusAttribute(0));
-            table.Dungeon.AddProperty(new RewardLevelsAttribute(_monsterCard.RewardLevels));
-            table.Dungeon.AddProperty(new RewardTreasuresAttribute(_monsterCard.RewardTreasures));
+            table.Dungeon.AddAtribute(new PlayerStrengthBonusAttribute(0));
+            table.Dungeon.AddAtribute(new MonsterStrengthBonusAttribute(_monsterCard.Level));
+            table.Dungeon.AddAtribute(new RunAwayBonusAttribute(0));
+            table.Dungeon.AddAtribute(new RewardLevelsAttribute(_monsterCard.RewardLevels));
+            table.Dungeon.AddAtribute(new RewardTreasuresAttribute(_monsterCard.RewardTreasures));
 
             // TODO: add "Ask For Help" action to list of available ones
 
             // NOTE: this stage is blocked until each player agrees to end the combat
-            await table.WaitForAllPlayers();
+            await table.WaitForAllPlayersAsync();
 
-            if (!table.Dungeon.PlayersAreWinningCombat())
-            {
-                var runAway = new RunAwayStep(FightingPlayer, HelpingPlayer, _monsters);
-                return await runAway.Resolve(table);
-            }
-            else
-            {
-                // TODO: resolve the good stuff here
-            }
+            //if (!table.Dungeon.PlayersAreWinningCombat())
+            //{
+            //    var runAway = new RunAwayStep(FightingPlayer, HelpingPlayer, _monsters);
+            //    return await runAway.Resolve(table);
+            //}
+            //else
+            //{
+            //    // TODO: resolve the good stuff here
+            //}
 
             var charity = new CharityStep();
             return await charity.Resolve(table);

@@ -9,8 +9,7 @@ namespace Munchkin.Api.Extensions.Mappers
         {
             return new PlayerVM
             {
-                PlayerId = 0,
-                Name = player.Name
+                Nickname = player.Nickname
             };
         }
     }

@@ -1,24 +1,24 @@
 ﻿using Munchkin.Core.Contracts.Attributes;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Munchkin.Core.Contracts
 {
     /// <summary>
     /// Defines the state with a set of attributes/values.
     /// </summary>
-    public interface IState
+    public interface IState<TState>
     {
         /// <summary>
         /// Gets all the attributes of the state.
         /// </summary>
-        IReadOnlyCollection<Attribute> Attributes { get; }
+        ImmutableList<Attribute> Attributes { get; }
 
         /// <summary>
         /// Sets and additional attribute to the state.
         /// </summary>
         /// <typeparam name="TAttribute">The type of attribute.</typeparam>
         /// <param name="attribute">The attribute instance.</param>
-        void AddProperty<TAttribute>(TAttribute attribute) where TAttribute : Attribute;
+        TState AddProperty<TAttribute>(TAttribute attribute) where TAttribute : Attribute;
 
         /// <summary>
         /// Gets the specific attribute of the state.

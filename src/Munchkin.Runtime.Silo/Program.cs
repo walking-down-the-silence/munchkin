@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Munchkin.Runtime.Entities.GameRoomAggregate;
+using Munchkin.Runtime.Services;
 using Orleans;
 using Orleans.Configuration;
 using Orleans.Hosting;
@@ -29,7 +29,7 @@ namespace Munchkin.Runtime.Silo
                         })
                         .ConfigureApplicationParts(parts =>
                         {
-                            parts.AddApplicationPart(typeof(GameRoom).Assembly).WithReferences();
+                            parts.AddApplicationPart(typeof(Table).Assembly).WithReferences();
                         })
                         .ConfigureLogging(logging =>
                         {

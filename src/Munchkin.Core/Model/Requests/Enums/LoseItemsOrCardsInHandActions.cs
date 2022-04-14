@@ -2,9 +2,9 @@
 
 namespace Munchkin.Core.Model.Requests.Enums
 {
-    public class LoseItemsOrCardsInHandActions : Enumeration
+    public sealed record LoseItemsOrCardsInHandActions : Enumeration
     {
-        private LoseItemsOrCardsInHandActions(int id, string name) : base(id, name)
+        private LoseItemsOrCardsInHandActions(int code, string name) : base(code, name)
         {
         }
 

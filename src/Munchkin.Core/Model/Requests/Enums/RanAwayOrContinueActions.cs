@@ -2,9 +2,9 @@
 
 namespace Munchkin.Core.Model.Requests
 {
-    public class RanAwayOrContinueActions : Enumeration
+    public sealed record RanAwayOrContinueActions : Enumeration
     {
-        private RanAwayOrContinueActions(int id, string name) : base(id, name)
+        private RanAwayOrContinueActions(int code, string name) : base(code, name)
         {
         }
 

@@ -5,28 +5,18 @@ using System.Reflection;
 
 namespace Munchkin.Core.Contracts
 {
-    public abstract class Enumeration : IComparable
+    public abstract record Enumeration(int Code, string Name)
+        : IComparable
     {
-        protected Enumeration()
+        public static IReadOnlyCollection<T> GetAll<T>() where T : Enumeration, new()
         {
-        }
-
-        protected Enumeration(int id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
-
-        public static ICollection<T> GetAll<T>() where T : Enumeration, new()
-        {
-            // TODO: check the possibility to create an instance internally
             var type = typeof(T);
             var fields = type.GetTypeInfo().GetFields(
                 BindingFlags.Public |
                 BindingFlags.Static |
                 BindingFlags.DeclaredOnly);
 
-            List<T> enumerations = new List<T>();
+            List<T> enumerations = new();
 
             foreach (var info in fields)
             {
@@ -46,37 +36,13 @@ namespace Munchkin.Core.Contracts
             return GetAll<T>().FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase));
         }
 
-        public static bool operator ==(Enumeration lhs, Enumeration rhs) => lhs is null ? rhs is null : lhs.Equals(rhs);
-
-        public static bool operator !=(Enumeration lhs, Enumeration rhs) => !(lhs == rhs);
-
-        public int Id { get; }
-
-        public string Name { get; }
-
-        public override string ToString() => Name;
-
-        public override bool Equals(object obj)
-        {
-            var otherValue = obj as Enumeration;
-            if (otherValue == null)
-            {
-                return false;
-            }
-            var typeMatches = GetType().Equals(obj.GetType());
-            var valueMatches = Id.Equals(otherValue.Id);
-            return typeMatches && valueMatches;
-        }
-
         public int CompareTo(object obj)
         {
             if (obj == null)
-            {
                 throw new ArgumentNullException(nameof(obj));
-            }
 
             Enumeration enumeration = obj as Enumeration;
-            return Id.CompareTo(enumeration?.Id);
+            return Code.CompareTo(enumeration?.Code);
         }
     }
 }

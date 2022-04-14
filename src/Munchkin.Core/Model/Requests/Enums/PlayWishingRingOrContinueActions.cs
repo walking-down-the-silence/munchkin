@@ -2,9 +2,9 @@
 
 namespace Munchkin.Core.Model.Requests
 {
-    public class PlayWishingRingOrContinueActions : Enumeration
+    public sealed record PlayWishingRingOrContinueActions : Enumeration
     {
-        private PlayWishingRingOrContinueActions(int id, string name) : base(id, name)
+        private PlayWishingRingOrContinueActions(int code, string name) : base(code, name)
         {
         }
 

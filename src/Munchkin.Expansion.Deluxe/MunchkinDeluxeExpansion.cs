@@ -1,6 +1,6 @@
 ﻿using Munchkin.Core.Contracts;
 
-namespace Munchkin.Core.Model
+namespace Munchkin.Expansion.Deluxe
 {
     public sealed class MunchkinDeluxeExpansion : IExpansion
     {

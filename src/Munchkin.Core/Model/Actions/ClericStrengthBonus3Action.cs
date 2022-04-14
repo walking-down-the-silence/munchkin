@@ -35,7 +35,7 @@ namespace Munchkin.Core.Model.Actions
                 .SendAsync(table);
 
             // NOTE: adds a bonus of +3 for each card
-            selectedCards.ForEach(card => table.Dungeon.AddProperty(new PlayerStrengthBonusAttribute(3)));
+            selectedCards.ForEach(card => table.Dungeon.AddAtribute(new PlayerStrengthBonusAttribute(3)));
             selectedCards.DiscardAll(table);
 
             return table;

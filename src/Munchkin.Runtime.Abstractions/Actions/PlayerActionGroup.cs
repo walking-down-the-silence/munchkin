@@ -2,7 +2,7 @@
 using Munchkin.Core.Model;
 using System.Collections.Generic;
 
-namespace Munchkin.Runtime.Entities.Actions
+namespace Munchkin.Runtime.Abstractions.Actions
 {
     public class PlayerActionGroup
     {
