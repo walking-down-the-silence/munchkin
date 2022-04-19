@@ -7,10 +7,10 @@ namespace Munchkin.Api.Extensions.Mappers
 {
     public static class TableExtensions
     {
-        public static async Task<TableVM> ToVM(this ITable table)
+        public static async Task<TableVM> ToVM(this ITableGrain table)
         {
-            var players = await table.GetPlayers();
-            var expansionSelections = await table.GetExpansionSelections();
+            var players = await table.GetPlayersAsync();
+            var expansionSelections = await table.GetIncludedExpansionsAsync();
 
             return new TableVM
             {

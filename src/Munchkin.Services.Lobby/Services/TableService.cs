@@ -1,11 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Munchkin.Core.Contracts;
-using Munchkin.Core.Model;
-using Munchkin.Core.Model.Expansions;
+﻿using Munchkin.Core.Model.Expansions;
+using Munchkin.Extensions.Threading;
 using Munchkin.Runtime.Abstractions.Tables;
 using Munchkin.Runtime.Abstractions.UserAggregate;
+using Orleans;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,93 +11,49 @@ namespace Munchkin.Services.Lobby.Services
 {
     public class TableService
     {
-        private readonly IPlayerRepository _userRepository;
-        private readonly ITableRepository _tableRepository;
-        private readonly IServiceProvider _expansionProvider;
+        private readonly IClusterClient _clusterClient;
+        private readonly IPlayerRepository _playerRepository;
 
         public TableService(
-            IPlayerRepository userRepository,
-            ITableRepository tableRepository,
-            IServiceProvider expansionProvider)
+            IClusterClient clusterClient,
+            IPlayerRepository playerRepository)
         {
-            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _tableRepository = tableRepository ?? throw new ArgumentNullException(nameof(tableRepository));
-            _expansionProvider = expansionProvider ?? throw new ArgumentNullException(nameof(expansionProvider));
+            _clusterClient = clusterClient ?? throw new ArgumentNullException(nameof(clusterClient));
+            _playerRepository = playerRepository ?? throw new ArgumentNullException(nameof(playerRepository));
         }
 
-        public async Task<ITable> CreateTableAsLeader(string nickname)
-        {
-            var availableExpansions = _expansionProvider
-                .GetServices<IExpansion>()
-                .Select(x => new ExpansionOption(x.Code, x.Title))
-                .ToArray();
+        public Task<ITableGrain> CreateAsync() =>
+            GenerateUniqueId()
+                .Unit()
+                .SelectMany(tableId => _clusterClient.GetGrain<ITableGrain>(tableId).Unit());
 
-            var user = await _userRepository.GetPlayerByNicknameAsync(nickname);
+        public Task<ITableGrain> GetAsync(string tableId) =>
+            _clusterClient.GetGrain<ITableGrain>(tableId).Unit();
 
-            // TODO: generate a unique id for the table
-            var tableId = "table_123";
-            var table = await _tableRepository.GetTableByIdAsync(tableId);
-            await table.WithExpansions(availableExpansions);
+        public Task<ITableGrain> SetupAsync(string tableId) =>
+            _clusterClient
+                .GetGrain<ITableGrain>(tableId)
+                .SetupAsync()
+                .SelectMany(table => table.AsReference<ITableGrain>().Unit());
 
-            var joinResponse = user is not null
-                ? await table.JoinRoom(user)
-                : JoinTableResult.InvalidUser;
+        public Task<JoinTableResult> JoinTableAsync(string tableId, string nickname) =>
+            _clusterClient.GetGrain<ITableGrain>(tableId).Unit()
+                .SelectMany(table => _playerRepository
+                    .GetPlayerByNicknameAsync(nickname)
+                    .SelectMany(player => table.JoinAsync(player)));
 
-            return joinResponse == JoinTableResult.JoinedRoom ? table : default;
-        }
+        public Task<JoinTableResult> LeaveTableAsync(string tableId, string nickname) =>
+            _clusterClient.GetGrain<ITableGrain>(tableId).Unit()
+                .SelectMany(table => _playerRepository
+                    .GetPlayerByNicknameAsync(nickname)
+                    .SelectMany(player => table.LeaveAsync(player)));
 
-        public async Task<ITable> GetTable(string tableId)
-        {
-            return await _tableRepository.GetTableByIdAsync(tableId);
-        }
+        public Task<SelectExpansionResult> MarkExpansionSelectionAsync(string tableId, string expansionCode, bool selected) =>
+            _clusterClient.GetGrain<ITableGrain>(tableId).Unit()
+                .SelectMany(table => selected
+                    ? table.IncludeExpansionAsync(expansionCode)
+                    : table.ExcludeExpansionAsync(expansionCode));
 
-        public async Task<IReadOnlyCollection<Player>> GetPlayersAsync(string tableId)
-        {
-            var table = await _tableRepository.GetTableByIdAsync(tableId);
-            var players = await table.GetPlayers();
-            return players;
-        }
-
-        public async Task<Player> GetPlayerByIdAsync(string tableId, string nickname)
-        {
-            var table = await _tableRepository.GetTableByIdAsync(tableId);
-            var players = await table.GetPlayers();
-            return players.SingleOrDefault(x => x.Nickname == nickname);
-        }
-
-        public async Task<JoinTableResult> JoinTable(string tableId, string nickname)
-        {
-            var user = await _userRepository.GetPlayerByNicknameAsync(nickname);
-            var table = await _tableRepository.GetTableByIdAsync(tableId);
-            var joinResponse = user is not null
-                ? await table.JoinRoom(user)
-                : JoinTableResult.InvalidUser;
-            return joinResponse;
-        }
-
-        public async Task<JoinTableResult> LeaveTable(string tableId, string nickname)
-        {
-            var player = await _userRepository.GetPlayerByNicknameAsync(nickname);
-            var table = await _tableRepository.GetTableByIdAsync(tableId);
-            var joinResponse = player is not null
-                ? await table.LeaveRoom(player)
-                : JoinTableResult.InvalidUser;
-            return joinResponse;
-        }
-
-        public async Task<IReadOnlyCollection<ExpansionSelection>> GetExpansionSelections(string tableId)
-        {
-            var table = await _tableRepository.GetTableByIdAsync(tableId);
-            return await table.GetExpansionSelections();
-        }
-
-        public async Task<SelectExpansionResult> MarkExpansionSelection(string tableId, string expansionCode, bool selected)
-        {
-            var table = await _tableRepository.GetTableByIdAsync(tableId);
-            var result = selected
-                ? await table.SelectExpansion(expansionCode)
-                : await table.UnselectExpansion(expansionCode);
-            return result;
-        }
+        private static string GenerateUniqueId() => $"table_{Guid.NewGuid()}";
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Enums;
-using Munchkin.Runtime.Abstractions.GameEngines;
 using Munchkin.Runtime.Abstractions.UserAggregate;
 using System;
 using System.Linq;
@@ -11,39 +10,29 @@ namespace Munchkin.Services.Lobby.Services
 {
     public class PlayerService
     {
-        private readonly IGameEngineRepository _gameEngineRepository;
-        private readonly IPlayerRepository _userRepository;
+        private readonly IPlayerRepository _playerRepository;
 
-        public PlayerService(
-            IGameEngineRepository gameEngineRepository,
-            IPlayerRepository clusterClient)
+        public PlayerService(IPlayerRepository clusterClient)
         {
-            _gameEngineRepository = gameEngineRepository ?? throw new ArgumentNullException(nameof(gameEngineRepository));
-            _userRepository = clusterClient ?? throw new ArgumentNullException(nameof(clusterClient));
+            _playerRepository = clusterClient ?? throw new ArgumentNullException(nameof(clusterClient));
         }
 
         public async Task<Player> CreatePlayerAsync(string nickname, bool isMale)
         {
             var gender = isMale ? EGender.Male : EGender.Female;
             var player = new Player(nickname, gender);
-            await _userRepository.SavePlayerAsync(player);
+            await _playerRepository.SavePlayerAsync(player);
             return player;
         }
 
         public Task<Player> GetUserByNicknameAsync(string nickname)
         {
-            return _userRepository.GetPlayerByNicknameAsync(nickname);
+            return _playerRepository.GetPlayerByNicknameAsync(nickname);
         }
 
-        public async Task ChangeCardStorage(string tableId, string playerId, int cardId, string storageType)
+        public async Task ChangeCardStorage(string playerId, int cardId, string storageType)
         {
-            var game = await _gameEngineRepository.GetGameByIdAsync(tableId);
-
-            if (game is null)
-                throw new ArgumentNullException(nameof(game));
-
-            // TODO: find player by id instead of First()
-            var player = game.Table.Players.First();
+            var player = await _playerRepository.GetPlayerByNicknameAsync(playerId);
 
             if (player is null)
                 throw new ArgumentNullException(nameof(player));

@@ -16,8 +16,8 @@ namespace Munchkin.Core.Model
     public sealed class Table
     {
         private readonly Dictionary<string, Player> _players = new();
-        private readonly List<ExpansionOption> _expansionOptions = new();
-        private readonly Dictionary<string, ExpansionOption> _selectedOptions = new();
+        private readonly Dictionary<string, ExpansionSelection> _availableExpansions = new();
+        private readonly Dictionary<string, ExpansionSelection> _selectedExpansions = new();
 
         private Table()
         {
@@ -71,6 +71,12 @@ namespace Munchkin.Core.Model
         /// </summary>
         public IReadOnlyCollection<Trade> OngoingTrades { get; }
 
+        public IReadOnlyCollection<ExpansionSelection> AvailableExpansions =>
+            _availableExpansions.Values;
+
+        public IReadOnlyCollection<ExpansionSelection> IncludedExpansions =>
+            _selectedExpansions.Values;
+
         /// <summary>
         /// Request sink that is used for player interaction when a selection or decision is needed.
         /// </summary>
@@ -80,118 +86,118 @@ namespace Munchkin.Core.Model
         /// Sets the target level required to win the game.
         /// </summary>
         /// <param name="winningLevel">Target level.</param>
-        public Task<Table> WithWinningLevel(int winningLevel)
+        public Table WithWinningLevel(int winningLevel)
         {
             WinningLevel = winningLevel;
-            return this.Unit();
+            return this;
         }
 
         /// <summary>
         /// Sets the requests sink instance used to communicate with outside world.
         /// </summary>
         /// <param name="requestSink">The request sink implementation instance.</param>
-        public Task<Table> WithRequestSink(IMediator requestSink)
+        public Table WithRequestSink(IMediator requestSink)
         {
             RequestSink = requestSink
                 ?? throw new ArgumentNullException(nameof(requestSink));
-            return this.Unit();
+            return this;
         }
 
         /// <summary>
         /// Assigns the players to the gaming table.
         /// </summary>
         /// <param name="players">The collection of players to assign.</param>
-        public Task<Table> WithPlayers(IReadOnlyCollection<Player> players)
+        public Table WithPlayers(IReadOnlyCollection<Player> players)
         {
             Players = players is null
                 ? throw new ArgumentNullException(nameof(players))
                 : new CircularList<Player>(players);
-            return this.Unit();
+            return this;
         }
 
         /// <summary>
         /// Appends the treasure cards to the deck. Can be used for additional expansions.
         /// </summary>
         /// <param name="cards">Cars to add.</param>
-        public Task<Table> WithTreasureDeck(IReadOnlyCollection<TreasureCard> cards)
+        public Table WithTreasureDeck(IReadOnlyCollection<TreasureCard> cards)
         {
             TreasureCardDeck = cards is null
                 ? throw new ArgumentNullException(nameof(cards))
                 : new CardDeck<TreasureCard>(cards);
-            return this.Unit();
+            return this;
         }
 
         /// <summary>
         /// Appends the door cards to the deck. Can be used for additional expansions.
         /// </summary>
         /// <param name="cards">Cards to add.</param>
-        public Task<Table> WithDoorDeck(IReadOnlyCollection<DoorsCard> cards)
+        public Table WithDoorDeck(IReadOnlyCollection<DoorsCard> cards)
         {
             DoorsCardDeck = cards is null
                 ? throw new ArgumentNullException(nameof(cards))
                 : new CardDeck<DoorsCard>(cards);
-            return this.Unit();
+            return this;
         }
 
-        public Task<Table> WithExpansions(IReadOnlyCollection<ExpansionOption> expansions)
+        public Table WithExpansions(IReadOnlyCollection<ExpansionOption> expansions)
         {
             if (expansions is null)
-                return this.Unit();
+                return this;
 
-            _expansionOptions.Clear();
-            _expansionOptions.AddRange(expansions);
-            return this.Unit();
+            _availableExpansions.Clear();
+            _selectedExpansions.Clear();
+
+            _ = expansions
+                .Select(x => _availableExpansions[x.Code] = ToExpansionSelection(x))
+                .ToList();
+
+            return this;
         }
 
-        public Task<IReadOnlyCollection<ExpansionSelection>> GetExpansionSelections()
-        {
-            IReadOnlyCollection<ExpansionSelection> expansionOptions = _expansionOptions
-                .Select(x => new ExpansionSelection(x.Code, x.Title, _selectedOptions.ContainsKey(x.Code)))
-                .ToArray();
-            return Task.FromResult(expansionOptions);
-        }
-
-        public Task<SelectExpansionResult> SelectExpansion(string code)
+        public SelectExpansionResult IncludeExpansion(string code)
         {
             if (string.IsNullOrWhiteSpace(code))
-                return Task.FromResult(SelectExpansionResult.InvalidOptionCode);
+                return SelectExpansionResult.InvalidOptionCode;
 
-            var expansion = _expansionOptions.FirstOrDefault(x => string.Equals(x.Code, code, StringComparison.OrdinalIgnoreCase));
-            _selectedOptions[code] = expansion;
-            return Task.FromResult(SelectExpansionResult.OptionSelected);
+            _selectedExpansions[code] = _availableExpansions[code];
+            _availableExpansions.Remove(code);
+            return SelectExpansionResult.OptionSelected;
         }
 
-        public Task<SelectExpansionResult> UnselectExpansion(string code)
+        public SelectExpansionResult ExcludeExpansion(string code)
         {
             if (string.IsNullOrWhiteSpace(code))
-                return Task.FromResult(SelectExpansionResult.InvalidOptionCode);
+                return SelectExpansionResult.InvalidOptionCode;
 
-            var expansion = _expansionOptions.FirstOrDefault(x => string.Equals(x.Code, code, StringComparison.OrdinalIgnoreCase));
-            _selectedOptions.Remove(code);
-            return Task.FromResult(SelectExpansionResult.OptionUnselected);
+            _availableExpansions[code] = _selectedExpansions[code];
+            _selectedExpansions.Remove(code);
+            return SelectExpansionResult.OptionUnselected;
         }
 
-        public Task<JoinTableResult> Join(Player player)
+        public JoinTableResult Join(Player player)
         {
             if (player is null)
-                return Task.FromResult(JoinTableResult.InvalidUser);
+                return JoinTableResult.InvalidUser;
 
             _players[player.Nickname] = player;
-            return Task.FromResult(JoinTableResult.JoinedRoom);
+            return JoinTableResult.JoinedRoom;
         }
 
-        public Task<JoinTableResult> Leave(Player player)
+        public JoinTableResult Leave(Player player)
         {
             if (player is null)
-                return Task.FromResult(JoinTableResult.InvalidUser);
+                return JoinTableResult.InvalidUser;
 
             if (!_players.Any())
-                return Task.FromResult(JoinTableResult.RoomEmpty);
+                return JoinTableResult.RoomEmpty;
 
             if (_players.Remove(player.Nickname))
-                return Task.FromResult(JoinTableResult.LeftRoom);
+                return JoinTableResult.LeftRoom;
 
-            return Task.FromResult(JoinTableResult.InvalidUser);
+            return JoinTableResult.InvalidUser;
         }
+
+        private static ExpansionSelection ToExpansionSelection(ExpansionOption x) =>
+            new ExpansionSelection(x.Code, x.Title, false);
     }
 }

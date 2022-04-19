@@ -16,6 +16,11 @@ namespace Munchkin.Services.Lobby.Repositories
                 : Task.FromResult<Player>(null);
         }
 
+        public Task<IReadOnlyCollection<Player>> GetPlayersAsync(string tableId)
+        {
+            return Task.FromResult<IReadOnlyCollection<Player>>(_players.Values);
+        }
+
         public Task SavePlayerAsync(Player player)
         {
             _ = player is not null

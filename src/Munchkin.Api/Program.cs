@@ -33,7 +33,7 @@ namespace Munchkin.Api
                     .AddMemoryGrainStorageAsDefault()
                     .ConfigureApplicationParts(parts =>
                     {
-                        parts.AddApplicationPart(typeof(Table).Assembly).WithReferences();
+                        parts.AddApplicationPart(typeof(TableGrain).Assembly).WithReferences();
                     })
                     .ConfigureLogging(logging =>
                     {

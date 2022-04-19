@@ -1,35 +1,28 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Munchkin.Core.Model;
+﻿using Munchkin.Core.Model;
 using Munchkin.Core.Model.Enums;
 using Munchkin.Runtime.Abstractions.UserAggregate;
-using Munchkin.Services.Lobby;
-using Munchkin.Services.Lobby.Repositories;
 using Munchkin.Services.Lobby.Services;
 using Orleans.TestingHost;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Munchkin.Runtime.Client.Tests.Services
 {
-    public class GameRoomServiceTests
+    public class TableServiceTests
     {
         [Fact]
-        public async void CreateRoom_WithNotNullParameter_ShouldCreateGameRoom()
+        public async void SetupAsync_WithNotNullParameter_ShouldCreateGameRoom()
         {
             // Arrange
-            var serviceCollection = new ServiceCollection();
-            serviceCollection.AddMunchkinGameServices();
-            using var serviceProvider = serviceCollection.BuildServiceProvider();
-
             using var cluster = CreateTestCluster();
             var tableId = "table_1";
-            var tableRepository = new TableRepository(cluster.Client);
             var playerRepository = new PlayerRepositoryDummy();
-            var gameRoomService = new TableService(playerRepository, tableRepository, serviceProvider);
+            var gameRoomService = new TableService(cluster.Client, playerRepository);
 
             // Act
-            var gameRoom = await gameRoomService.CreateTableAsLeader(tableId);
-            var players = await gameRoom.GetPlayers();
+            var gameRoom = await gameRoomService.SetupAsync(tableId);
+            var players = await gameRoom.GetPlayersAsync();
 
             // Assert
             Assert.NotNull(gameRoom);
@@ -40,6 +33,9 @@ namespace Munchkin.Runtime.Client.Tests.Services
         {
             public Task<Player> GetPlayerByNicknameAsync(string nickname) =>
                 Task.FromResult(new Player(nickname, EGender.Male));
+
+            public Task<IReadOnlyCollection<Player>> GetPlayersAsync(string tableId) =>
+                throw new System.NotImplementedException();
 
             public Task SavePlayerAsync(Player user) =>
                 throw new System.NotImplementedException();

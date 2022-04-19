@@ -24,51 +24,57 @@ namespace Munchkin.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] TableCreateAsLeaderVM vm)
         {
-            var gameRoom = await _tableService.CreateTableAsLeader(vm.LeaderNickname);
-            var gameRoomVm = await gameRoom.ToVM();
-            return Ok(gameRoomVm);
+            var table = await _tableService.CreateAsync();
+            var tableVm = await table.ToVM();
+            return Ok(tableVm);
         }
 
         [ProducesResponseType(typeof(TableVM), StatusCodes.Status200OK)]
         [HttpGet("{tableId}")]
         public async Task<IActionResult> Get(string tableId)
         {
-            var gameRoom = await _tableService.GetTable(tableId);
-            var gameRoomVm = await gameRoom.ToVM();
-            return Ok(gameRoomVm);
+            var table = await _tableService.GetAsync(tableId);
+            var tableVm = await table.ToVM();
+            return Ok(tableVm);
         }
 
         [ProducesResponseType(typeof(ICollection<PlayerVM>), StatusCodes.Status200OK)]
         [HttpGet("{tableId}/players")]
         public async Task<IActionResult> GetPlayers(string tableId)
         {
-            var players = await _tableService.GetPlayersAsync(tableId);
+            var table = await _tableService.GetAsync(tableId);
+            var players = await table.GetPlayersAsync();
             var playerVms = players.Select(x => x.ToVM()).ToArray();
             return Ok(playerVms);
         }
 
         [ProducesResponseType(typeof(PlayerVM), StatusCodes.Status200OK)]
-        [HttpGet("{tableId}/players/{playerId}")]
-        public async Task<IActionResult> Get(string tableId, string playerId)
+        [HttpGet("{tableId}/players/{nickname}")]
+        public async Task<IActionResult> Get(string tableId, string nickname)
         {
-            var player = await _tableService.GetPlayerByIdAsync(tableId, playerId);
+            var table = await _tableService.GetAsync(tableId);
+            var player = await table.GetPlayerByIdAsync(nickname);
             var playerVm = player.ToVM();
             return Ok(playerVm);
         }
 
         [ProducesResponseType(typeof(TableJoinResultVM), StatusCodes.Status200OK)]
-        [HttpPut("{tableId}/players/{playerId}")]
-        public async Task<IActionResult> Put(string tableId, string playerId)
+        [HttpPut("{tableId}/players/{nickname}")]
+        public async Task<IActionResult> Put(string tableId, string nickname)
         {
-            var joinResponse = await _tableService.JoinTable(tableId, playerId);
+            var table = await _tableService.GetAsync(tableId);
+            var player = await table.GetPlayerByIdAsync(nickname);
+            var joinResponse = await table.JoinAsync(player);
             return Ok(joinResponse);
         }
 
         [ProducesResponseType(typeof(TableJoinResultVM), StatusCodes.Status200OK)]
-        [HttpDelete("{tableId}/players/{playerId}")]
-        public async Task<IActionResult> Delete(string tableId, string playerId)
+        [HttpDelete("{tableId}/players/{nickname}")]
+        public async Task<IActionResult> Delete(string tableId, string nickname)
         {
-            var joinResponse = await _tableService.LeaveTable(tableId, playerId);
+            var table = await _tableService.GetAsync(tableId);
+            var player = await table.GetPlayerByIdAsync(nickname);
+            var joinResponse = await table.LeaveAsync(player);
             return Ok(joinResponse);
         }
 
@@ -76,7 +82,8 @@ namespace Munchkin.Api.Controllers
         [HttpGet("{tableId}/expansions")]
         public async Task<IActionResult> GetAvailableExpansions(string tableId)
         {
-            var expansionSelections = await _tableService.GetExpansionSelections(tableId);
+            var table = await _tableService.GetAsync(tableId);
+            var expansionSelections = await table.GetIncludedExpansionsAsync();
             var expansionSelectionsVms = expansionSelections.Select(x => x.ToVM()).ToArray();
             return Ok(expansionSelectionsVms);
         }
@@ -85,7 +92,7 @@ namespace Munchkin.Api.Controllers
         [HttpPut("{tableId}/expansions/{code}/selected")]
         public async Task<IActionResult> SelectExapansion(string tableId, string code)
         {
-            var selectionResponse = await _tableService.MarkExpansionSelection(tableId, code, true);
+            var selectionResponse = await _tableService.MarkExpansionSelectionAsync(tableId, code, true);
             var selectionResponseVm = selectionResponse;
             return Ok(selectionResponseVm);
         }
