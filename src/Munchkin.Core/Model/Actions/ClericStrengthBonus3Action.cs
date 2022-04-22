@@ -1,5 +1,4 @@
-﻿using Munchkin.Core.Contracts;
-using Munchkin.Core.Contracts.Actions;
+﻿using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Requests;
@@ -35,7 +34,7 @@ namespace Munchkin.Core.Model.Actions
                 .SendAsync(table);
 
             // NOTE: adds a bonus of +3 for each card
-            selectedCards.ForEach(card => table.Dungeon.AddAtribute(new PlayerStrengthBonusAttribute(3)));
+            //selectedCards.ForEach(card => table.Dungeon.AddAtribute(new PlayerStrengthBonusAttribute(3)));
             selectedCards.DiscardAll(table);
 
             return table;

@@ -1,6 +1,7 @@
 using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Engine.Original.Treasures;
+using Munchkin.Core.Model.Cards.Treasures.OneShot;
+using Munchkin.Core.Model.Cards.Treasures.Permanent;
 using System.Collections.Generic;
 using System.Linq;
 

@@ -1,9 +1,9 @@
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
-using Munchkin.Core.Model.Stages;
+using Munchkin.Core.Services;
 using System.Threading.Tasks;
 
-namespace Munchkin.Engine.Original.Doors
+namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class Bullrog : MonsterCard
     {

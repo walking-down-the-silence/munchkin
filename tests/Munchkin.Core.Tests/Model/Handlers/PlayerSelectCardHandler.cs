@@ -1,12 +1,12 @@
 ﻿using MediatR;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Contracts.PlayerInteraction;
 using Munchkin.Core.Model.Requests;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Munchkin.Core.Tests.Handlers
+namespace Munchkin.Core.Tests.Model.Handlers
 {
     public class PlayerSelectCardHandler : IRequestHandler<PlayerSelectSingleCardRequest, Response<Card>>
     {

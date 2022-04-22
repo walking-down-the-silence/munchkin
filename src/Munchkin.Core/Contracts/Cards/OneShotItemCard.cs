@@ -1,6 +1,5 @@
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Attributes;
-using Munchkin.Core.Model.Enums;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Contracts.Cards
@@ -18,8 +17,8 @@ namespace Munchkin.Core.Contracts.Cards
             BonusAttribute strength = BoundTo is null
                 ? new PlayerStrengthBonusAttribute(StrengthBonus)
                 : new MonsterStrengthBonusAttribute(StrengthBonus);
-            context.Dungeon.AddAtribute(strength);
-            context.Dungeon.AddAtribute(new RunAwayBonusAttribute(RunAwayBonus));
+            //context.Dungeon.AddAtribute(strength);
+            //context.Dungeon.AddAtribute(new RunAwayBonusAttribute(RunAwayBonus));
 
             return Task.CompletedTask;
         }

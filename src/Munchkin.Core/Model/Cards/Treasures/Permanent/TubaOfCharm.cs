@@ -1,9 +1,9 @@
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
-using Munchkin.Core.Model.Enums;
 using System.Threading.Tasks;
 
-namespace Munchkin.Engine.Original.Treasures
+namespace Munchkin.Core.Model.Cards.Treasures.Permanent
 {
     public sealed class TubaOfCharm : PermanentItemCard
     {

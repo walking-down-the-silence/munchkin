@@ -1,4 +1,4 @@
-﻿namespace Munchkin.Core.Contracts
+﻿namespace Munchkin.Core.Contracts.Actions
 {
     /// <summary>
     /// Defines a container for the actual action and it's description.

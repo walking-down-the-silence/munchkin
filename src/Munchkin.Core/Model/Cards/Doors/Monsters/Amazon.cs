@@ -1,11 +1,12 @@
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
-using Munchkin.Core.Model.Enums;
+using Munchkin.Core.Model.Cards.Doors.Curses;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Munchkin.Engine.Original.Doors
+namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class Amazon : MonsterCard
     {

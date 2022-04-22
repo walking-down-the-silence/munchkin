@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Munchkin.Core.Contracts.PlayerInteraction
+namespace Munchkin.Core.Contracts
 {
     public class Response<TResult>
     {

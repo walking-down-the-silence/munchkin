@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Model;
-using Munchkin.Core.Model.Enums;
-using Munchkin.Runtime.Abstractions.Tables;
+using Munchkin.Runtime.Abstractions;
 using Orleans;
 using Orleans.Configuration;
 using System;

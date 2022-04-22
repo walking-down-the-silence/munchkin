@@ -1,6 +1,6 @@
 using Munchkin.Core.Contracts.Cards;
 
-namespace Munchkin.Engine.Original.Treasures
+namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 {
     public sealed class FlamingPoisonPotion : OneShotItemCard
     {

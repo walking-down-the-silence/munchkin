@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
-using Munchkin.Core.Model.Enums;
 
-namespace Munchkin.Engine.Original.Doors
+namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
     public sealed class LoseTheFootgearYouAreWearing : CurseCard
     {

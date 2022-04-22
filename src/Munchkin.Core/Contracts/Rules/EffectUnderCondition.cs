@@ -1,4 +1,6 @@
-﻿namespace Munchkin.Core.Contracts.Rules
+﻿using Munchkin.Core.Contracts.Actions;
+
+namespace Munchkin.Core.Contracts.Rules
 {
     public class EffectUnderCondition<TState> : IConditionalEffect<TState>
     {

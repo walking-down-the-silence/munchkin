@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Munchkin.Core.Model
+namespace Munchkin.Core
 {
     public class CardDeck<TCard> : ICardDeck<TCard> where TCard : Card
     {

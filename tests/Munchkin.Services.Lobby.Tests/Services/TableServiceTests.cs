@@ -1,6 +1,5 @@
-﻿using Munchkin.Core.Model;
-using Munchkin.Core.Model.Enums;
-using Munchkin.Runtime.Abstractions.UserAggregate;
+﻿using Munchkin.Core.Contracts;
+using Munchkin.Core.Model;
 using Munchkin.Services.Lobby.Services;
 using Orleans.TestingHost;
 using System.Collections.Generic;

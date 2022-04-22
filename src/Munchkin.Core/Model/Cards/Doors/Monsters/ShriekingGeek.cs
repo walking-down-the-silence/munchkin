@@ -3,8 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
+using Munchkin.Core.Model.Cards.Doors.Classes;
 
-namespace Munchkin.Engine.Original.Doors
+namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class ShriekingGeek : MonsterCard
     {

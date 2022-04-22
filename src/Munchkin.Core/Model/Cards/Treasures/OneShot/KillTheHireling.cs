@@ -1,8 +1,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Munchkin.Core.Model;
+using Munchkin.Core.Model.Cards.Treasures.Permanent;
 
-namespace Munchkin.Engine.Original.Treasures
+namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 {
     public sealed class KillTheHireling : LevelUpTreasure
     {

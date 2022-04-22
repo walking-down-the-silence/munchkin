@@ -1,6 +1,6 @@
 ﻿using MediatR;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Contracts.PlayerInteraction;
 using Munchkin.Core.Model.Requests;
 using System.Threading;
 using System.Threading.Tasks;

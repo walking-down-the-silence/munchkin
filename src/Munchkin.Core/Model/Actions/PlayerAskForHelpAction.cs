@@ -1,7 +1,8 @@
 using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Extensions;
+using Munchkin.Core.Model.Phases;
 using Munchkin.Core.Model.Requests;
-using Munchkin.Core.Model.Stages;
+using Munchkin.Core.Model.Requests.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

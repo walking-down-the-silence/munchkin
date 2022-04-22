@@ -1,4 +1,4 @@
-using Munchkin.Core.Contracts;
+using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Model;
@@ -6,7 +6,7 @@ using Munchkin.Core.Model.Effects;
 using Munchkin.Core.Model.Rules;
 using System.Threading.Tasks;
 
-namespace Munchkin.Engine.Original.Doors
+namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class Harpies : MonsterCard
     {

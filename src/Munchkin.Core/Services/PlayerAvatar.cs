@@ -1,8 +1,9 @@
 ﻿using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
+using Munchkin.Core.Model;
 using System.Linq;
 
-namespace Munchkin.Core.Model.Stages
+namespace Munchkin.Core.Services
 {
     public static class PlayerAvatar
     {

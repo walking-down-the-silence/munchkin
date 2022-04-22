@@ -1,6 +1,6 @@
 ﻿using Munchkin.Core.Contracts;
 
-namespace Munchkin.Core.Model.Requests
+namespace Munchkin.Core.Model.Requests.Enums
 {
     public sealed record EmptyRoomActions : Enumeration
     {

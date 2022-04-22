@@ -1,5 +1,6 @@
 ﻿using MediatR;
-using Munchkin.Core.Contracts.PlayerInteraction;
+using Munchkin.Core.Contracts;
+using Munchkin.Core.Model.Requests.Enums;
 using System;
 
 namespace Munchkin.Core.Model.Requests

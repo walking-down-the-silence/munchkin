@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
 
-namespace Munchkin.Engine.Original.Doors
+namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
     public sealed class TrulyObmoxiousCurse : CurseCard
     {

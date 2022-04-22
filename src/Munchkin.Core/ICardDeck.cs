@@ -1,7 +1,7 @@
 ﻿using Munchkin.Core.Contracts.Cards;
 using System.Collections.Generic;
 
-namespace Munchkin.Core.Model
+namespace Munchkin.Core
 {
     public interface ICardDeck<TCard> : IEnumerable<TCard> where TCard : Card
     {

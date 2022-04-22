@@ -1,5 +1,5 @@
-﻿using Munchkin.Core.Model;
-using Munchkin.Core.Model.Enums;
+﻿using Munchkin.Core.Contracts;
+using Munchkin.Core.Model;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;

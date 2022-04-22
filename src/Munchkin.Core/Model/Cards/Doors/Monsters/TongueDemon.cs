@@ -1,10 +1,11 @@
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
+using Munchkin.Core.Model.Cards.Doors.Classes;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Munchkin.Engine.Original.Doors
+namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class TongueDemon : MonsterCard
     {

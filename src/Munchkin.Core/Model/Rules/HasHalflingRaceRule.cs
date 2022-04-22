@@ -1,5 +1,5 @@
 ﻿using Munchkin.Core.Contracts.Rules;
-using Munchkin.Engine.Original.Doors;
+using Munchkin.Core.Model.Cards.Doors.Races;
 using System.Linq;
 
 namespace Munchkin.Core.Model.Rules

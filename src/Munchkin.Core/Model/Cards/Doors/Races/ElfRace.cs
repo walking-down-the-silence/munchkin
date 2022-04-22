@@ -3,7 +3,7 @@ using Munchkin.Core.Model;
 using System;
 using System.Threading.Tasks;
 
-namespace Munchkin.Engine.Original.Doors
+namespace Munchkin.Core.Model.Cards.Doors.Races
 {
     public class ElfRace : RaceCard
     {

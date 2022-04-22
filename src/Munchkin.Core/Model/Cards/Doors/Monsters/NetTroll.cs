@@ -4,7 +4,7 @@ using Munchkin.Core.Model.Requests;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Munchkin.Engine.Original.Doors
+namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class NetTroll : MonsterCard
     {

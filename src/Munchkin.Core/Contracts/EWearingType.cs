@@ -1,4 +1,4 @@
-namespace Munchkin.Core.Model.Enums
+namespace Munchkin.Core.Contracts
 {
     public enum EWearingType
     {

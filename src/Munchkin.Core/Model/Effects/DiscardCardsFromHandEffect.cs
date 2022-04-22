@@ -1,5 +1,5 @@
-﻿using Munchkin.Core.Contracts;
-using Munchkin.Core.Model.Stages;
+﻿using Munchkin.Core.Contracts.Actions;
+using Munchkin.Core.Services;
 
 namespace Munchkin.Core.Model.Effects
 {

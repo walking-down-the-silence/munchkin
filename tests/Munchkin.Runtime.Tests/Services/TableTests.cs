@@ -1,9 +1,9 @@
 using MediatR;
 using Moq;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Model;
-using Munchkin.Core.Model.Enums;
 using Munchkin.Core.Model.Expansions;
-using Munchkin.Runtime.Abstractions.Tables;
+using Munchkin.Runtime.Abstractions;
 using Munchkin.Runtime.Services;
 using Orleans.Runtime;
 using System;

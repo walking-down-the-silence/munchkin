@@ -3,7 +3,7 @@ using Munchkin.Core.Model;
 using Munchkin.Core.Model.Attributes;
 using System.Threading.Tasks;
 
-namespace Munchkin.Engine.Original.Treasures
+namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 {
     public class MagicLamp : OneShotItemCard
     {

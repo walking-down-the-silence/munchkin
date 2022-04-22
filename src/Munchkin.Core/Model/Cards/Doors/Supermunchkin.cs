@@ -1,7 +1,8 @@
+using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
 using System.Threading.Tasks;
 
-namespace Munchkin.Core.Contracts.Cards
+namespace Munchkin.Core.Model.Cards.Doors
 {
     public class SuperMunchkin : ClassCard
     {

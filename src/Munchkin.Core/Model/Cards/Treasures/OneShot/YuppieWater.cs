@@ -1,7 +1,7 @@
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model.Attributes;
 
-namespace Munchkin.Engine.Original.Treasures
+namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 {
     public sealed class YuppieWater : OneShotItemCard
     {

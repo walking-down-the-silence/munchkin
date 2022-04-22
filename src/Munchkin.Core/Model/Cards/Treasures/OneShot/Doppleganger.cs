@@ -5,7 +5,7 @@ using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Attributes;
 
-namespace Munchkin.Engine.Original.Treasures
+namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 {
     public sealed class Doppleganger : OneShotItemCard
     {

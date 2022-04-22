@@ -5,7 +5,7 @@ using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Attributes;
 
-namespace Munchkin.Engine.Original.Doors
+namespace Munchkin.Core.Model.Cards.Doors
 {
     public sealed class Mate : SpecialCard
     {

@@ -3,7 +3,7 @@ using Munchkin.Core.Model;
 using Munchkin.Core.Model.Requests;
 using System.Threading.Tasks;
 
-namespace Munchkin.Engine.Original.Doors
+namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class Pitbull : MonsterCard
     {

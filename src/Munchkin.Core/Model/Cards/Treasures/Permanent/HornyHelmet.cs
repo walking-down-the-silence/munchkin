@@ -1,11 +1,11 @@
 using Munchkin.Core.Contracts;
+using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Model.Effects;
-using Munchkin.Core.Model.Enums;
 using Munchkin.Core.Model.Rules;
 
-namespace Munchkin.Engine.Original.Treasures
+namespace Munchkin.Core.Model.Cards.Treasures.Permanent
 {
     public sealed class HornyHelmet : PermanentItemCard
     {

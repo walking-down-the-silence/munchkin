@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Munchkin.Core.Contracts.PlayerInteraction;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Model;
 using System.Threading.Tasks;
 

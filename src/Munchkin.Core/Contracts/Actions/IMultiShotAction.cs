@@ -1,4 +1,4 @@
-﻿namespace Munchkin.Core.Contracts
+﻿namespace Munchkin.Core.Contracts.Actions
 {
     /// <summary>
     /// Defines an action that can be executed multiple times.

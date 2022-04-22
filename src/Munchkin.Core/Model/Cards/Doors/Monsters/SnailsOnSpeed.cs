@@ -1,12 +1,11 @@
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model;
 using Munchkin.Core.Model.Requests;
 using Munchkin.Core.Model.Requests.Enums;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Munchkin.Engine.Original.Doors
+namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class SnailsOnSpeed : MonsterCard
     {

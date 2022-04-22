@@ -1,4 +1,4 @@
-﻿using Munchkin.Core.Contracts;
+﻿using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Model;
 using System.Threading.Tasks;
 

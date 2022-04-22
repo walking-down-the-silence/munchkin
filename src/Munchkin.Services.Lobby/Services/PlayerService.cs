@@ -1,7 +1,6 @@
-﻿using Munchkin.Core.Extensions;
+﻿using Munchkin.Core.Contracts;
+using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
-using Munchkin.Core.Model.Enums;
-using Munchkin.Runtime.Abstractions.UserAggregate;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

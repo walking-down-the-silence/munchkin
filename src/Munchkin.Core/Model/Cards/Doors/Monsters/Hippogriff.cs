@@ -2,7 +2,7 @@
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
 
-namespace Munchkin.Engine.Original.Doors
+namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class Hippogriff : MonsterCard
     {

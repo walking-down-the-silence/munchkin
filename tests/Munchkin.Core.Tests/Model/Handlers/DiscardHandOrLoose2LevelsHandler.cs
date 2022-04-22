@@ -1,10 +1,11 @@
 ﻿using MediatR;
-using Munchkin.Core.Contracts.PlayerInteraction;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Model.Requests;
+using Munchkin.Core.Model.Requests.Enums;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Munchkin.Core.Tests.Handlers
+namespace Munchkin.Core.Tests.Model.Handlers
 {
     public class DiscardHandOrLoose2LevelsHandler : IRequestHandler<PlayerDiscardHandOrLoose2LevelsRequest, Response<DiscardHandOrLoose2LevelsActions>>
     {

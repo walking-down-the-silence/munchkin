@@ -1,5 +1,4 @@
-﻿using Munchkin.Core.Contracts;
-using Munchkin.Core.Model.Attributes;
+﻿using Munchkin.Core.Contracts.Actions;
 
 namespace Munchkin.Core.Model.Effects
 {
@@ -15,7 +14,7 @@ namespace Munchkin.Core.Model.Effects
         public Table Apply(Table state)
         {
             // TODO: check if current stage actually is a combat
-            state.Dungeon.AddAtribute(new PlayerStrengthBonusAttribute(BonusStrength));
+            //state.Dungeon.AddAtribute(new PlayerStrengthBonusAttribute(BonusStrength));
             return state;
         }
     }

@@ -1,4 +1,4 @@
-﻿using Munchkin.Core.Contracts;
+﻿using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Model.Attributes;
 
 namespace Munchkin.Core.Model.Effects
@@ -13,7 +13,7 @@ namespace Munchkin.Core.Model.Effects
 
         public Table Apply(Table state)
         {
-            state.Dungeon.AddAtribute(new RewardTreasuresAttribute(TreasureBonus));
+            //state.Dungeon.AddAtribute(new RewardTreasuresAttribute(TreasureBonus));
             return state;
         }
     }

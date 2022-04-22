@@ -1,7 +1,7 @@
 ﻿using Munchkin.Core.Contracts.Rules;
 using System;
 
-namespace Munchkin.Core.Contracts
+namespace Munchkin.Core.Contracts.Actions
 {
     /// <summary>
     /// Extensions for fluent configuration of the conditional effects.

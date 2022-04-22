@@ -1,4 +1,4 @@
-﻿using Munchkin.Core.Contracts;
+﻿using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Model;
 using Munchkin.Runtime.Abstractions.Actions;
 using System.Collections.Generic;

@@ -1,7 +1,7 @@
-﻿using Munchkin.Core.Model.Expansions;
+﻿using Munchkin.Core.Model;
+using Munchkin.Core.Model.Expansions;
 using Munchkin.Extensions.Threading;
-using Munchkin.Runtime.Abstractions.Tables;
-using Munchkin.Runtime.Abstractions.UserAggregate;
+using Munchkin.Runtime.Abstractions;
 using Orleans;
 using System;
 using System.Linq;

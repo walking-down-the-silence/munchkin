@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Munchkin.Core.Model;
 using Munchkin.Runtime.Abstractions.Actions;
-using Munchkin.Runtime.Abstractions.UserAggregate;
 using Munchkin.Services.Lobby.Repositories;
 using Munchkin.Services.Lobby.Services;
 

@@ -1,7 +1,8 @@
 ﻿using Munchkin.Core.Contracts;
+using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model.Enums;
+using Munchkin.Core.Model.Cards.Doors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -137,21 +138,17 @@ namespace Munchkin.Core.Model
         /// Discards whole hand from the player and puts back into the discard pile.
         /// </summary>
         /// <param name="table"> Table instance with all the state. </param>
-        public void DiscardHand()
-        {
-            _yourHand.Clear();
-        }
+        public void DiscardHand() => _yourHand.Clear();
 
         /// <summary>
         /// Discards all equipped cards from the player and puts back into the discard pile.
         /// </summary>
-        public void DiscardEquipped()
-        {
-            _equipped.Clear();
-        }
+        public void DiscardEquipped() => _equipped.Clear();
 
         /// <summary>
-        /// Revive the players hero and give intital cards.
+        /// On your next turn, start by drawing four face-down cards from each deck
+        /// and playing any legal cards you want to, just as when you started the game.
+        /// Then take your turn normally.
         /// </summary>
         /// <param name="table"> Table instance with all the state. </param>
         public void Revive(IReadOnlyCollection<DoorsCard> doors, IReadOnlyCollection<TreasureCard> treasures)
@@ -169,22 +166,24 @@ namespace Munchkin.Core.Model
         }
 
         /// <summary>
-        /// Kills the player's hero.
+        /// If you die, you lose all your stuff. You keep your Class(es), Race(s),
+        /// and Level(and any Curses that were affecting you when you died) – your
+        /// new character will look just like your old one.If you have Half-Breed or
+        /// Super Munchkin, keep those as well.
         /// </summary>
         /// <returns> A collection of cards that should be discarded. </returns>
         public IReadOnlyCollection<Card> Kill()
         {
             _isDead = true;
 
-            // NOTE: Leave the cards of class, race, and active curses.
             var playerCards = Enumerable.Empty<Card>()
                 .Concat(YourHand)
                 .Concat(Equipped
-                    .NotOfType<RaceCard>()
                     .NotOfType<ClassCard>()
-                    .NotOfType<SuperMunchkin>()
+                    .NotOfType<RaceCard>()
+                    .NotOfType<CurseCard>()
                     .NotOfType<Halfbreed>()
-                    .NotOfType<CurseCard>())
+                    .NotOfType<SuperMunchkin>())
                 .Concat(Backpack)
                 .ToList();
 

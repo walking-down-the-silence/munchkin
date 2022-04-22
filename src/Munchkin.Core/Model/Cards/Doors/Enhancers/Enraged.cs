@@ -1,6 +1,6 @@
 using Munchkin.Core.Contracts.Cards;
 
-namespace Munchkin.Engine.Original.Doors
+namespace Munchkin.Core.Model.Cards.Doors.Enhancers
 {
     public sealed class Enraged : EnhancerCard
     {

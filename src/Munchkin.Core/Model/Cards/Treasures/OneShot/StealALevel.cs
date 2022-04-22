@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Munchkin.Core.Model;
 
-namespace Munchkin.Engine.Original.Treasures
+namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 {
     public sealed class StealALevel : LevelUpTreasure
     {
@@ -14,7 +14,7 @@ namespace Munchkin.Engine.Original.Treasures
         {
             // select player to steal level from
             gameContext.Players.First().LevelDown();
-            
+
             // level up the owner player
             return base.Play(gameContext);
         }

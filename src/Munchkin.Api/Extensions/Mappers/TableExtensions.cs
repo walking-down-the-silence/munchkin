@@ -1,5 +1,5 @@
 ﻿using Munchkin.Api.ViewModels;
-using Munchkin.Runtime.Abstractions.Tables;
+using Munchkin.Runtime.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 

@@ -2,9 +2,8 @@
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
-using Munchkin.Core.Model.Enums;
-using Munchkin.Core.Model.Stages;
-using Munchkin.Engine.Original.Doors;
+using Munchkin.Core.Model.Cards.Doors;
+using Munchkin.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

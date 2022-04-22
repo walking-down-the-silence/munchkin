@@ -1,12 +1,10 @@
 ﻿using MediatR;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model.Expansions;
-using Munchkin.Core.Stages;
 using Munchkin.Extensions.Threading;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model
 {
@@ -21,7 +19,6 @@ namespace Munchkin.Core.Model
 
         private Table()
         {
-            Dungeon = Dungeon.KickOpenTheDoor(null);
             Players = new CircularList<Player>();
             TreasureCardDeck = new CardDeck<TreasureCard>();
             DoorsCardDeck = new CardDeck<DoorsCard>();
@@ -60,16 +57,6 @@ namespace Munchkin.Core.Model
         /// The winning level number.
         /// </summary>
         public int WinningLevel { get; private set; }
-
-        /// <summary>
-        /// Dungeon state representing all goods in this dungeon.
-        /// </summary>
-        public Dungeon Dungeon { get; }
-
-        /// <summary>
-        /// Gets the ongoing trades bebtween players.
-        /// </summary>
-        public IReadOnlyCollection<Trade> OngoingTrades { get; }
 
         public IReadOnlyCollection<ExpansionSelection> AvailableExpansions =>
             _availableExpansions.Values;

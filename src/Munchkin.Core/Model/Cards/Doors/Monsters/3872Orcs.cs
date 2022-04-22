@@ -1,13 +1,14 @@
-﻿using Munchkin.Core.Contracts;
+﻿using Munchkin.Core;
+using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Effects;
 using Munchkin.Core.Model.Rules;
-using Munchkin.Core.Model.Stages;
+using Munchkin.Core.Services;
 using System.Threading.Tasks;
 
-namespace Munchkin.Engine.Original.Doors
+namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class BandOf3872Orcs : MonsterCard
     {

@@ -4,7 +4,7 @@ using Munchkin.Core.Model.Attributes;
 using System;
 using System.Threading.Tasks;
 
-namespace Munchkin.Engine.Original.Doors
+namespace Munchkin.Core.Model.Cards.Doors.Races
 {
     public sealed class DwarfRace : RaceCard
     {
