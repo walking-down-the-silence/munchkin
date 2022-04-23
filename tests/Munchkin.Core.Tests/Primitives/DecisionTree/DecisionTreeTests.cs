@@ -1,13 +1,11 @@
-﻿using MediatR;
-using Moq;
+﻿using Moq;
 using Munchkin.Core.Model;
 using Munchkin.Core.Primitives;
-using Munchkin.Core.Primitives.DecisionTree;
 using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Munchkin.Core.Tests.Primitives.DecisionTree
+namespace Munchkin.Core.Tests.Primitives
 {
     public class DecisionTreeTests
     {

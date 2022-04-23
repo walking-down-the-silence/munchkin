@@ -1,6 +1,11 @@
 ﻿using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Engine.Original.Doors;
+using Munchkin.Core.Model.Cards.Doors;
+using Munchkin.Core.Model.Cards.Doors.Classes;
+using Munchkin.Core.Model.Cards.Doors.Curses;
+using Munchkin.Core.Model.Cards.Doors.Enhancers;
+using Munchkin.Core.Model.Cards.Doors.Monsters;
+using Munchkin.Core.Model.Cards.Doors.Races;
 using System.Collections.Generic;
 using System.Linq;
 

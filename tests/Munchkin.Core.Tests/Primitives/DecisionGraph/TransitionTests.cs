@@ -1,7 +1,9 @@
 ﻿using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
+using Munchkin.Core.Model.Cards.Doors.Monsters;
 using Munchkin.Core.Model.Phases;
+using Munchkin.Core.Primitives;
 using System;
 using Xunit;
 

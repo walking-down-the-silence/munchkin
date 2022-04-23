@@ -3,6 +3,8 @@ using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Cards.Doors;
+using Munchkin.Core.Model.Cards.Doors.Classes;
+using Munchkin.Core.Model.Cards.Doors.Races;
 using Munchkin.Core.Services;
 using System;
 using System.Collections.Generic;
