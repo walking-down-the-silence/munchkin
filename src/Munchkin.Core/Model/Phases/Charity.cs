@@ -13,16 +13,13 @@ namespace Munchkin.Core.Model.Phases
     /// gets the bigger set(s) of leftovers.
     /// </summary>
     /// <param name="Table">The table where the game takes place.</param>
-    /// <param name="Player">The player that has more than 5 cards in hand.</param>
+    /// <param name="CurrentPlayer">The player that has more than 5 cards in hand.</param>
     /// <param name="ExcessCards">The excessive cards that a player has.</param>
     public record Charity(
         Table Table,
-        Player Player,
+        Player CurrentPlayer,
         ImmutableList<Card> ExcessCards
-    )
-    : StateBase<Charity>(Table, ImmutableList<Attribute>.Empty);
-
-    public static class CharityExtensions
+    ) : StateBase<Charity>(Table, CurrentPlayer, ImmutableList<Attribute>.Empty)
     {
         public static IState From(Table table, Player player)
         {
@@ -32,7 +29,10 @@ namespace Munchkin.Core.Model.Phases
                 player,
                 excessCards);
         }
+    }
 
+    public static class CharityExtensions
+    {
         public static IState DiscardTreasure(this Charity state, TreasureCard card)
         {
             state.Table.Players.Current.Discard(card);
@@ -54,7 +54,10 @@ namespace Munchkin.Core.Model.Phases
             return state;
         }
 
-        public static IState EndTurn(this Charity state) =>
-            TurnExtensions.From(state.Table);
+        public static Turn EndTurn(this Charity state)
+        {
+            // TODO: discard all played cards and cleanup after the current player's turn
+            return Turn.From(state.Table);
+        }
     }
 }

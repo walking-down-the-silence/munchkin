@@ -1,6 +1,5 @@
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
-using Munchkin.Core.Services;
+using Munchkin.Core.Extensions;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
@@ -15,7 +14,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
         {
             if (state.Players.Current.Level > 5)
             {
-                PlayerAvatar.Kill(state, state.Players.Current);
+                state.KillPlayer(state.Players.Current);
             }
 
             return Task.CompletedTask;

@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Munchkin.Core.Contracts;
-using Munchkin.Core.Model.Actions;
 using Munchkin.Core.Model.Requests;
 using Munchkin.Runtime.Abstractions.Actions;
 using System.Threading;
@@ -20,9 +19,7 @@ namespace Munchkin.Services.Lobby.Handlers
         public async Task<Response<Unit>> Handle(GameWaitForPlayerRequest request, CancellationToken cancellationToken)
         {
             var (source, response) = Response<Unit>.Create();
-            var playerAction = new PlayerNextStageAction(source);
 
-            await _playerActionRepository.AddActionForPlayer(request.TargetPlayer, playerAction);
             return response;
         }
     }

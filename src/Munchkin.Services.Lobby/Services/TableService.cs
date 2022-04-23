@@ -1,5 +1,4 @@
-﻿using Munchkin.Core.Model;
-using Munchkin.Core.Model.Expansions;
+﻿using Munchkin.Core.Model.Expansions;
 using Munchkin.Extensions.Threading;
 using Munchkin.Runtime.Abstractions;
 using Orleans;
@@ -22,34 +21,34 @@ namespace Munchkin.Services.Lobby.Services
             _playerRepository = playerRepository ?? throw new ArgumentNullException(nameof(playerRepository));
         }
 
-        public Task<ITableGrain> CreateAsync() =>
+        public Task<ITable> CreateAsync() =>
             GenerateUniqueId()
                 .Unit()
-                .SelectMany(tableId => _clusterClient.GetGrain<ITableGrain>(tableId).Unit());
+                .SelectMany(tableId => _clusterClient.GetGrain<ITable>(tableId).Unit());
 
-        public Task<ITableGrain> GetAsync(string tableId) =>
-            _clusterClient.GetGrain<ITableGrain>(tableId).Unit();
+        public Task<ITable> GetAsync(string tableId) =>
+            _clusterClient.GetGrain<ITable>(tableId).Unit();
 
-        public Task<ITableGrain> SetupAsync(string tableId) =>
+        public Task<ITable> SetupAsync(string tableId) =>
             _clusterClient
-                .GetGrain<ITableGrain>(tableId)
+                .GetGrain<ITable>(tableId)
                 .SetupAsync()
-                .SelectMany(table => table.AsReference<ITableGrain>().Unit());
+                .SelectMany(table => table.AsReference<ITable>().Unit());
 
         public Task<JoinTableResult> JoinTableAsync(string tableId, string nickname) =>
-            _clusterClient.GetGrain<ITableGrain>(tableId).Unit()
+            _clusterClient.GetGrain<ITable>(tableId).Unit()
                 .SelectMany(table => _playerRepository
                     .GetPlayerByNicknameAsync(nickname)
                     .SelectMany(player => table.JoinAsync(player)));
 
         public Task<JoinTableResult> LeaveTableAsync(string tableId, string nickname) =>
-            _clusterClient.GetGrain<ITableGrain>(tableId).Unit()
+            _clusterClient.GetGrain<ITable>(tableId).Unit()
                 .SelectMany(table => _playerRepository
                     .GetPlayerByNicknameAsync(nickname)
                     .SelectMany(player => table.LeaveAsync(player)));
 
         public Task<SelectExpansionResult> MarkExpansionSelectionAsync(string tableId, string expansionCode, bool selected) =>
-            _clusterClient.GetGrain<ITableGrain>(tableId).Unit()
+            _clusterClient.GetGrain<ITable>(tableId).Unit()
                 .SelectMany(table => selected
                     ? table.IncludeExpansionAsync(expansionCode)
                     : table.ExcludeExpansionAsync(expansionCode));

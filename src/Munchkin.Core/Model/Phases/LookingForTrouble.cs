@@ -6,25 +6,25 @@ using System.Linq;
 
 namespace Munchkin.Core.Model.Phases
 {
-    public record LookForTrouble(
+    public record LookingForTrouble(
         Table Table,
         Player CurrentPlayer,
         ImmutableList<MonsterCard> Monsters
-    )
-    : StateBase<LookForTrouble>(Table, ImmutableList<Attribute>.Empty);
-
-    public static class LookForTroubleExtensions
+    ) : StateBase<LookingForTrouble>(Table, CurrentPlayer, ImmutableList<Attribute>.Empty)
     {
         public static IState From(Table table, Player currentPlayer)
         {
             var monsters = ImmutableList.CreateRange(currentPlayer.YourHand.OfType<MonsterCard>());
-            return new LookForTrouble(table, currentPlayer, monsters);
+            return new LookingForTrouble(table, currentPlayer, monsters);
         }
+    }
 
-        public static IState SelectMonster(this LookForTrouble state, MonsterCard monster)
+    public static class LookingForTroubleExtensions
+    {
+        public static IState SelectMonster(this LookingForTrouble state, MonsterCard monster)
         {
             state.CurrentPlayer.Discard(monster);
-            return CombatRoomExtensions.From(state.Table, state.CurrentPlayer, monster);
+            return CombatRoom.From(state.Table, state.CurrentPlayer, monster);
         }
     }
 }

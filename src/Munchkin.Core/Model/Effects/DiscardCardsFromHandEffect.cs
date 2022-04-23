@@ -1,5 +1,5 @@
 ﻿using Munchkin.Core.Contracts.Actions;
-using Munchkin.Core.Services;
+using Munchkin.Core.Extensions;
 
 namespace Munchkin.Core.Model.Effects
 {
@@ -7,7 +7,7 @@ namespace Munchkin.Core.Model.Effects
     {
         public Table Apply(Table state)
         {
-            PlayerAvatar.DiscardHand(state, state.Players.Current);
+            state.DiscardPlayersHand(state.Players.Current);
             return state;
         }
     }

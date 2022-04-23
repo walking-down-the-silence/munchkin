@@ -4,9 +4,9 @@ namespace Munchkin.Runtime.Abstractions
 {
     public interface ITableRepository
     {
-        Task<ITableGrain> GetTableByIdAsync(string tableId);
+        Task<ITable> GetTableByIdAsync(string tableId);
 
-        Task<ITableGrain> SaveTableAsync(ITableGrain table);
+        Task<ITable> SaveTableAsync(ITable table);
 
         Task<bool> DeleteTableAsync(string tableId);
     }

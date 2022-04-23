@@ -12,8 +12,8 @@ namespace Munchkin.Core.Model.Phases
 
             var nextState = doors switch
             {
-                CurseCard curse => CursedRoomExtensions.From(table, table.Players.Current, curse),
-                MonsterCard monster => CombatRoomExtensions.From(table, table.Players.Current, monster),
+                CurseCard curse => CursedRoom.From(table, table.Players.Current, curse),
+                MonsterCard monster => CombatRoom.From(table, table.Players.Current, monster),
                 _ => DungeonExtensions.TakeInHand(table, doors, table.Players.Current)
             };
 
@@ -28,8 +28,7 @@ namespace Munchkin.Core.Model.Phases
         {
             // NOTE: if card is taking in hand then remove from played, so it is not discarded later
             table.Players.Current.TakeInHand(doors);
-
-            return EmptyRoomExtensions.From(table, currentPlayer);
+            return EmptyRoom.From(table, currentPlayer);
         }
     }
 }

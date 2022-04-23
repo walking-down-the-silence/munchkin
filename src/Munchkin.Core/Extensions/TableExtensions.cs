@@ -1,8 +1,6 @@
-﻿using Munchkin.Core.Model;
-using Munchkin.Core.Model.Requests;
-using Munchkin.Extensions.Threading;
+﻿using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Model;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Munchkin.Core.Extensions
 {
@@ -19,17 +17,23 @@ namespace Munchkin.Core.Extensions
         /// <param name="table">The table to chak against.</param>
         public static bool IsEmpty(this Table table) => !table.Players.Any();
 
-        public static async Task<Table> WaitForAllPlayersAsync(this Table table)
+        public static void RevivePlayer(this Table table, Player player)
         {
-            // NOTE: map each player to their own Task Completion Source, so that they can end combat
-            var playerResponses = table.Players
-                .Select(player => new GameWaitForPlayerRequest(table, player))
-                .Select(request => table.RequestSink.Send(request));
+            var doorCards = table.DoorsCardDeck.TakeRange(4);
+            var treasureCards = table.TreasureCardDeck.TakeRange(4);
+            player.Revive(doorCards.ToArray(), treasureCards.ToArray());
+        }
 
-            // NOTE: select and wait for all players to end combat
-            await Task.WhenAll(playerResponses);
+        public static void KillPlayer(this Table table, Player player)
+        {
+            var cardsToDiscard = player.Kill();
+            cardsToDiscard.ForEach(card => card.Discard(table));
+        }
 
-            return table;
+        public static void DiscardPlayersHand(this Table table, Player player)
+        {
+            player.YourHand.OfType<DoorsCard>().ForEach(card => card.Discard(table));
+            player.YourHand.OfType<TreasureCard>().ForEach(card => card.Discard(table));
         }
     }
 }

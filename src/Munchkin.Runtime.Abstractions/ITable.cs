@@ -9,13 +9,13 @@ namespace Munchkin.Runtime.Abstractions
     /// <summary>
     /// Defines a virtual table and available features of the table where players can play the game.
     /// </summary>
-    public interface ITableGrain : IGrainWithStringKey
+    public interface ITable : IGrainWithStringKey
     {
         /// <summary>
         /// Prepares the table for the game by dealing the cards to the players and shuffling the decks.
         /// </summary>
         /// <returns>The table grain instance.</returns>
-        Task<ITableGrain> SetupAsync();
+        Task<ITable> SetupAsync();
 
         /// <summary>
         /// Gets the collection of players sitting around the table.

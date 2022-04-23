@@ -1,30 +1,9 @@
 ﻿using Munchkin.Core.Contracts;
-using Munchkin.Core.Contracts.Attributes;
-using System.Collections.Immutable;
-using System.Linq;
 
 namespace Munchkin.Core.Model.Phases
 {
-    public record AskingForHelp(
-        Table Table,
-        ImmutableList<Player> PlayersToAsk,
-        Player HelpingPlayer,
-        CombatRoom PreviousState
-    )
-    : StateBase<AskingForHelp>(Table, ImmutableList<Attribute>.Empty);
-
-    public static class AskingForHelpExtensions
+    public static class AskingForHelp
     {
-        public static IState From(Table table, CombatRoom previousState)
-        {
-            var playersToAsk = ImmutableList.CreateRange(table.Players.Where(p => p != table.Players.Current));
-            return new AskingForHelp(
-                table,
-                playersToAsk,
-                null,
-                previousState);
-        }
-
         /// <summary>
         /// Sends a request for rhelp to a selected player.
         /// TODO: send a request for help to the target player
@@ -32,7 +11,7 @@ namespace Munchkin.Core.Model.Phases
         /// <param name="state"></param>
         /// <param name="targetPlayer"></param>
         /// <returns></returns>
-        public static IState Ask(this AskingForHelp state, Player targetPlayer) =>
+        public static IState Ask(this Help state, Player targetPlayer) =>
             state with { PlayersToAsk = state.PlayersToAsk.Remove(targetPlayer) };
 
         /// <summary>
@@ -41,7 +20,7 @@ namespace Munchkin.Core.Model.Phases
         /// <param name="state"></param>
         /// <param name="helpingPlayer"></param>
         /// <returns></returns>
-        public static IState Accept(this AskingForHelp state, Player helpingPlayer) =>
+        public static IState Accept(this Help state, Player helpingPlayer) =>
             state.PreviousState with { HelpingPlayer = helpingPlayer };
 
         /// <summary>
@@ -51,7 +30,7 @@ namespace Munchkin.Core.Model.Phases
         /// <param name="state"></param>
         /// <param name="helpingPlayer"></param>
         /// <returns></returns>
-        public static IState Reject(this AskingForHelp state, Player helpingPlayer) =>
+        public static IState Reject(this Help state, Player helpingPlayer) =>
             state.PreviousState with { HelpingPlayer = null };
     }
 }

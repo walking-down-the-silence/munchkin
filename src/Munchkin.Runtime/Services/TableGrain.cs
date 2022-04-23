@@ -4,7 +4,6 @@ using Munchkin.Core.Contracts;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Expansions;
-using Munchkin.Core.Services;
 using Munchkin.Extensions.Threading;
 using Munchkin.Runtime.Abstractions;
 using Orleans;
@@ -16,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Runtime.Services
 {
-    public class TableGrain : Grain, ITableGrain
+    public class TableGrain : Grain, ITable
     {
         private readonly IPersistentState<Table> _persistance;
         private readonly IMediator _mediator;
@@ -46,7 +45,7 @@ namespace Munchkin.Runtime.Services
             await base.OnActivateAsync();
         }
 
-        public Task<ITableGrain> SetupAsync()
+        public Task<ITable> SetupAsync()
         {
             var availableExpansions = _expansionProvider
                 .GetServices<IExpansion>()
@@ -68,9 +67,9 @@ namespace Munchkin.Runtime.Services
             _persistance.State.TreasureCardDeck.Shuffle();
 
             // NOTE: give all players initial cards
-            _persistance.State.Players.ForEach(player => PlayerAvatar.Revive(_persistance.State, player));
+            _persistance.State.Players.ForEach(player => _persistance.State.RevivePlayer(player));
 
-            return this.AsReference<ITableGrain>().Unit();
+            return this.AsReference<ITable>().Unit();
         }
 
         public Task<IReadOnlyCollection<Player>> GetPlayersAsync() =>

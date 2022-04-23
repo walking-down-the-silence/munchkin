@@ -149,7 +149,7 @@ namespace Munchkin.Runtime.Tests.Entities.GameRoomAggregate
             Assert.Empty(selectedExpansions.Where(x => x.Selected));
         }
 
-        private static ITableGrain CreateTable()
+        private static ITable CreateTable()
         {
             var persistence = Mock.Of<IPersistentState<Table>>();
             var mediator = Mock.Of<IMediator>();

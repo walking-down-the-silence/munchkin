@@ -1,4 +1,5 @@
 ﻿using Munchkin.Core.Model;
+using Munchkin.Runtime.Abstractions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

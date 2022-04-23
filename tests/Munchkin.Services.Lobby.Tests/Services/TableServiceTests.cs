@@ -1,5 +1,6 @@
 ﻿using Munchkin.Core.Contracts;
 using Munchkin.Core.Model;
+using Munchkin.Runtime.Abstractions;
 using Munchkin.Services.Lobby.Services;
 using Orleans.TestingHost;
 using System.Collections.Generic;

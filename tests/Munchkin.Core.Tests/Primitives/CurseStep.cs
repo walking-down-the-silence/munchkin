@@ -8,8 +8,6 @@ namespace Munchkin.Core.Model.Phases
 {
     /// <summary>
     /// Defines a process of resolving a curse sent onto a player.
-    /// TODO: handle a case when the player does not have a wishing ring, but can play other card to obtain one.
-    /// TODO: handle a case of highlighting the cards that can resolve a curse (not only Wishing Ring can resolve a curse).
     /// </summary>
     public class CurseStep : StepBase<Table>
     {

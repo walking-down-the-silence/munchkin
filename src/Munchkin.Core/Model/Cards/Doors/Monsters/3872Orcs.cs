@@ -1,11 +1,9 @@
-﻿using Munchkin.Core;
-using Munchkin.Core.Contracts.Actions;
+﻿using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Rules;
-using Munchkin.Core.Model;
+using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Effects;
 using Munchkin.Core.Model.Rules;
-using Munchkin.Core.Services;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
@@ -26,7 +24,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
 
             if (diceRollResult <= 2)
             {
-                PlayerAvatar.Kill(state, state.Players.Current);
+                state.KillPlayer(state.Players.Current);
             }
             else
             {

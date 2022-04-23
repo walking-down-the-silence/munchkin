@@ -11,7 +11,7 @@ namespace Munchkin.Core.Model.Phases
     /// <param name="Attributes">All the attributes that the state has.</param>
     public record Dungeon(
         Table Table,
-        IState Current
+        Player CurrentPlayer
     )
-    : StateBase<Dungeon>(Table, ImmutableList<Attribute>.Empty);
+    : StateBase<Dungeon>(Table, CurrentPlayer, ImmutableList<Attribute>.Empty);
 }

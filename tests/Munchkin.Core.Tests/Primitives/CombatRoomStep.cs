@@ -1,9 +1,6 @@
 ﻿using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model.Actions;
-using Munchkin.Core.Model.Attributes;
-using Munchkin.Core.Model.Phases;
 using Munchkin.Core.Primitives;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,9 +18,6 @@ namespace Munchkin.Core.Model.Phases
             _monsters = new List<MonsterCard> { monsterCard };
             _fightingPlayer = fightingPlayer ?? throw new System.ArgumentNullException(nameof(fightingPlayer));
             _monsterCard = monsterCard ?? throw new System.ArgumentNullException(nameof(monsterCard));
-
-            AskForHelp = new PlayerAskForHelpAction(this);
-            OfferHelp = new PlayerOfferHelpAction(this, fightingPlayer);
         }
 
         #region Actions
@@ -71,7 +65,6 @@ namespace Munchkin.Core.Model.Phases
             // TODO: add "Ask For Help" action to list of available ones
 
             // NOTE: this stage is blocked until each player agrees to end the combat
-            await table.WaitForAllPlayersAsync();
 
             //if (!table.Dungeon.PlayersAreWinningCombat())
             //{

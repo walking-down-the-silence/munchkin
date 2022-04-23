@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Munchkin.Core.Model;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Munchkin.Core.Model
+namespace Munchkin.Runtime.Abstractions
 {
     public interface IPlayerRepository
     {

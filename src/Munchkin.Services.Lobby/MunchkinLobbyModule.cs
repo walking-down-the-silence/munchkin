@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Munchkin.Core.Model;
+using Munchkin.Runtime.Abstractions;
 using Munchkin.Runtime.Abstractions.Actions;
 using Munchkin.Services.Lobby.Repositories;
 using Munchkin.Services.Lobby.Services;

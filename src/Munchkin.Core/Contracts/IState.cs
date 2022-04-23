@@ -29,6 +29,7 @@ namespace Munchkin.Core.Contracts
 
     public record StateBase<TState>(
         Table Table,
+        Player CurrentPlayer,
         ImmutableList<Attribute> Attributes
     )
     : IState<TState>
