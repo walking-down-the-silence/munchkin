@@ -1,21 +1,17 @@
 ﻿using Munchkin.Api.ViewModels;
-using Munchkin.Runtime.Abstractions;
+using Munchkin.Core.Model;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Munchkin.Api.Extensions.Mappers
 {
     public static class TableExtensions
     {
-        public static async Task<TableVM> ToVM(this ITable table)
+        public static TableVM ToVM(this Table table)
         {
-            var players = await table.GetPlayersAsync();
-            var expansionSelections = await table.GetIncludedExpansionsAsync();
-
             return new TableVM
             {
-                Players = players.Select(x => x.ToVM()).ToArray(),
-                ExpansionSelections = expansionSelections.Select(x => x.ToVM()).ToArray()
+                Players = table.Players.Select(x => x.ToVM()).ToArray(),
+                ExpansionSelections = table.IncludedExpansions.Select(x => x.ToVM()).ToArray()
             };
         }
     }

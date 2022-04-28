@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Munchkin.Api.Extensions.Mappers;
 using Munchkin.Api.ViewModels;
-using Munchkin.Services.Lobby.Services;
+using Munchkin.Runtime.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Munchkin.Expansion.Deluxe;
-using Munchkin.Services.Lobby;
+using Munchkin.Runtime;
 
 namespace Munchkin.Api
 {

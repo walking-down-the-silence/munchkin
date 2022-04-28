@@ -13,7 +13,6 @@ namespace Munchkin.Core.Model
     /// </summary>
     public sealed class Table
     {
-        private readonly Dictionary<string, Player> _players = new();
         private readonly Dictionary<string, ExpansionSelection> _availableExpansions = new();
         private readonly Dictionary<string, ExpansionSelection> _selectedExpansions = new();
 
@@ -91,18 +90,6 @@ namespace Munchkin.Core.Model
         }
 
         /// <summary>
-        /// Assigns the players to the gaming table.
-        /// </summary>
-        /// <param name="players">The collection of players to assign.</param>
-        public Table WithPlayers(IReadOnlyCollection<Player> players)
-        {
-            Players = players is null
-                ? throw new ArgumentNullException(nameof(players))
-                : new CircularList<Player>(players);
-            return this;
-        }
-
-        /// <summary>
         /// Appends the treasure cards to the deck. Can be used for additional expansions.
         /// </summary>
         /// <param name="cards">Cars to add.</param>
@@ -166,7 +153,7 @@ namespace Munchkin.Core.Model
             if (player is null)
                 return JoinTableResult.InvalidUser;
 
-            _players[player.Nickname] = player;
+            Players.Add(player);
             return JoinTableResult.JoinedRoom;
         }
 
@@ -175,10 +162,10 @@ namespace Munchkin.Core.Model
             if (player is null)
                 return JoinTableResult.InvalidUser;
 
-            if (!_players.Any())
+            if (!Players.Any())
                 return JoinTableResult.RoomEmpty;
 
-            if (_players.Remove(player.Nickname))
+            if (Players.Remove(player))
                 return JoinTableResult.LeftRoom;
 
             return JoinTableResult.InvalidUser;

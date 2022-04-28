@@ -1,7 +1,5 @@
-﻿using System.Threading.Tasks;
-using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
-using Munchkin.Core.Model.Cards.Doors;
+﻿using Munchkin.Core.Contracts.Cards;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
 {

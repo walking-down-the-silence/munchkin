@@ -33,16 +33,16 @@ namespace Munchkin.Runtime.Abstractions
         /// <summary>
         /// Add a player to the table to player the game.
         /// </summary>
-        /// <param name="player">The player that joins the game.</param>
+        /// <param name="nickname">The player that joins the game.</param>
         /// <returns>The result of player trying to joing the game.</returns>
-        Task<JoinTableResult> JoinAsync(Player player);
+        Task<JoinTableResult> JoinAsync(string nickname);
 
         /// <summary>
         /// Removes a player from the table.
         /// </summary>
-        /// <param name="player">The player that leaves the game.</param>
+        /// <param name="nickname">The player that leaves the game.</param>
         /// <returns>The result of player trying to leave the game.</returns>
-        Task<JoinTableResult> LeaveAsync(Player player);
+        Task<JoinTableResult> LeaveAsync(string nickname);
 
         /// <summary>
         /// Gets a list of available expansions in the game.
@@ -57,17 +57,11 @@ namespace Munchkin.Runtime.Abstractions
         Task<IReadOnlyCollection<ExpansionSelection>> GetIncludedExpansionsAsync();
 
         /// <summary>
-        /// Includes the expansion into the game.
+        /// Includes or excludes the expansion from the game.
         /// </summary>
         /// <param name="code">The code of the expansion.</param>
+        /// <param name="selected">Marks the expansion either included or not.</param>
         /// <returns>The result of the player trying to include an expansion.</returns>
-        Task<SelectExpansionResult> IncludeExpansionAsync(string code);
-
-        /// <summary>
-        /// Excludes the expansions from the game.
-        /// </summary>
-        /// <param name="code">The code of the expansion.</param>
-        /// <returns>The result of the player trying to include an expansion.</returns>
-        Task<SelectExpansionResult> ExcludeExpansionAsync(string code);
+        Task<SelectExpansionResult> MarkExpansionSelectionAsync(string expansionCode, bool selected);
     }
 }

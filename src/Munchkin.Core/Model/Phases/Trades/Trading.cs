@@ -1,7 +1,4 @@
 ﻿using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace Munchkin.Core.Model.Phases.Trades
@@ -20,9 +17,9 @@ namespace Munchkin.Core.Model.Phases.Trades
         public static Trade InitiateTrade(Player left, Player right)
         {
             var emptyCollection = ImmutableList<Card>.Empty;
-            var leftSide = new TradingSide(left, emptyCollection);
-            var rightSide = new TradingSide(right, emptyCollection);
-            return new Trade(leftSide, rightSide, TradingStatus.Ongoing, PlayerTradeChoice.None, PlayerTradeChoice.None);
+            var leftSide = new TradingSide(left, emptyCollection, PlayerTradeChoice.None);
+            var rightSide = new TradingSide(right, emptyCollection, PlayerTradeChoice.None);
+            return new Trade(leftSide, rightSide, TradingStatus.Ongoing);
         }
 
         /// <summary>
@@ -31,12 +28,12 @@ namespace Munchkin.Core.Model.Phases.Trades
         /// <param name="trade">The trade state object to change.</param>
         /// <param name="choice">The player's choice on the trade offer.</param>
         /// <returns>An instance of the trade state object with reflected changes.</returns>
-        public static Trade SetLeftSideDecisionTrade(Trade trade, PlayerTradeChoice choice)
+        public static Trade SetLeftSideDecisionTrade(this Trade trade, PlayerTradeChoice choice)
         {
             return trade with
             {
-                LeftSideTradeDecision = choice,
-                Status = GetTradingStatus(choice, trade.RightSideTradeDecision)
+                LeftSide = trade.LeftSide with { Decision = choice },
+                Status = GetTradingStatus(choice, trade.RightSide.Decision)
             };
         }
 
@@ -46,12 +43,12 @@ namespace Munchkin.Core.Model.Phases.Trades
         /// <param name="trade">The trade state object to change.</param>
         /// <param name="choice">The player's choice on the trade offer.</param>
         /// <returns>An instance of the trade state object with reflected changes.</returns>
-        public static Trade SetRightSideDecisionTrade(Trade trade, PlayerTradeChoice choice)
+        public static Trade SetRightSideDecisionTrade(this Trade trade, PlayerTradeChoice choice)
         {
             return trade with
             {
-                RightSideTradeDecision = choice,
-                Status = GetTradingStatus(trade.LeftSideTradeDecision, choice)
+                RightSide = trade.RightSide with { Decision = choice },
+                Status = GetTradingStatus(trade.LeftSide.Decision, choice)
             };
         }
 
@@ -60,28 +57,44 @@ namespace Munchkin.Core.Model.Phases.Trades
         /// </summary>
         /// <param name="cards">The collection of cards.</param>
         /// <returns>An instance of the trade state object with reflected changes.</returns>
-        public static Trade AddToLeftSideOffer(IReadOnlyCollection<Card> cards) => throw new NotImplementedException();
+        public static Trade AddToLeftSideOffer(this Trade trade, Card card)
+        {
+            var leftSide = trade.LeftSide with { OfferedCards = trade.LeftSide.OfferedCards.Add(card) };
+            return trade with { LeftSide = leftSide };
+        }
 
         /// <summary>
         /// Adds the collection of cards to the offer on behalf of the right party.
         /// </summary>
         /// <param name="cards">The collection of cards.</param>
         /// <returns>An instance of the trade state object with reflected changes.</returns>
-        public static Trade AddToRightSideOffer(IReadOnlyCollection<Card> cards) => throw new NotImplementedException();
+        public static Trade AddToRightSideOffer(this Trade trade, Card card)
+        {
+            var rightSide = trade.RightSide with { OfferedCards = trade.RightSide.OfferedCards.Add(card) };
+            return trade with { RightSide = rightSide };
+        }
 
         /// <summary>
         /// Removes the collection of cards from the offer on behalf of the left party.
         /// </summary>
         /// <param name="cards">The collection of cards.</param>
         /// <returns>An instance of the trade state object with reflected changes.</returns>
-        public static Trade RemoveFromLeftSideOffer(IReadOnlyCollection<Card> cards) => throw new NotImplementedException();
+        public static Trade RemoveFromLeftSideOffer(this Trade trade, Card card)
+        {
+            var leftSide = trade.LeftSide with { OfferedCards = trade.LeftSide.OfferedCards.Remove(card) };
+            return trade with { LeftSide = leftSide };
+        }
 
         /// <summary>
         /// Removes the collection of cards from the offer on behalf of the right party.
         /// </summary>
         /// <param name="cards">The collection of cards.</param>
         /// <returns>An instance of the trade state object with reflected changes.</returns>
-        public static Trade RemoveFromRightSideOffer(IReadOnlyCollection<Card> cards) => throw new NotImplementedException();
+        public static Trade RemoveFromRightSideOffer(this Trade trade, Card card)
+        {
+            var rightSide = trade.RightSide with { OfferedCards = trade.RightSide.OfferedCards.Remove(card) };
+            return trade with { RightSide = rightSide };
+        }
 
         private static TradingStatus GetTradingStatus(PlayerTradeChoice leftChoice, PlayerTradeChoice rightChoice)
         {

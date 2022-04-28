@@ -9,19 +9,21 @@ namespace Munchkin.Core.Extensions
         /// <summary>
         /// Gets if any of the players has won the game.
         /// </summary>
-        public static bool IsGameOver(this Table table) => table.Players.Any(x => x.Level >= table.WinningLevel);
+        public static bool IsGameOver(this Table table) => 
+            table.Players.Any(x => x.Level >= table.WinningLevel);
 
         /// <summary>
         /// Gets if the table is empty and has no players besides it.
         /// </summary>
         /// <param name="table">The table to chak against.</param>
-        public static bool IsEmpty(this Table table) => !table.Players.Any();
+        public static bool IsEmpty(this Table table) => 
+            !table.Players.Any();
 
-        public static void RevivePlayer(this Table table, Player player)
+        public static void ReceiveCards(this Table table, Player player)
         {
             var doorCards = table.DoorsCardDeck.TakeRange(4);
             var treasureCards = table.TreasureCardDeck.TakeRange(4);
-            player.Revive(doorCards.ToArray(), treasureCards.ToArray());
+            player.ReceiveCards(doorCards.ToArray(), treasureCards.ToArray());
         }
 
         public static void KillPlayer(this Table table, Player player)

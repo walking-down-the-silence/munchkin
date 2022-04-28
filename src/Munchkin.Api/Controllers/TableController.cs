@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Munchkin.Api.Extensions.Mappers;
 using Munchkin.Api.ViewModels;
-using Munchkin.Services.Lobby.Services;
+using Munchkin.Runtime.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,7 +25,7 @@ namespace Munchkin.Api.Controllers
         public async Task<IActionResult> Post([FromBody] TableCreateAsLeaderVM vm)
         {
             var table = await _tableService.CreateAsync();
-            var tableVm = await table.ToVM();
+            var tableVm = table.ToVM();
             return Ok(tableVm);
         }
 
@@ -34,7 +34,7 @@ namespace Munchkin.Api.Controllers
         public async Task<IActionResult> Get(string tableId)
         {
             var table = await _tableService.GetAsync(tableId);
-            var tableVm = await table.ToVM();
+            var tableVm = table.ToVM();
             return Ok(tableVm);
         }
 
@@ -43,8 +43,7 @@ namespace Munchkin.Api.Controllers
         public async Task<IActionResult> GetPlayers(string tableId)
         {
             var table = await _tableService.GetAsync(tableId);
-            var players = await table.GetPlayersAsync();
-            var playerVms = players.Select(x => x.ToVM()).ToArray();
+            var playerVms = table.Players.Select(x => x.ToVM()).ToArray();
             return Ok(playerVms);
         }
 
@@ -53,7 +52,7 @@ namespace Munchkin.Api.Controllers
         public async Task<IActionResult> Get(string tableId, string nickname)
         {
             var table = await _tableService.GetAsync(tableId);
-            var player = await table.GetPlayerByIdAsync(nickname);
+            var player = table.Players.SingleOrDefault(x => x.Nickname == nickname);
             var playerVm = player.ToVM();
             return Ok(playerVm);
         }
@@ -62,9 +61,7 @@ namespace Munchkin.Api.Controllers
         [HttpPut("{tableId}/players/{nickname}")]
         public async Task<IActionResult> Put(string tableId, string nickname)
         {
-            var table = await _tableService.GetAsync(tableId);
-            var player = await table.GetPlayerByIdAsync(nickname);
-            var joinResponse = await table.JoinAsync(player);
+            var joinResponse = await _tableService.JoinTableAsync(tableId, nickname);
             return Ok(joinResponse);
         }
 
@@ -72,9 +69,7 @@ namespace Munchkin.Api.Controllers
         [HttpDelete("{tableId}/players/{nickname}")]
         public async Task<IActionResult> Delete(string tableId, string nickname)
         {
-            var table = await _tableService.GetAsync(tableId);
-            var player = await table.GetPlayerByIdAsync(nickname);
-            var joinResponse = await table.LeaveAsync(player);
+            var joinResponse = await _tableService.LeaveTableAsync(tableId, nickname);
             return Ok(joinResponse);
         }
 
@@ -83,8 +78,7 @@ namespace Munchkin.Api.Controllers
         public async Task<IActionResult> GetAvailableExpansions(string tableId)
         {
             var table = await _tableService.GetAsync(tableId);
-            var expansionSelections = await table.GetIncludedExpansionsAsync();
-            var expansionSelectionsVms = expansionSelections.Select(x => x.ToVM()).ToArray();
+            var expansionSelectionsVms = table.IncludedExpansions.Select(x => x.ToVM()).ToArray();
             return Ok(expansionSelectionsVms);
         }
 

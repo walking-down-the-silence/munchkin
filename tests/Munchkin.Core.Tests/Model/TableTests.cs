@@ -36,14 +36,14 @@ namespace Munchkin.Core.Tests.Model
             var table = Table.Empty();
 
             // Act
-            Table result = table.WithPlayers(players);
+            players.ForEach(player => table.Join(player));
 
             // Assert
-            Assert.Equal(2, result.Players.Count);
-            Assert.Empty(result.TreasureCardDeck);
-            Assert.Empty(result.DoorsCardDeck);
-            Assert.Empty(result.DiscardedTreasureCards);
-            Assert.Empty(result.DiscardedDoorsCards);
+            Assert.Equal(2, table.Players.Count);
+            Assert.Empty(table.TreasureCardDeck);
+            Assert.Empty(table.DoorsCardDeck);
+            Assert.Empty(table.DiscardedTreasureCards);
+            Assert.Empty(table.DiscardedDoorsCards);
         }
 
         [Fact]

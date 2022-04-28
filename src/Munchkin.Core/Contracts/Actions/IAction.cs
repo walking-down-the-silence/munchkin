@@ -32,4 +32,8 @@ namespace Munchkin.Core.Contracts.Actions
         /// <returns>A modified state instance.</returns>
         Task<TState> ExecuteAsync(TState state);
     }
+
+    public interface IAction
+    {
+    }
 }

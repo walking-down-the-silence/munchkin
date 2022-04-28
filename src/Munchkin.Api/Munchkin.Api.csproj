@@ -21,7 +21,6 @@
     <ProjectReference Include="..\Munchkin.Expansion.Deluxe\Munchkin.Expansion.Deluxe.csproj" />
     <ProjectReference Include="..\Munchkin.Runtime.Client\Munchkin.Runtime.Client.csproj" />
     <ProjectReference Include="..\Munchkin.Runtime\Munchkin.Runtime.csproj" />
-    <ProjectReference Include="..\Munchkin.Services.Lobby\Munchkin.Services.Lobby.csproj" />
   </ItemGroup>
 
 </Project>

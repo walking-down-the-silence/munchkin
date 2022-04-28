@@ -30,8 +30,8 @@ namespace Munchkin.Runtime.Client
 
             var player = new Player("johny.cash", EGender.Male);
 
-            var gameRoom = client.GetGrain<ITable>("table_1");
-            var joinRoomResult = await gameRoom.JoinAsync(player);
+            var table = client.GetGrain<ITable>("table_1");
+            var joinRoomResult = await table.JoinAsync(player.Nickname);
 
             Console.ReadKey();
         }

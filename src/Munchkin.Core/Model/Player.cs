@@ -20,6 +20,7 @@ namespace Munchkin.Core.Model
         private readonly List<Card> _equipped = new();
         private readonly List<IAction<Table>> _actions = new();
         private bool _isDead;
+        private bool _isRevived;
         private int _level = 1;
 
         public Player(string nickname, EGender gender)
@@ -32,57 +33,72 @@ namespace Munchkin.Core.Model
         }
 
         /// <summary>
-        /// Gets the players name
+        /// Gets the players name.
         /// </summary>
         public string Nickname { get; }
 
         /// <summary>
-        /// Gets the players gender
+        /// Gets the players gender.
         /// </summary>
         public EGender Gender { get; }
 
         /// <summary>
-        /// Gets the players current level
+        /// Gets the players current level.
         /// </summary>
         public int Level => _level;
 
         /// <summary>
-        /// Gets if players hero is dead
+        /// Gets if players hero is dead.
         /// </summary>
         public bool IsDead => _isDead;
 
         /// <summary>
-        /// Gets the closed out-of-game cards
+        /// Gets if the players hero was recently revived and did not receive new cards.
+        /// </summary>
+        public bool IsRevived => _isRevived;
+
+        /// <summary>
+        /// Gets the closed out-of-game cards.
         /// </summary>
         public IReadOnlyCollection<Card> YourHand => _yourHand;
 
         /// <summary>
-        /// Gets that are in play and are equipped
+        /// Gets that are in play and are equipped.
         /// </summary>
         public IReadOnlyCollection<Card> Equipped => _equipped;
 
         /// <summary>
-        /// Gets that are in play but are not equipped
+        /// Gets that are in play but are not equipped.
         /// </summary>
         public IReadOnlyCollection<Card> Backpack => _backpack;
 
         /// <summary>
-        /// Gets the dynamic actions for the user
+        /// Gets the dynamic actions for the user.
         /// </summary>
         public IReadOnlyCollection<IAction<Table>> Actions => _actions.AsReadOnly();
 
         /// <summary>
-        /// Levels up the player
+        /// Levels up the player.
         /// </summary>
         public void LevelUp() => Interlocked.Increment(ref _level);
 
         /// <summary>
-        /// Levels down the user (but not less that 1)
+        /// Levels up the player by a couple levels.
+        /// </summary>
+        public void LevelUp(int levels) => Interlocked.Add(ref _level, levels);
+
+        /// <summary>
+        /// Levels down the user (but not less that 1).
         /// </summary>
         public void LevelDown() => Interlocked.Exchange(ref _level, Math.Max(1, _level - 1));
 
         /// <summary>
-        /// Takes a card in hand as face-down
+        /// Levels down the user  by couple levels (but not less that 1).
+        /// </summary>
+        public void LevelDown(int levels) => Interlocked.Exchange(ref _level, Math.Max(1, _level - levels));
+
+        /// <summary>
+        /// Takes a card in hand as face-down.
         /// </summary>
         public void TakeInHand(Card card)
         {
@@ -96,7 +112,7 @@ namespace Munchkin.Core.Model
         }
 
         /// <summary>
-        /// Puts a card in play as equipped
+        /// Puts a card in play as equipped.
         /// </summary>
         public void Equip(Card card)
         {
@@ -109,7 +125,7 @@ namespace Munchkin.Core.Model
         }
 
         /// <summary>
-        /// Puts a card in play as not equipped
+        /// Puts a card in play as not equipped.
         /// </summary>
         public void PutInBackpack(Card card)
         {
@@ -146,12 +162,24 @@ namespace Munchkin.Core.Model
         public void DiscardEquipped() => _equipped.Clear();
 
         /// <summary>
+        /// When the next player begins his turn, your new character appears and can
+        /// help others in combat with his Level and Class or Race abilities. . .but you
+        /// have no cards, unless you receive Charity or gifts from other players.
+        /// </summary>
+        public void Revive()
+        {
+            _isDead = false;
+            _isRevived = true;
+        }
+
+        /// <summary>
         /// On your next turn, start by drawing four face-down cards from each deck
         /// and playing any legal cards you want to, just as when you started the game.
         /// Then take your turn normally.
         /// </summary>
-        /// <param name="table"> Table instance with all the state. </param>
-        public void Revive(IReadOnlyCollection<DoorsCard> doors, IReadOnlyCollection<TreasureCard> treasures)
+        /// <param name="doors">The 4 Door cards to take into hand.</param>
+        /// <param name="treasures">The 4 Treasure cards to take into hand.</param>
+        public void ReceiveCards(IReadOnlyCollection<DoorsCard> doors, IReadOnlyCollection<TreasureCard> treasures)
         {
             if (!doors.Any())
                 throw new ArgumentException("Player should be revived with 4 door cards.", nameof(doors));
@@ -163,6 +191,7 @@ namespace Munchkin.Core.Model
             treasures.ForEach(TakeInHand);
 
             _isDead = false;
+            _isRevived = false;
         }
 
         /// <summary>

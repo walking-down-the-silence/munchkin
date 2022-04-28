@@ -273,7 +273,7 @@ namespace Munchkin.Core.Tests.Model
             var treasures = table.TreasureCardDeck.TakeRange(4).ToList();
 
             // Act
-            player.Revive(doors, treasures);
+            player.ReceiveCards(doors, treasures);
 
             // Assert
             Assert.NotEmpty(player.YourHand);
@@ -331,9 +331,8 @@ namespace Munchkin.Core.Tests.Model
                 table = table.WithDoorDeck(doorFactory.GetDoorsCards().ToArray());
             }
 
-            table = table.WithPlayers(players.ToArray());
-            table.Players.ForEach(player => table.RevivePlayer(player));
-
+            players.ForEach(player => table.Join(player));
+            table.Players.ForEach(player => table.ReceiveCards(player));
             return table;
         }
 
@@ -356,8 +355,7 @@ namespace Munchkin.Core.Tests.Model
                 table = table.WithDoorDeck(doorFactory.GetDoorsCards().ToArray());
             }
 
-            table = table.WithPlayers(players.ToArray());
-
+            players.ForEach(player => table.Join(player));
             return table;
         }
     }

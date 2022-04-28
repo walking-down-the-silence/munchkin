@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Munchkin.Runtime.Services;
+using Munchkin.Runtime.Grains;
 using Orleans;
 using Orleans.Configuration;
 using Orleans.Hosting;
