@@ -4,12 +4,9 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal class ThiefStealCardAction : DynamicAction
+    internal record ThiefStealCardAction() :
+        DynamicAction(string.Empty, "Steal A Card", string.Empty)
     {
-        public ThiefStealCardAction() : base("Steal Card", "")
-        {
-        }
-
         public override bool CanExecute(Table state)
         {
             throw new NotImplementedException();

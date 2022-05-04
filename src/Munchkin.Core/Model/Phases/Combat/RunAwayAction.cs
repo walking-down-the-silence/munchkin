@@ -1,4 +1,8 @@
-﻿namespace Munchkin.Core.Model.Phases
+﻿using Munchkin.Core.Contracts.Actions;
+
+namespace Munchkin.Core.Model.Phases
 {
-    public record RunAwayAction() : ICombatAction;
+    public record RunAwayAction() :
+        ActionBase(TurnActions.Combat.RunAway, "Run Away From Monster", string.Empty),
+        ICombatAction;
 }

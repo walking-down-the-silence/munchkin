@@ -9,16 +9,6 @@ namespace Munchkin.Core.Contracts.Actions
     public interface IAction<TState>
     {
         /// <summary>
-        /// The title for the action.
-        /// </summary>
-        string Title { get; }
-
-        /// <summary>
-        /// A short description ofthe action.
-        /// </summary>
-        string Description { get; }
-
-        /// <summary>
         /// Checks if the action can be applied under provided state.
         /// </summary>
         /// <param name="state">Original state instance.</param>
@@ -35,5 +25,19 @@ namespace Munchkin.Core.Contracts.Actions
 
     public interface IAction
     {
+        /// <summary>
+        /// The type code of the action.
+        /// </summary>
+        string Type { get; }
+
+        /// <summary>
+        /// The title for the action.
+        /// </summary>
+        string Title { get; }
+
+        /// <summary>
+        /// A short description of what the action does.
+        /// </summary>
+        string Description { get; }
     }
 }

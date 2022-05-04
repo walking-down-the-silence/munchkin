@@ -1,8 +1,9 @@
-﻿using Munchkin.Core.Contracts.Cards;
+﻿using Munchkin.Core.Contracts.Actions;
+using Munchkin.Core.Contracts.Cards;
 
 namespace Munchkin.Core.Model.Phases
 {
-    public record DiscardTreasureAction(
-        Player Player,
-        TreasureCard Card) : ICharityAction;
+    public record DiscardTreasureAction(Player Player, TreasureCard Card) :
+        ActionBase(TurnActions.Player.DiscardTreasure, "Discard The Treasure Card", string.Empty),
+        ICharityAction;
 }

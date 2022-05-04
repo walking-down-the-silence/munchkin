@@ -42,7 +42,7 @@ namespace Munchkin.Core.Model.Phases
         {
             return action switch
             {
-                LootTheBody lootTheBody => LootTheBody(state, lootTheBody.Player, lootTheBody.Card),
+                LootTheBodyAction lootTheBody => LootTheBody(state, lootTheBody.Player, lootTheBody.Card),
                 _                       => throw new ArgumentOutOfRangeException(nameof(action))
             };
         }

@@ -4,12 +4,9 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal class ThiefStabFor2Action : DynamicAction
+    internal record ThiefStabFor2Action() :
+        DynamicAction(string.Empty, "Stab (-2)", string.Empty)
     {
-        public ThiefStabFor2Action() : base("Stab (-2)", "")
-        {
-        }
-
         public override bool CanExecute(Table state)
         {
             throw new NotImplementedException();

@@ -4,13 +4,11 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal class WizardFleeMonsterAction : DynamicAction, IRenewableAction<Table>
+    internal record WizardFleeMonsterAction() :
+        DynamicAction(string.Empty, "Flee Monster", string.Empty),
+        IRenewableAction<Table>
     {
         private bool _wasExecuted = false;
-
-        public WizardFleeMonsterAction() : base("Flee Monster", "")
-        {
-        }
 
         public override bool CanExecute(Table state)
         {

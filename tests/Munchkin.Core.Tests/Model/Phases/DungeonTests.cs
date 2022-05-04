@@ -25,15 +25,15 @@ namespace Munchkin.Core.Tests.Model.Phases
                 .WithDoorDeck(doorCards)
                 .WithTreasureDeck(treasureCards);
             var joined = table.Join(player);
-            var dungeon = new Dungeon(table, table.Players.Current);
+            var dungeon = Dungeon.From(table, table.Players.Current);
 
             // Act
-            var nextState = dungeon.KickOpenTheDoor();
+            var nextState = Dungeon.KickOpenTheDoor(dungeon);
 
             // Assert
             nextState.Should().NotBeNull();
             nextState.Should().NotBeSameAs(dungeon);
-            nextState.Should().BeOfType<CurseState>();
+            nextState.Should().BeOfType<Dungeon>();
         }
 
         [Fact]
@@ -48,15 +48,15 @@ namespace Munchkin.Core.Tests.Model.Phases
                 .WithDoorDeck(doorCards)
                 .WithTreasureDeck(treasureCards);
             var joined = table.Join(player);
-            var dungeon = new Dungeon(table, table.Players.Current);
+            var dungeon = Dungeon.From(table, table.Players.Current);
 
             // Act
-            var nextState = dungeon.KickOpenTheDoor();
+            var nextState = Dungeon.KickOpenTheDoor(dungeon);
 
             // Assert
             nextState.Should().NotBeNull();
             nextState.Should().NotBeSameAs(dungeon);
-            nextState.Should().BeOfType<CombatState>();
+            nextState.Should().BeOfType<Dungeon>();
         }
 
         [Fact]
@@ -71,15 +71,15 @@ namespace Munchkin.Core.Tests.Model.Phases
                 .WithDoorDeck(doorCards)
                 .WithTreasureDeck(treasureCards);
             var joined = table.Join(player);
-            var dungeon = new Dungeon(table, table.Players.Current);
+            var dungeon = Dungeon.From(table, table.Players.Current);
 
             // Act
-            var nextState = dungeon.KickOpenTheDoor();
+            var nextState = Dungeon.KickOpenTheDoor(dungeon);
 
             // Assert
             nextState.Should().NotBeNull();
             nextState.Should().NotBeSameAs(dungeon);
-            nextState.Should().BeOfType<EmptyRoom>();
+            nextState.Should().BeOfType<Dungeon>();
         }
 
         [Fact]
@@ -94,15 +94,15 @@ namespace Munchkin.Core.Tests.Model.Phases
                 .WithDoorDeck(doorCards)
                 .WithTreasureDeck(treasureCards);
             var joined = table.Join(player);
-            var emptyRoom = new EmptyRoom(table, table.Players.Current);
+            var dungeon = Dungeon.From(table, table.Players.Current);
 
             // Act
-            var nextState = emptyRoom.LootTheRoom();
+            var nextState = Dungeon.LootTheRoom(dungeon);
 
             // Assert
             nextState.Should().NotBeNull();
-            nextState.Should().NotBeSameAs(emptyRoom);
-            nextState.Should().BeOfType<Charity>();
+            nextState.Should().NotBeSameAs(dungeon);
+            nextState.Should().BeOfType<Dungeon>();
             table.Players.Current.Should().NotBeNull();
             table.Players.Current.Should().BeSameAs(player);
             player.YourHand.Should().NotBeNull();
@@ -120,16 +120,17 @@ namespace Munchkin.Core.Tests.Model.Phases
                 .WithWinningLevel(10)
                 .WithDoorDeck(doorCards)
                 .WithTreasureDeck(treasureCards);
+            var monster = new PlutoniumDragon();
             var joined = table.Join(player);
-            var emptyRoom = new EmptyRoom(table, table.Players.Current);
+            var dungeon = Dungeon.From(table, table.Players.Current);
 
             // Act
-            var nextState = emptyRoom.LookForTrouble();
+            var nextState = Dungeon.LookForTrouble(dungeon, monster);
 
             // Assert
             nextState.Should().NotBeNull();
-            nextState.Should().NotBeSameAs(emptyRoom);
-            nextState.Should().BeOfType<Charity>();
+            nextState.Should().NotBeSameAs(dungeon);
+            nextState.Should().BeOfType<Dungeon>();
             table.Players.Current.Should().NotBeNull();
             table.Players.Current.Should().BeSameAs(player);
             player.YourHand.Should().NotBeNull();

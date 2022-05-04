@@ -4,17 +4,11 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Contracts.Actions
 {
-    public abstract class MultiShotAction : DynamicAction, IMultiShotAction<Table>
+    public abstract record MultiShotAction(string Type, string Title, string Description, int ExecutionsCount) :
+        DynamicAction(Type, Title, Description),
+        IMultiShotAction<Table>
     {
         private int _executionsLeft;
-
-        protected MultiShotAction(int executionCount, string title, string description) : base(title, description)
-        {
-            _executionsLeft = executionCount;
-            ExecutionsCount = executionCount;
-        }
-
-        public int ExecutionsCount { get; }
 
         public int ExecutionsLeft => _executionsLeft;
 

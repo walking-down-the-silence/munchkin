@@ -18,12 +18,11 @@ namespace Munchkin.Core.Model.Phases
     {
         public static Combat From(Table table, Player currentPlayer)
         {
-            var askingForHelp = AskingForHelp.From(table);
             return new Combat(
                 table,
                 currentPlayer,
                 null,
-                askingForHelp,
+                AskingForHelp.From(table),
                 ImmutableArray<RunningAway>.Empty,
                 ImmutableArray<Card>.Empty);
         }
@@ -117,7 +116,7 @@ namespace Munchkin.Core.Model.Phases
         public static Combat RunAway(Combat state)
         {
             // TODO: should be called for all monsters per each player (fighting and helping)
-            var nextState = ImmutableArray.CreateRange(state.Monsters.SelectMany(monster => new[]
+            var runningAways = ImmutableArray.CreateRange(state.Monsters.SelectMany(monster => new[]
             {
                 RunningAway.From(state.Table, state.FightingPlayer, monster, -1),
                 RunningAway.From(state.Table, state.HelpingPlayer, monster, -1)
@@ -130,7 +129,10 @@ namespace Munchkin.Core.Model.Phases
             });
 
             //return ActionResult.Create(state, availableActions);
-            return state;
+            return state with
+            {
+                RunningAways = runningAways
+            };
         }
 
         #endregion

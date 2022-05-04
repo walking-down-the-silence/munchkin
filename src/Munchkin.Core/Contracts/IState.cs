@@ -1,10 +1,6 @@
 ﻿using Munchkin.Core.Contracts.Attributes;
-using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
-using Munchkin.Core.Model.Attributes;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace Munchkin.Core.Contracts
 {
@@ -29,15 +25,7 @@ namespace Munchkin.Core.Contracts
     {
     }
 
-    public record StateBase<TState>(
-        Table Table,
-        Player CurrentPlayer,
-        ImmutableList<Attribute> Attributes
-    )
-    : IState<TState>
+    public record StateBase<TState>(Table Table, Player CurrentPlayer, ImmutableList<Attribute> Attributes) : 
+        IState<TState>
         where TState : IState<TState>;
-
-    public static class StateExtensions
-    {
-    }
 }

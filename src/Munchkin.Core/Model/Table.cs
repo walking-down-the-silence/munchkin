@@ -2,6 +2,8 @@
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model.Expansions;
 using Munchkin.Extensions.Threading;
+using Munchkin.Primitives;
+using Munchkin.Primitives.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

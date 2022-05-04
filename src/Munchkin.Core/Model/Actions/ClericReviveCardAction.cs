@@ -1,18 +1,12 @@
 using Munchkin.Core.Contracts.Actions;
-using System;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal class ClericReviveCardAction : MultiShotAction
+    internal record ClericReviveCardAction(Player player) :
+        MultiShotAction(string.Empty, "Revive Card", string.Empty, int.MaxValue)
     {
-        private readonly Player _player;
         private bool _wasExecuted = false;
-
-        public ClericReviveCardAction(Player player) : base(int.MaxValue, "Revive Card", "")
-        {
-            _player = player ?? throw new ArgumentNullException(nameof(player));
-        }
 
         public override bool CanExecute(Table state) => !_wasExecuted;
 

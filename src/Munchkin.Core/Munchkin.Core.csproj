@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Munchkin.Extensions.Threading\Munchkin.Extensions.Threading.csproj" />
+    <ProjectReference Include="..\Munchkin.Primitives.Abstractions\Munchkin.Primitives.Abstractions.csproj" />
+    <ProjectReference Include="..\Munchkin.Primitives\Munchkin.Primitives.csproj" />
   </ItemGroup>
 
 </Project>

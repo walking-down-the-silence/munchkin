@@ -4,12 +4,9 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal class WarriorStrengthBonus1Action : MultiShotAction
+    internal record WarriorStrengthBonus1Action() :
+        MultiShotAction(string.Empty, "Rage (+1)", string.Empty, 3)
     {
-        public WarriorStrengthBonus1Action() : base(3, "Rage (+1)", "")
-        {
-        }
-
         public override bool CanExecute(Table state) => ExecutionsLeft > 0;
 
         public override async Task<Table> ExecuteAsync(Table table)

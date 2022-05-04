@@ -1,18 +1,15 @@
 ﻿using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Requests;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal class ClericStrengthBonus3Action : MultiShotAction, IRenewableAction<Table>
+    internal record ClericStrengthBonus3Action() :
+        MultiShotAction(string.Empty, "Bonus +3", string.Empty, 3),
+        IRenewableAction<Table>
     {
-        public ClericStrengthBonus3Action() : base(3, "Bonus +3", "")
-        {
-        }
-
         public override bool CanExecute(Table state)
         {
             // TODO: check if current stage actually is a combat
