@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Munchkin.Core.Contracts;
+using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Cards.Doors.Curses;
 using Munchkin.Core.Model.Cards.Doors.Enhancers;
@@ -32,7 +33,6 @@ namespace Munchkin.Core.Tests.Model.Phases
 
             // Assert
             nextState.Should().NotBeNull();
-            nextState.Should().NotBeSameAs(dungeon);
             nextState.Should().BeOfType<Dungeon>();
         }
 
@@ -55,7 +55,6 @@ namespace Munchkin.Core.Tests.Model.Phases
 
             // Assert
             nextState.Should().NotBeNull();
-            nextState.Should().NotBeSameAs(dungeon);
             nextState.Should().BeOfType<Dungeon>();
         }
 
@@ -78,7 +77,6 @@ namespace Munchkin.Core.Tests.Model.Phases
 
             // Assert
             nextState.Should().NotBeNull();
-            nextState.Should().NotBeSameAs(dungeon);
             nextState.Should().BeOfType<Dungeon>();
         }
 
@@ -101,7 +99,6 @@ namespace Munchkin.Core.Tests.Model.Phases
 
             // Assert
             nextState.Should().NotBeNull();
-            nextState.Should().NotBeSameAs(dungeon);
             nextState.Should().BeOfType<Dungeon>();
             table.Players.Current.Should().NotBeNull();
             table.Players.Current.Should().BeSameAs(player);
@@ -113,28 +110,28 @@ namespace Munchkin.Core.Tests.Model.Phases
         public void LookForTrouble_ShouldReturnLookForTroubleState()
         {
             // Arrange
-            var doorCards = Enumerable.Repeat(new Ancient(), 10).ToArray();
+            var doorCards = Enumerable.Repeat(new PlutoniumDragon(), 10).ToArray();
             var treasureCards = Enumerable.Repeat(new CotionOfPonfusion(), 10).ToArray();
             var player = new Player("johny.cash", EGender.Male);
             var table = Table.Empty()
                 .WithWinningLevel(10)
                 .WithDoorDeck(doorCards)
                 .WithTreasureDeck(treasureCards);
-            var monster = new PlutoniumDragon();
+            var monster = doorCards.First();
             var joined = table.Join(player);
             var dungeon = Dungeon.From(table, table.Players.Current);
 
             // Act
+            player.TakeInHand(monster);
             var nextState = Dungeon.LookForTrouble(dungeon, monster);
 
             // Assert
             nextState.Should().NotBeNull();
-            nextState.Should().NotBeSameAs(dungeon);
             nextState.Should().BeOfType<Dungeon>();
             table.Players.Current.Should().NotBeNull();
             table.Players.Current.Should().BeSameAs(player);
             player.YourHand.Should().NotBeNull();
-            player.YourHand.Should().HaveCount(1);
+            player.YourHand.Should().BeEmpty();
         }
     }
 }
