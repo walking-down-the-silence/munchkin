@@ -1,110 +1,34 @@
 ﻿using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 
 namespace Munchkin.Core.Model.Phases
 {
-    public record Combat(
-        Table Table,
-        Player FightingPlayer,
-        Player HelpingPlayer,
-        AskingForHelp AskingForHelp,
-        ImmutableArray<RunningAway> RunningAways,
-        ImmutableArray<Card> TemporaryPile)
+    public static class Combat
     {
-        public static Combat From(Table table, Player currentPlayer)
-        {
-            return new Combat(
-                table,
-                currentPlayer,
-                null,
-                AskingForHelp.From(table),
-                ImmutableArray<RunningAway>.Empty,
-                ImmutableArray<Card>.Empty);
-        }
-
-        public static Combat Reduce(Combat state, ICombatAction action)
-        {
-            return action switch
-            {
-                RunAwayAction _             => RunAway(state),
-                RewardAction _              => Reward(state),
-                AskForHelpAction askForHelp => AskForHelp(state, askForHelp.AskedPlayer),
-                AcceptHelpAction acceptHelp => AcceptHelpRequest(state, acceptHelp.AskedPlayer),
-                RejectHelpAction _          => RejectHelpRequesst(state),
-                _                           => throw new ArgumentOutOfRangeException(nameof(action))
-            };
-        }
-
-        #region Calculated Properties
-
-        public IEnumerable<MonsterCard> Monsters => TemporaryPile.OfType<MonsterCard>();
-
-        public IEnumerable<Card> MonsterEnhancers => TemporaryPile
-            .Where(x => x.HasAttribute<StrengthBonusAttribute>() || x.HasAttribute<MonsterStrengthBonusAttribute>())
-            .Where(x => x.BoundTo is MonsterCard);
-
-        public IEnumerable<Card> PlayerEnhancers => TemporaryPile
-            .Where(x => x.HasAttribute<StrengthBonusAttribute>())
-            .Where(x => x.BoundTo is null);
-
-        public int MonstersStrength()
-        {
-            var enhancers = MonsterEnhancers.Aggregate(0, (total, card) =>
-            {
-                var strength = card.AggregateAttributes<StrengthBonusAttribute>(x => x.Bonus);
-                return total + strength;
-            });
-            var levels = Monsters.Aggregate(0, (totalStrength, monster) => totalStrength + monster.Level);
-            return levels + enhancers;
-        }
-
-        public int PlayersStrength()
-        {
-            var enhancers = PlayerEnhancers.Aggregate(0, (total, card) =>
-            {
-                var strength = card.AggregateAttributes<StrengthBonusAttribute>(x => x.Bonus);
-                return total + strength;
-            });
-            return FightingPlayer.Level + HelpingPlayer.Level + enhancers;
-        }
-
-        #endregion
-
-        #region Combat Actions
-
         /// <summary>
         /// TODO: run charity for helping player as well
         /// </summary>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static Combat Reward(Combat state)
+        public static Table Reward(Table table)
         {
+            var combatStats = CombatStats.From(table);
+
             // TODO: collect all the treasures, levels and other stuff after a combat
             // TODO: do the same for helping player on agreed treasures
-            var rewardTreasures = state.Monsters.Aggregate(0, (total, monster) => total + monster.RewardTreasures);
-            var rewardLevels = state.Monsters.Aggregate(0, (total, monster) => total + monster.RewardLevels);
+            var monsters = table.TemporaryPile.OfType<MonsterCard>();
+            var rewardTreasures = monsters.Aggregate(0, (total, monster) => total + monster.RewardTreasures);
+            var rewardLevels = monsters.Aggregate(0, (total, monster) => total + monster.RewardLevels);
 
-            state.FightingPlayer.LevelUp(rewardLevels);
-            state.HelpingPlayer?.LevelUp(rewardLevels);
+            combatStats.FightingPlayer.LevelUp(rewardLevels);
+            combatStats.HelpingPlayer?.LevelUp(rewardLevels);
 
             // TODO: think of a way to distribute treasures based on help agreement
-            state.Table.TreasureCardDeck.Take(rewardTreasures)
-                .ForEach(card => state.FightingPlayer.TakeInHand(card));
+            table.TreasureCardDeck.Take(rewardTreasures)
+                .ForEach(card => combatStats.FightingPlayer.TakeInHand(card));
 
-            //var nextState = Charity.From(turn.Table, turn.CurrentPlayer);
-            var availableActions = ImmutableList.CreateRange(new[]
-            {
-                TurnActions.Player.DiscardDoor,
-                TurnActions.Player.DiscardTreasure,
-                TurnActions.Player.GiveAway
-            });
-            //return ActionResult.Create<Combat>(null, availableActions);
-            return state;
+            return table;
         }
 
         /// <summary>
@@ -113,31 +37,25 @@ namespace Munchkin.Core.Model.Phases
         /// <param name="state"></param>
         /// <param name="monster"></param>
         /// <returns></returns>
-        public static Combat RunAway(Combat state)
+        public static Table RunAway(Table table)
         {
-            // TODO: should be called for all monsters per each player (fighting and helping)
-            var runningAways = ImmutableArray.CreateRange(state.Monsters.SelectMany(monster => new[]
-            {
-                RunningAway.From(state.Table, state.FightingPlayer, monster, -1),
-                RunningAway.From(state.Table, state.HelpingPlayer, monster, -1)
-            }));
-            var availableActions = ImmutableList.CreateRange(new[]
-            {
-                TurnActions.Dungeon.PlayCard,
-                TurnActions.Combat.RollTheDice,
-                TurnActions.Combat.TakeBadStuffFromMonster
-            });
+            var combatStats = CombatStats.From(table);
 
-            //return ActionResult.Create(state, availableActions);
-            return state with
-            {
-                RunningAways = runningAways
-            };
+            // TODO: table instance should be updated
+            // TODO: should be called for all monsters per each player (fighting and helping)
+            _ = table.TemporaryPile
+                .OfType<MonsterCard>()
+                .SelectMany(monster => new[]
+                {
+                    new RunningAwayFromMonsterEvent(combatStats.FightingPlayer.Nickname, monster.GetHashCode().ToString()),
+                    new RunningAwayFromMonsterEvent(combatStats.HelpingPlayer.Nickname, monster.GetHashCode().ToString())
+                })
+                .Aggregate(table.ActionLog, (actionLog, item) => actionLog.Push(item));
+
+            return table;
         }
 
-        #endregion
-
-        #region Asking For Help
+        public record RunningAwayFromMonsterEvent(string PlayerNickname, string MonsterCardId);
 
         /// <summary>
         /// Sends a request for rhelp to a selected player.
@@ -146,14 +64,17 @@ namespace Munchkin.Core.Model.Phases
         /// <param name="state"></param>
         /// <param name="targetPlayer"></param>
         /// <returns></returns>
-        public static Combat AskForHelp(Combat state, Player targetPlayer)
+        public static Table AskForHelp(Table table, Player targetPlayer)
         {
-            //return ActionResult.Create(state, null, null);
-            return state with
-            {
-                HelpingPlayer = null,
-                AskingForHelp = state.AskingForHelp.WithAskedPlayer(targetPlayer)
-            };
+            var askingForHelpEvent = new AskingForHelpPlayerEvent(targetPlayer.Nickname);
+            table.ActionLog.Push(askingForHelpEvent);
+
+            //var nextState = state with
+            //{
+            //    HelpingPlayer = null,
+            //    AskingForHelp = state.AskingForHelp.WithAskedPlayer(targetPlayer)
+            //};
+            return table;
         }
 
         /// <summary>
@@ -162,13 +83,17 @@ namespace Munchkin.Core.Model.Phases
         /// <param name="state"></param>
         /// <param name="askedPlayer"></param>
         /// <returns></returns>
-        public static Combat AcceptHelpRequest(Combat state, Player askedPlayer)
+        public static Table AcceptHelpRequest(Table table, Player askedPlayer)
         {
-            return state with
-            {
-                HelpingPlayer = askedPlayer,
-                AskingForHelp = state.AskingForHelp.WithoutAskedPlayer()
-            };
+            var askingForHelpEvent = new AskingForHelpAcceptedEvent(askedPlayer.Nickname);
+            table.ActionLog.Push(askingForHelpEvent);
+
+            //var nextState = state with
+            //{
+            //    HelpingPlayer = askedPlayer,
+            //    AskingForHelp = state.AskingForHelp.WithoutAskedPlayer()
+            //};
+            return table;
         }
 
         /// <summary>
@@ -176,17 +101,24 @@ namespace Munchkin.Core.Model.Phases
         /// TODO: remove player that rejected from the list of players to ask
         /// </summary>
         /// <param name="state"></param>
-        /// <param name="askedPlayer"></param>
-        /// <returns></returns>s
-        public static Combat RejectHelpRequesst(Combat state)
+        /// <returns></returns>
+        public static Table RejectHelpRequest(Table table, Player askedPlayer)
         {
-            return state with
-            {
-                HelpingPlayer = null,
-                AskingForHelp = state.AskingForHelp.WithoutAskedPlayer()
-            };
-        }
+            var askingForHelpEvent = new AskingForHelpRejectedEvent(askedPlayer.Nickname);
+            table.ActionLog.Push(askingForHelpEvent);
 
-        #endregion
+            //var nextState = state with
+            //{
+            //    HelpingPlayer = null,
+            //    AskingForHelp = state.AskingForHelp.WithoutAskedPlayer()
+            //};
+            return table;
+        }
     }
+
+    public record AskingForHelpPlayerEvent(string AskedPlayerNickname);
+
+    public record AskingForHelpAcceptedEvent(string AskedPlayerNickname);
+
+    public record AskingForHelpRejectedEvent(string AskedPlayerNickname);
 }

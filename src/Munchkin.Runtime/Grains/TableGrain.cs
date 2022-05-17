@@ -72,10 +72,10 @@ namespace Munchkin.Runtime.Grains
         public Task<Player> GetPlayerByIdAsync(string nickname) =>
             _tablePersistance.State.Players.SingleOrDefault(x => x.Nickname == nickname).Unit();
 
-        public Task<IReadOnlyCollection<ExpansionSelection>> GetAvailableExpansionsAsync() =>
+        public Task<IReadOnlyCollection<ExpansionOption>> GetAvailableExpansionsAsync() =>
             _tablePersistance.State.AvailableExpansions.Unit();
 
-        public Task<IReadOnlyCollection<ExpansionSelection>> GetIncludedExpansionsAsync() =>
+        public Task<IReadOnlyCollection<ExpansionOption>> GetIncludedExpansionsAsync() =>
             _tablePersistance.State.IncludedExpansions.Unit();
 
         public Task<JoinTableResult> JoinAsync(string nickname) =>

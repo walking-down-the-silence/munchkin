@@ -1,140 +1,120 @@
 ﻿using Munchkin.Core.Contracts.Cards;
-using System;
-using System.Collections.Immutable;
 
 namespace Munchkin.Core.Model.Phases
 {
     /// <summary>
     /// Defines the state of the dungeon that the player has entered.
     /// </summary>
-    public record Dungeon(
-        Table Table,
-        Player CurrentPlayer,
-        Combat Combat,
-        Cursing Cursed,
-        RunningAway RunningAway,
-        Death Death,
-        Charity Charity,
-        ImmutableArray<Card> TemporaryPile)
+    public static class Dungeon
     {
-        public static Dungeon From(Table table, Player currentPlayer)
-        {
-            return new Dungeon(
-                table,
-                currentPlayer,
-                Combat.From(table, currentPlayer),
-                Cursing.From(table, currentPlayer),
-                RunningAway.From(table, currentPlayer, null, -1),
-                Death.From(table, currentPlayer),
-                Charity.From(table, currentPlayer),
-                ImmutableArray<Card>.Empty);
-        }
-
-        public static Dungeon Reduce(Dungeon state, IDungeonAction action)
-        {
-            return action switch
-            {
-                KickOpenTheDoorAction _             => KickOpenTheDoor(state),
-                LootTheRoomAction _                 => LootTheRoom(state),
-                LookForTroubleAction lookForTrouble => LookForTrouble(state, lookForTrouble.Monster),
-                PlayCardAction playCard             => Play(null, playCard.Card),
-                ICombatAction combat                => state with { Combat = Combat.Reduce(state.Combat, combat) },
-                ICurseAction curse                  => state with { Cursed = Cursing.Reduce(state.Cursed, curse) },
-                IRunningAwayAction runningAway      => state with { RunningAway = RunningAway.Reduce(state.RunningAway, runningAway) },
-                IDeathAction death                  => state with { Death = Death.Reduce(state.Death, death) },
-                ICharityAction charity              => state with { Charity = Charity.Reduce(state.Charity, charity) },
-                _                                   => throw new ArgumentOutOfRangeException(nameof(action))
-            };
-        }
-
-        #region Dungeon Actions
-
-        public static Dungeon KickOpenTheDoor(Dungeon state)
+        /// <summary>
+        /// Kick open the door into the dungeon.
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        public static Table KickOpenTheDoor(Table table)
         {
             // NOTE: 'Kick Open the Door' by drawing a card from the Doors Deck
-            var doors = state.Table.DoorsCardDeck.Take();
+            var doors = table.DoorsCardDeck.Take();
 
-            var nextState = doors switch
+            var kickOpenedTheDoorEvent = new KickOpenedTheDoor(table.Turns.Current.Player.Nickname, doors.GetHashCode().ToString());
+            table.ActionLog.Push(kickOpenedTheDoorEvent);
+
+            table = doors switch
             {
-                CurseCard curse => CreateCusedRoomActionResult(state, curse),
-                MonsterCard monster => CreateCombatRoomActionResult(state, monster),
-                _ => CreateEmptyRoomActionResult(state, doors)
+                CurseCard curse => CreateCursedRoom(table, table.Turns.Current.Player, curse),
+                MonsterCard monster => CreateCombatRoom(table, monster),
+                _ => CreateEmptyRoom(table, doors)
             };
 
-            return nextState;
+            return table;
         }
 
-        public static Dungeon LootTheRoom(Dungeon state)
+        /// <summary>
+        /// Get another door from the deck.
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        public static Table LootTheRoom(Table table)
         {
             // NOTE: 'Loot the Room' by drawing another cards from the Doors Deck
-            var doors = state.Table.DoorsCardDeck.Take();
-            state.CurrentPlayer.TakeInHand(doors);
-            var availableActions = ImmutableArray.CreateRange(TurnActions.Player.All);
-            //return ActionResult.Create(state, availableActions);
-            return state;
+            var doors = table.DoorsCardDeck.Take();
+            table.Turns.Current.Player.TakeInHand(doors);
+
+            var playerTookInHandEvent = new PlayerTookInHandEvent(table.Turns.Current.Player.Nickname, doors.GetHashCode().ToString());
+            table.ActionLog.Push(playerTookInHandEvent);
+
+            return table;
         }
 
-        public static Dungeon LookForTrouble(Dungeon state, MonsterCard monster)
+        /// <summary>
+        /// Play a monster from hand.
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="table"></param>
+        /// <param name="monster"></param>
+        /// <returns></returns>
+        public static Table LookForTrouble(Table table, MonsterCard monster)
         {
-            state.CurrentPlayer.Discard(monster);
-            var availableActions = ImmutableArray.CreateRange(TurnActions.Combat.All);
-            state = state with { TemporaryPile = state.TemporaryPile.Add(monster) };
-            //return ActionResult.Create(state, availableActions);
-            return state;
+            return CreateCombatRoom(table, monster);
         }
 
-        public static Dungeon Curse(Dungeon state, CurseCard curse, Player player)
+        /// <summary>
+        /// TODO: maybe return the curse state so that the caller can save it?
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="table"></param>
+        /// <param name="curse"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public static Table Curse(Table table, CurseCard curse, Player player)
         {
-            var availableActions = ImmutableArray.CreateRange(TurnActions.Curse.All);
-            state = state with { TemporaryPile = state.TemporaryPile.Add(curse) };
-            //return ActionResult.Create(state, availableActions);
-            return state;
+            return CreateCursedRoom(table, player, curse);
         }
 
-        public static Dungeon Play(Dungeon state, Card card)
+        private static Table CreateCursedRoom(Table table, Player player, CurseCard curse)
         {
-            card.Play(state.Table);
-            var availableActions = ImmutableArray.CreateRange(TurnActions.Player.All);
-            state = state with { TemporaryPile = state.TemporaryPile.Add(card) };
-            //return ActionResult.Create(state, availableActions);
-            return state;
+            table.TemporaryPile.Add(curse);
+
+            // TODO: use the real card id
+            var playerCursedEvent = new PlayerCursedEvent(player.Nickname, curse.GetHashCode().ToString());
+            table.ActionLog.Push(playerCursedEvent);
+
+            return table;
         }
 
-        #endregion
-
-        #region Private Methods
-
-        private static Dungeon CreateCusedRoomActionResult(Dungeon state, CurseCard curse)
+        private static Table CreateCombatRoom(Table table, MonsterCard monster)
         {
-            var availableActions = ImmutableArray.CreateRange(TurnActions.Curse.All);
-            state = state with { TemporaryPile = state.TemporaryPile.Add(curse) };
-            //return ActionResult.Create(state, availableActions);
-            return state;
+            table.Turns.Current.Player.Discard(monster);
+            table.TemporaryPile.Add(monster);
+
+            // TODO: use the real card id
+            var combatEvent = new CombatStartedEvent(table.Turns.Current.Player.Nickname, monster.GetHashCode().ToString());
+            table.ActionLog.Push(combatEvent);
+
+            return table;
         }
 
-        private static Dungeon CreateCombatRoomActionResult(Dungeon state, MonsterCard monster)
-        {
-            var availableActions = ImmutableArray.CreateRange(TurnActions.Combat.All);
-            state = state with { TemporaryPile = state.TemporaryPile.Add(monster) };
-            //return ActionResult.Create(state, availableActions);
-            return state;
-        }
-
-        private static Dungeon CreateEmptyRoomActionResult(Dungeon state, DoorsCard card)
+        private static Table CreateEmptyRoom(Table table, DoorsCard card)
         {
             // NOTE: If acquired some other way, such as by Looting The Room, Curse cards
             // go into your hand and may be played on any player at any time.
-            state.CurrentPlayer.TakeInHand(card);
-            var availableActions = ImmutableArray.CreateRange(new string[]
-            {
-                TurnActions.Dungeon.LootTheRoom,
-                TurnActions.Dungeon.LookForTrouble
-            });
-            state = state with { TemporaryPile = state.TemporaryPile.Add(card) };
-            //return ActionResult.Create(state, availableActions);
-            return state;
-        }
+            table.Turns.Current.Player.TakeInHand(card);
 
-        #endregion
+            var playerHandEvent = new PlayerTookInHandEvent(table.Turns.Current.Player.Nickname, card.GetHashCode().ToString());
+            table.ActionLog.Push(playerHandEvent);
+
+            return table;
+        }
     }
+
+    public record KickOpenedTheDoor(string PlayerNickname, string DoorCardId);
+
+    public record PlayerCursedEvent(string PlayerNickname, string CurseCardId);
+
+    public record PlayerTookInHandEvent(string PlayerNickname, string CardId);
+
+    public record CombatStartedEvent(string PlayerNickname, string MonsterCardId);
 }

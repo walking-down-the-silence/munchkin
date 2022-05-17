@@ -18,7 +18,7 @@ namespace Munchkin.Expansion.Deluxe
             return CreateCardCollection().ToArray();
         }
 
-        private IEnumerable<DoorsCard> CreateCardCollection()
+        private static IEnumerable<DoorsCard> CreateCardCollection()
         {
             yield return new Halfbreed();
             yield return new Halfbreed();

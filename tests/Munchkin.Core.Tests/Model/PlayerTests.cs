@@ -31,7 +31,7 @@ namespace Munchkin.Core.Tests.Model
             Assert.NotNull(player.Nickname);
             Assert.Equal(EGender.Male, player.Gender);
             Assert.Equal(1, player.Level);
-            Assert.False(player.IsDead);
+            Assert.False(player.IsDead());
             Assert.Empty(player.YourHand);
             Assert.Empty(player.Equipped);
             Assert.Empty(player.Backpack);
@@ -278,7 +278,7 @@ namespace Munchkin.Core.Tests.Model
             // Assert
             Assert.NotEmpty(player.YourHand);
             Assert.Equal(8, player.YourHand.Count);
-            Assert.False(player.IsDead);
+            Assert.False(player.IsDead());
         }
 
         [Fact]
@@ -296,11 +296,11 @@ namespace Munchkin.Core.Tests.Model
             player.Equip(new WarriorClass());
             player.Equip(new SuperMunchkin());
             player.Equip(new Halfbreed());
-            player.Kill();
+            player.Die();
 
             // Assert
             Assert.Empty(player.YourHand);
-            Assert.True(player.IsDead);
+            Assert.True(player.IsDead());
             Assert.NotEmpty(player.Equipped.OfType<RaceCard>());
             Assert.NotEmpty(player.Equipped.OfType<ClassCard>());
             Assert.NotEmpty(player.Equipped.OfType<SuperMunchkin>());
@@ -332,7 +332,7 @@ namespace Munchkin.Core.Tests.Model
             }
 
             players.ForEach(player => table.Join(player));
-            table.Players.ForEach(player => table.ReceiveCards(player));
+            table.Players.ForEach(player => table.DealCards(player));
             return table;
         }
 

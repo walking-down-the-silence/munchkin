@@ -3,6 +3,6 @@
 namespace Munchkin.Core.Model.Phases
 {
     public record RollTheDiceAction(Player Player) :
-        ActionBase(TurnActions.Combat.RollTheDice, "Roll The Dice", string.Empty),
+        ActionBase(TurnActions.RunAway.RollTheDice, "Roll The Dice", string.Empty),
         IRunningAwayAction;
 }

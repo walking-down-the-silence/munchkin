@@ -3,6 +3,6 @@
 namespace Munchkin.Core.Model.Phases
 {
     public record AskForHelpAction(Player AskedPlayer) :
-        ActionBase(TurnActions.Combat.AskForHelp, "Ask Player For Help", string.Empty),
+        ActionBase(TurnActions.AskingForHelp.AskForHelp, "Ask Player For Help", string.Empty),
         ICombatAction;
 }

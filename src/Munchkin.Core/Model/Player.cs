@@ -19,6 +19,7 @@ namespace Munchkin.Core.Model
         private readonly List<Card> _backpack = new();
         private readonly List<Card> _equipped = new();
         private readonly List<IAction<Table>> _actions = new();
+        private EPlayerLifeState _life;
         private bool _isDead;
         private bool _isRevived;
         private int _level = 1;
@@ -48,14 +49,9 @@ namespace Munchkin.Core.Model
         public int Level => _level;
 
         /// <summary>
-        /// Gets if players hero is dead.
+        /// Gets if the players hero has recently died, was being revived or is alive.
         /// </summary>
-        public bool IsDead => _isDead;
-
-        /// <summary>
-        /// Gets if the players hero was recently revived and did not receive new cards.
-        /// </summary>
-        public bool IsRevived => _isRevived;
+        public EPlayerLifeState Life => _life;
 
         /// <summary>
         /// Gets the closed out-of-game cards.
@@ -76,6 +72,9 @@ namespace Munchkin.Core.Model
         /// Gets the dynamic actions for the user.
         /// </summary>
         public IReadOnlyCollection<IAction<Table>> Actions => _actions.AsReadOnly();
+
+        /// <inheritdoc />
+        public override string ToString() => $"{Nickname}, Level {Level}, {Life}";
 
         /// <summary>
         /// Levels up the player.
@@ -166,11 +165,7 @@ namespace Munchkin.Core.Model
         /// help others in combat with his Level and Class or Race abilities. . .but you
         /// have no cards, unless you receive Charity or gifts from other players.
         /// </summary>
-        public void Revive()
-        {
-            _isDead = false;
-            _isRevived = true;
-        }
+        public void Revive() => _life = EPlayerLifeState.Revived;
 
         /// <summary>
         /// On your next turn, start by drawing four face-down cards from each deck
@@ -190,8 +185,7 @@ namespace Munchkin.Core.Model
             doors.ForEach(TakeInHand);
             treasures.ForEach(TakeInHand);
 
-            _isDead = false;
-            _isRevived = false;
+            _life = EPlayerLifeState.Alive;
         }
 
         /// <summary>
@@ -201,9 +195,9 @@ namespace Munchkin.Core.Model
         /// Super Munchkin, keep those as well.
         /// </summary>
         /// <returns> A collection of cards that should be discarded. </returns>
-        public IReadOnlyCollection<Card> Kill()
+        public IReadOnlyCollection<Card> Die()
         {
-            _isDead = true;
+            _life = EPlayerLifeState.Dead;
 
             var playerCards = Enumerable.Empty<Card>()
                 .Concat(YourHand)

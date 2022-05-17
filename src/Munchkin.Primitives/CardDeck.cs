@@ -6,15 +6,24 @@ namespace Munchkin.Primitives
     public class CardDeck<TCard> : ICardDeck<TCard>
     {
         private readonly List<TCard> _cards;
+        private readonly IShuffleAlgorithm<TCard> _shuffleAlgorithm;
 
-        public CardDeck()
+        public CardDeck(IShuffleAlgorithm<TCard> shuffleAlgorithm, IEnumerable<TCard> cards)
         {
-            _cards = new List<TCard>();
+            _shuffleAlgorithm = shuffleAlgorithm ?? new DefaultShuffleAlgorithm<TCard>();
+            _cards = new List<TCard>(cards);
         }
 
-        public CardDeck(IEnumerable<TCard> cards)
+        public CardDeck(IShuffleAlgorithm<TCard> shuffleAlgorithm) : this(shuffleAlgorithm, Enumerable.Empty<TCard>())
         {
-            _cards = new List<TCard>(cards);
+        }
+
+        public CardDeck(IEnumerable<TCard> cards) : this(default, cards)
+        {
+        }
+
+        public CardDeck() : this(default, Enumerable.Empty<TCard>())
+        {
         }
 
         public bool IsEmpty => _cards.Count == 0;
@@ -23,16 +32,10 @@ namespace Munchkin.Primitives
 
         public void Shuffle()
         {
-            int count = _cards.Count;
-            var random = new Random((int)DateTime.Now.Ticks);
-            while (count > 1)
-            {
-                count--;
-                int randomNumber = random.Next(count + 1);
-                TCard value = _cards[randomNumber];
-                _cards[randomNumber] = _cards[count];
-                _cards[count] = value;
-            }
+            var shuffled = _cards.ToArray();
+            _shuffleAlgorithm.Shuffle(shuffled);
+            _cards.Clear();
+            _cards.AddRange(shuffled);
         }
 
         public TCard Take()
@@ -82,5 +85,21 @@ namespace Munchkin.Primitives
         public IEnumerator<TCard> GetEnumerator() => _cards.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        private class DefaultShuffleAlgorithm<T> : IShuffleAlgorithm<T>
+        {
+            public void Shuffle(T[] array)
+            {
+                int count = array.Length;
+                var random = new Random((int)DateTime.Now.Ticks);
+
+                while (count > 1)
+                {
+                    count--;
+                    int randomNumber = random.Next(count + 1);
+                    (array[count], array[randomNumber]) = (array[randomNumber], array[count]);
+                }
+            }
+        }
     }
 }

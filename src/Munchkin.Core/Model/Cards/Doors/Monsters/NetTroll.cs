@@ -1,6 +1,4 @@
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
-using Munchkin.Core.Model.Requests;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,12 +19,12 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
             while (players.MoveNext() && state.Players.Current.Equipped.OfType<TreasureCard>().Any())
             {
                 var treasures = state.Players.Current.Equipped.OfType<TreasureCard>().ToList();
-                var request = new PlayerSelectSingleCardRequest(players.Current, state, treasures);
-                var response = await state.RequestSink.Send(request);
-                var card = await response.Task;
+                //var request = new PlayerSelectSingleCardRequest(players.Current, state, treasures);
+                //var response = await state.RequestSink.Send(request);
+                //var card = await response.Task;
 
-                state.Players.Current.Discard(card);
-                players.Current.PutInBackpack(card);
+                //state.Players.Current.Discard(card);
+                //players.Current.PutInBackpack(card);
             }
         }
     }

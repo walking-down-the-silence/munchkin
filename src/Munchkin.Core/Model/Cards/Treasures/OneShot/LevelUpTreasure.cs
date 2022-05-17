@@ -1,7 +1,6 @@
-using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 {
@@ -11,9 +10,9 @@ namespace Munchkin.Core.Model.Cards.Treasures.OneShot
         {
         }
 
-        public override Task Play(Table gameContext)
+        public override Task Play(Table table)
         {
-            if (!Owner.WillBecomeWinner(gameContext.WinningLevel))
+            if (!Owner.WillBecomeWinner(table.WinningLevel))
             {
                 Owner.LevelUp();
             }

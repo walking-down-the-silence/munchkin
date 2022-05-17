@@ -1,63 +1,36 @@
 ﻿using Munchkin.Core.Contracts.Cards;
-using System;
-using System.Collections.Immutable;
+using Munchkin.Core.Extensions;
 
 namespace Munchkin.Core.Model.Phases
 {
-    public record RunningAway(
-        Table Table,
-        Player Player,
-        MonsterCard Monster,
-        int DiceRollResult,
-        ImmutableArray<Card> TemporaryPile)
+    public static class RunningAway
     {
-        public static RunningAway From(Table table, Player targetPlayer, MonsterCard monster, int diceRoll)
+        public static Table RollTheDice(Table table, MonsterCard monster, Player player)
         {
-            return new RunningAway(
-                table,
-                targetPlayer,
-                monster,
-                diceRoll,
-                ImmutableArray<Card>.Empty);
+            // TODO: get real monster card id
+            var diceRollEvent = new RunningAwayFromMonsterDiceRollEvent(
+                player.Nickname,
+                monster.GetHashCode().ToString(),
+                Dice.Roll());
+
+            table.ActionLog.Push(diceRollEvent);
+
+            return table;
         }
 
-        public static RunningAway Reduce(RunningAway state, IRunningAwayAction action)
+        public static Table TakeBadStuff(Table table, MonsterCard monster, Player taker)
         {
-            return action switch
+            if (!taker.IsDead())
             {
-                RollTheDiceAction rollTheDice               => RollTheDice(state, rollTheDice.Player, state.Monster),
-                TakeBadStuffFromMonsterAction takeBadStuff  => TakeBadStuff(state, takeBadStuff.Player, state.Monster),
-                _                                           => throw new ArgumentOutOfRangeException(nameof(action))
-            };
-        }
-
-        public static RunningAway RollTheDice(RunningAway state, Player player, MonsterCard monster)
-        {
-            state = state with { DiceRollResult = Dice.Roll() };
-
-            var availableActions = ImmutableList.CreateRange(new[]
-            {
-                TurnActions.Player.DiscardDoor,
-                TurnActions.Player.DiscardTreasure,
-                TurnActions.Player.GiveAway
-            });
-            //return ActionResult.Create<RunningAway>(null, availableActions);
-            return state;
-        }
-
-        public static RunningAway TakeBadStuff(RunningAway state, Player player, MonsterCard monster)
-        {
-            // TODO: pass the player implicitly
-            if (!player.IsDead)
-            {
-                monster.BadStuff(state.Table);
+                monster.BadStuff(table);
             }
 
-            var availableActions = ImmutableList.CreateRange(player.IsDead
-                ? TurnActions.Death.All
-                : TurnActions.Player.All);
-            //return ActionResult.Create<RunningAway>(null, availableActions);
-            return state;
+            return table;
         }
     }
+
+    public record RunningAwayFromMonsterDiceRollEvent(
+        string PlayerNickname,
+        string MonsterCardId,
+        int DiceRollResult);
 }

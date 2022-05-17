@@ -2,7 +2,7 @@
 
 namespace Munchkin.Core.Model.Phases
 {
-    public record TakeBadStuffFromMonsterAction(Player Player) :
-        ActionBase(TurnActions.Combat.TakeBadStuffFromMonster, "Take Bad Stuff", string.Empty),
+    public record TakeBadStuffFromMonsterAction(Table Table, Player Player) :
+        ActionBase(TurnActions.RunAway.TakeBadStuff, "Take Bad Stuff", string.Empty),
         IRunningAwayAction;
 }

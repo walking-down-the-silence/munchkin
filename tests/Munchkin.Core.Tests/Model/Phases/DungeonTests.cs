@@ -26,14 +26,13 @@ namespace Munchkin.Core.Tests.Model.Phases
                 .WithDoorDeck(doorCards)
                 .WithTreasureDeck(treasureCards);
             var joined = table.Join(player);
-            var dungeon = Dungeon.From(table, table.Players.Current);
 
             // Act
-            var nextState = Dungeon.KickOpenTheDoor(dungeon);
+            var nextState = Dungeon.KickOpenTheDoor(table);
 
             // Assert
             nextState.Should().NotBeNull();
-            nextState.Should().BeOfType<Dungeon>();
+            nextState.Should().BeOfType<Table>();
         }
 
         [Fact]
@@ -48,14 +47,13 @@ namespace Munchkin.Core.Tests.Model.Phases
                 .WithDoorDeck(doorCards)
                 .WithTreasureDeck(treasureCards);
             var joined = table.Join(player);
-            var dungeon = Dungeon.From(table, table.Players.Current);
 
             // Act
-            var nextState = Dungeon.KickOpenTheDoor(dungeon);
+            var nextState = Dungeon.KickOpenTheDoor(table);
 
             // Assert
             nextState.Should().NotBeNull();
-            nextState.Should().BeOfType<Dungeon>();
+            nextState.Should().BeOfType<Table>();
         }
 
         [Fact]
@@ -70,14 +68,13 @@ namespace Munchkin.Core.Tests.Model.Phases
                 .WithDoorDeck(doorCards)
                 .WithTreasureDeck(treasureCards);
             var joined = table.Join(player);
-            var dungeon = Dungeon.From(table, table.Players.Current);
 
             // Act
-            var nextState = Dungeon.KickOpenTheDoor(dungeon);
+            var nextState = Dungeon.KickOpenTheDoor(table);
 
             // Assert
             nextState.Should().NotBeNull();
-            nextState.Should().BeOfType<Dungeon>();
+            nextState.Should().BeOfType<Table>();
         }
 
         [Fact]
@@ -92,14 +89,13 @@ namespace Munchkin.Core.Tests.Model.Phases
                 .WithDoorDeck(doorCards)
                 .WithTreasureDeck(treasureCards);
             var joined = table.Join(player);
-            var dungeon = Dungeon.From(table, table.Players.Current);
 
             // Act
-            var nextState = Dungeon.LootTheRoom(dungeon);
+            var nextState = Dungeon.LootTheRoom(table);
 
             // Assert
             nextState.Should().NotBeNull();
-            nextState.Should().BeOfType<Dungeon>();
+            nextState.Should().BeOfType<Table>();
             table.Players.Current.Should().NotBeNull();
             table.Players.Current.Should().BeSameAs(player);
             player.YourHand.Should().NotBeNull();
@@ -119,15 +115,14 @@ namespace Munchkin.Core.Tests.Model.Phases
                 .WithTreasureDeck(treasureCards);
             var monster = doorCards.First();
             var joined = table.Join(player);
-            var dungeon = Dungeon.From(table, table.Players.Current);
 
             // Act
             player.TakeInHand(monster);
-            var nextState = Dungeon.LookForTrouble(dungeon, monster);
+            var nextState = Dungeon.LookForTrouble(table, monster);
 
             // Assert
             nextState.Should().NotBeNull();
-            nextState.Should().BeOfType<Dungeon>();
+            nextState.Should().BeOfType<Table>();
             table.Players.Current.Should().NotBeNull();
             table.Players.Current.Should().BeSameAs(player);
             player.YourHand.Should().NotBeNull();

@@ -53,7 +53,7 @@ namespace Munchkin.Core.Contracts.Cards
         public IReadOnlyCollection<IAttribute> Attributes => _attributes.AsReadOnly();
 
         /// <inheritdoc />
-        public override string ToString() => $"{Title}";
+        public override string ToString() => $"{Title}, Owner: {(Owner is null ? "None" : Owner.Nickname)}";
 
         /// <summary>
         /// Binds the card to the current one to be played along with it.
