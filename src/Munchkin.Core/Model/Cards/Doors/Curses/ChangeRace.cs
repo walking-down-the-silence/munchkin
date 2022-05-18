@@ -1,7 +1,5 @@
-using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
-using Munchkin.Core.Model.Cards.Doors;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
@@ -21,7 +19,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
                 }
             }
 
-            var firstDiscardedRace = context.DiscardedDoorsCards.TakeFirst<RaceCard>();
+            context = context with { DiscardedDoorsCards = context.DiscardedDoorsCards.TakeFirst<RaceCard>(out var firstDiscardedRace) };
             if (firstDiscardedRace != null)
             {
                 context.Players.Current.Equip(firstDiscardedRace);

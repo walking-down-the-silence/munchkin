@@ -60,14 +60,13 @@ namespace Munchkin.Runtime.Tests
 
             // NOTE: a player starts the game
             var table = await tableService.CreateAsync(new NonShuffleAlgorithm<Card>());
-            string tableId = TableService.GetUniqueId(table);
 
             table.Should().NotBeNull();
 
             // NOTE: more players join the game table
-            var joined1 = await tableService.JoinTableAsync(tableId, PlayerJohnyCashNickname);
-            var joined2 = await tableService.JoinTableAsync(tableId, PlayerFrankSinatraNickname);
-            var joined3 = await tableService.JoinTableAsync(tableId, PlayerElonMuskNickname);
+            var joined1 = await tableService.JoinTableAsync(TableService.GetUniqueId(table), PlayerJohnyCashNickname);
+            var joined2 = await tableService.JoinTableAsync(TableService.GetUniqueId(table), PlayerFrankSinatraNickname);
+            var joined3 = await tableService.JoinTableAsync(TableService.GetUniqueId(table), PlayerElonMuskNickname);
 
             joined1.Should().NotBeNull();
             joined1.Should().BeEquivalentTo(JoinTableResult.Joined);
@@ -76,14 +75,13 @@ namespace Munchkin.Runtime.Tests
             joined3.Should().NotBeNull();
             joined3.Should().BeEquivalentTo(JoinTableResult.Joined);
 
-            table = await tableService.SetupAsync(tableId);
-            tableId = TableService.GetUniqueId(table);
+            table = await tableService.SetupAsync(TableService.GetUniqueId(table));
 
             table.Should().NotBeNull();
             table.Players.Count.Should().Be(3);
 
             // NOTE: try to join after the game has started
-            var joined4 = await tableService.JoinTableAsync(tableId, PlayerPeterJacksonNickname);
+            var joined4 = await tableService.JoinTableAsync(TableService.GetUniqueId(table), PlayerPeterJacksonNickname);
 
             joined4.Should().NotBeNull();
             joined4.Should().BeEquivalentTo(JoinTableResult.Full);
@@ -96,35 +94,33 @@ namespace Munchkin.Runtime.Tests
             var tableService = serviceProvider.GetRequiredService<TableService>();
             var dungeonService = serviceProvider.GetRequiredService<DungeonService>();
 
-            string tableId = TableService.GetUniqueId(table);
-
             table.Should().NotBeNull();
-            table.Turns.Current.Player.Should().NotBeNull();
-            table.Turns.Current.Player.Nickname.Should().BeEquivalentTo(PlayerJohnyCashNickname);
+            table.Players.Current.Should().NotBeNull();
+            table.Players.Current.Nickname.Should().BeEquivalentTo(PlayerJohnyCashNickname);
 
             // PHASE: Kick Open The Door
-            await dungeonService.KickOpenTheDoorAsync(tableId);
+            table = await dungeonService.KickOpenTheDoorAsync(TableService.GetUniqueId(table));
 
             // PHASE: Loot The Room / Look For Trouble
-            await dungeonService.LootTheRoomAsync(tableId);
+            table = await dungeonService.LootTheRoomAsync(TableService.GetUniqueId(table));
 
-            table.Turns.Current.Player.YourHand.Should().HaveCount(10);
+            table.Players.Current.YourHand.Should().HaveCount(10);
 
             // PHASE: Charity
-            string johnyCardEquipped1Id = CardService.GetUniqueId(table.Turns.Current.Player.FirstOrDefault<ClericClass>());
-            string johnyCardEquipped2Id = CardService.GetUniqueId(table.Turns.Current.Player.FirstOrDefault<SneakyBastardSword>());
-            await tableService.EquipAsync(tableId, PlayerJohnyCashNickname, johnyCardEquipped1Id);
-            await tableService.EquipAsync(tableId, PlayerJohnyCashNickname, johnyCardEquipped2Id);
+            string johnyCardEquipped1Id = CardService.GetUniqueId(table.Players.Current.FirstOrDefault<ClericClass>());
+            string johnyCardEquipped2Id = CardService.GetUniqueId(table.Players.Current.FirstOrDefault<SneakyBastardSword>());
+            table = await tableService.EquipAsync(TableService.GetUniqueId(table), PlayerJohnyCashNickname, johnyCardEquipped1Id);
+            table = await tableService.EquipAsync(TableService.GetUniqueId(table), PlayerJohnyCashNickname, johnyCardEquipped2Id);
 
-            string johnyCardDiscarded1Id = CardService.GetUniqueId(table.Turns.Current.Player.FirstOrDefault<GelatinousOctahedron>());
-            string johnyCardDiscarded2Id = CardService.GetUniqueId(table.Turns.Current.Player.FirstOrDefault<Ancient>());
-            string johnyCardDiscarded3Id = CardService.GetUniqueId(table.Turns.Current.Player.FirstOrDefault<ElevenFootPole>());
-            await tableService.DiscardAsync(tableId, johnyCardDiscarded1Id);
-            await tableService.DiscardAsync(tableId, johnyCardDiscarded2Id);
-            await tableService.DiscardAsync(tableId, johnyCardDiscarded3Id);
+            string johnyCardDiscarded1Id = CardService.GetUniqueId(table.Players.Current.FirstOrDefault<GelatinousOctahedron>());
+            string johnyCardDiscarded2Id = CardService.GetUniqueId(table.Players.Current.FirstOrDefault<Ancient>());
+            string johnyCardDiscarded3Id = CardService.GetUniqueId(table.Players.Current.FirstOrDefault<ElevenFootPole>());
+            table = await tableService.DiscardAsync(TableService.GetUniqueId(table), johnyCardDiscarded1Id);
+            table = await tableService.DiscardAsync(TableService.GetUniqueId(table), johnyCardDiscarded2Id);
+            table = await tableService.DiscardAsync(TableService.GetUniqueId(table), johnyCardDiscarded3Id);
 
-            table.Turns.Current.Player.YourHand.Should().HaveCount(5);
-            table.Turns.Current.Player.Equipped.Should().HaveCount(2);
+            table.Players.Current.YourHand.Should().HaveCount(5);
+            table.Players.Current.Equipped.Should().HaveCount(2);
             table.DiscardedDoorsCards.Should().HaveCount(2);
             table.DiscardedTreasureCards.Should().HaveCount(1);
 
@@ -138,35 +134,34 @@ namespace Munchkin.Runtime.Tests
             var charityService = serviceProvider.GetRequiredService<CharityService>();
             var combatService = serviceProvider.GetRequiredService<CombatService>();
 
-            string tableId = TableService.GetUniqueId(table);
-            table = await tableService.NextAsync(tableId);
+            table = await tableService.NextAsync(TableService.GetUniqueId(table));
 
             table.Should().NotBeNull();
-            table.Turns.Current.Player.Should().NotBeNull();
-            table.Turns.Current.Player.Nickname.Should().BeEquivalentTo(PlayerFrankSinatraNickname);
+            table.Players.Current.Should().NotBeNull();
+            table.Players.Current.Nickname.Should().BeEquivalentTo(PlayerFrankSinatraNickname);
 
             // PHASE: Play Cards
-            string frankCardEquipped1Id = CardService.GetUniqueId(table.Turns.Current.Player.FirstOrDefault<ThousandGoldPieces>());
-            string frankCardEquipped2Id = CardService.GetUniqueId(table.Turns.Current.Player.FirstOrDefault<MutilateTheBodies>());
-            await tableService.PlayAsync(tableId, PlayerFrankSinatraNickname, frankCardEquipped1Id);
-            await tableService.PlayAsync(tableId, PlayerFrankSinatraNickname, frankCardEquipped2Id);
+            string frankCardEquipped1Id = CardService.GetUniqueId(table.Players.Current.FirstOrDefault<ThousandGoldPieces>());
+            string frankCardEquipped2Id = CardService.GetUniqueId(table.Players.Current.FirstOrDefault<MutilateTheBodies>());
+            table = await tableService.PlayAsync(TableService.GetUniqueId(table), PlayerFrankSinatraNickname, frankCardEquipped1Id);
+            table = await tableService.PlayAsync(TableService.GetUniqueId(table), PlayerFrankSinatraNickname, frankCardEquipped2Id);
 
             // PHASE: Kick Open The Door
-            await dungeonService.KickOpenTheDoorAsync(tableId);
+            table = await dungeonService.KickOpenTheDoorAsync(TableService.GetUniqueId(table));
 
             // PHASE: Loot The Room / Look For Trouble
-            string frankMonsterFromHand1Id = CardService.GetUniqueId(table.Turns.Current.Player.FirstOrDefault<PottedPlant>());
-            await dungeonService.LookForTroubleAsync(tableId, frankMonsterFromHand1Id);
-            await combatService.RewardAsync(tableId);
+            string frankMonsterFromHand1Id = CardService.GetUniqueId(table.Players.Current.FirstOrDefault<PottedPlant>());
+            table = await dungeonService.LookForTroubleAsync(TableService.GetUniqueId(table), frankMonsterFromHand1Id);
+            table = await combatService.RewardAsync(TableService.GetUniqueId(table));
 
-            table.Turns.Current.Player.Level.Should().Be(4);
+            table.Players.Current.Level.Should().Be(4);
             table.DiscardedDoorsCards.Should().HaveCount(4);
 
             // PHASE: Charity
-            string frankCardGiven1Id = CardService.GetUniqueId(table.Turns.Current.Player.FirstOrDefault<BoilAnAnthill>());
-            string frankCardGiven2Id = CardService.GetUniqueId(table.Turns.Current.Player.FirstOrDefault<WishingRing>());
-            await charityService.GiveAwayAsync(tableId, frankCardGiven1Id, PlayerFrankSinatraNickname, PlayerElonMuskNickname);
-            await charityService.GiveAwayAsync(tableId, frankCardGiven2Id, PlayerFrankSinatraNickname, PlayerElonMuskNickname);
+            string frankCardGiven1Id = CardService.GetUniqueId(table.Players.Current.FirstOrDefault<BoilAnAnthill>());
+            string frankCardGiven2Id = CardService.GetUniqueId(table.Players.Current.FirstOrDefault<WishingRing>());
+            table = await charityService.GiveAwayAsync(TableService.GetUniqueId(table), frankCardGiven1Id, PlayerFrankSinatraNickname, PlayerElonMuskNickname);
+            table = await charityService.GiveAwayAsync(TableService.GetUniqueId(table), frankCardGiven2Id, PlayerFrankSinatraNickname, PlayerElonMuskNickname);
 
             return table;
         }
@@ -179,8 +174,8 @@ namespace Munchkin.Runtime.Tests
             table = await tableService.NextAsync(tableId);
 
             table.Should().NotBeNull();
-            table.Turns.Current.Player.Should().NotBeNull();
-            table.Turns.Current.Player.Nickname.Should().BeEquivalentTo(PlayerElonMuskNickname);
+            table.Players.Current.Should().NotBeNull();
+            table.Players.Current.Nickname.Should().BeEquivalentTo(PlayerElonMuskNickname);
 
             return table;
         }

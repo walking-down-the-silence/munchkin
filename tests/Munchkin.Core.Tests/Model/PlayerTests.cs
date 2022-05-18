@@ -269,11 +269,11 @@ namespace Munchkin.Core.Tests.Model
             var treasureFactory = new MunchkinOriginalTreasuresFactory();
             var doorFactory = new MunchkinOriginalDoorsFactory();
             var table = SetupTableNoRevive(players, treasureFactory, doorFactory, 10);
-            var doors = table.DoorsCardDeck.TakeRange(4).ToList();
-            var treasures = table.TreasureCardDeck.TakeRange(4).ToList();
+            table = table with { DoorsCardDeck = table.DoorsCardDeck.TakeRange(4, out var doors) };
+            table = table with { TreasureCardDeck = table.TreasureCardDeck.TakeRange(4, out var treasures) };
 
             // Act
-            player.ReceiveCards(doors, treasures);
+            player.ReceiveCards(doors.ToArray(), treasures.ToArray());
 
             // Assert
             Assert.NotEmpty(player.YourHand);

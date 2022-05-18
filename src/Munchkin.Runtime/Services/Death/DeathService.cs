@@ -2,6 +2,7 @@
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Phases;
 using Munchkin.Runtime.Abstractions;
+using Munchkin.Runtime.Queries;
 using System;
 using System.Threading.Tasks;
 

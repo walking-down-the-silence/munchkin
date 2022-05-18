@@ -14,7 +14,7 @@ namespace Munchkin.Core.Tests.Primitives
         protected override async Task<Table> OnResolve(Table table)
         {
             // TODO: check if deck is empty and reshuffle discard if it is
-            var doorsCard = table.DoorsCardDeck.Take();
+            table = table with { DoorsCardDeck = table.DoorsCardDeck.Take(out var doorsCard) };
             table.Players.Current.TakeInHand(doorsCard);
 
             var stage = new CharityStep();

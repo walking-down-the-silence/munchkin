@@ -1,5 +1,6 @@
 ﻿using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace Munchkin.Core.Extensions
@@ -17,6 +18,58 @@ namespace Munchkin.Core.Extensions
         /// <param name="table">The table to chak against.</param>
         public static bool IsEmpty(this Table table) => !table.Players.Any();
 
+        /// <summary>
+        /// Closes the table for joining/leaving and shuffles the decks.
+        /// </summary>
+        /// <returns></returns>
+        public static Table Setup(this Table table)
+        {
+            // NOTE: Divide the cards into the Door deck and the Treasure deck. Shuffle both decks.
+            // NOTE: Deal four cards from each deck to each player.
+            table = table with
+            {
+                IsClosed = true,
+                DoorsCardDeck = table.DoorsCardDeck.Shuffle(),
+                TreasureCardDeck = table.TreasureCardDeck.Shuffle()
+            };
+
+            table = table.Players.Aggregate(table, (table, player) => table.DealCards(player));
+
+            return table;
+        }
+
+        /// <summary>
+        /// Defines an action that moves the turn to the next player.
+        /// </summary>
+        /// <returns>Returns an updated isntance of the table after the turn has moved to another player.</returns>
+        public static Table NextTurn(this Table table)
+        {
+            var doorCardsToDiscard = table.DungeonCards.OfType<DoorsCard>();
+            var treasureCardsToDiscard = table.DungeonCards.OfType<TreasureCard>();
+
+            table = table with
+            {
+                DiscardedDoorsCards = table.DiscardedDoorsCards.PutRange(doorCardsToDiscard),
+                DiscardedTreasureCards = table.DiscardedTreasureCards.PutRange(treasureCardsToDiscard),
+                DungeonCards = ImmutableArray<Card>.Empty
+            };
+
+            // NOTE: When the next player begins his turn, your new character appears and can
+            // help others in combat with his Level and Class or Race abilities... but you
+            // have no cards, unless you receive Charity or gifts from other players.
+            if (table.Players.Current.IsDead())
+                table.Players.Current.Revive();
+
+            var nextPlayer = table.Players.Next();
+
+            // NOTE: On your next turn, start by drawing four face-down cards from each deck
+            // and playing any legal cards you want to, just as when you started the game.
+            if (nextPlayer.IsRevived())
+                table.DealCards(nextPlayer);
+
+            return table;
+        }
+
         #region Player Working With Cards
 
         /// <summary>
@@ -26,8 +79,8 @@ namespace Munchkin.Core.Extensions
         /// <returns>Return an updated table instance.</returns>
         public static Table DealCards(this Table table, Player player)
         {
-            var doorCards = table.DoorsCardDeck.TakeRange(4);
-            var treasureCards = table.TreasureCardDeck.TakeRange(4);
+            table = table with { DoorsCardDeck = table.DoorsCardDeck.TakeRange(4, out var doorCards) };
+            table = table with { TreasureCardDeck = table.TreasureCardDeck.TakeRange(4, out var treasureCards) };
             player.ReceiveCards(doorCards.ToArray(), treasureCards.ToArray());
             return table;
         }

@@ -1,11 +1,12 @@
 ﻿using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Phases;
+using Munchkin.Extensions.Threading;
 using Munchkin.Runtime.Abstractions;
 using System;
 using System.Threading.Tasks;
 
-namespace Munchkin.Runtime.Services
+namespace Munchkin.Runtime
 {
     public class CharityService
     {
@@ -20,7 +21,7 @@ namespace Munchkin.Runtime.Services
             _playerRepository = playerRepository ?? throw new ArgumentNullException(nameof(playerRepository));
         }
 
-        public Task GiveAwayAsync(string tableId, string treasureCardId, string playerGiverNickname, string playerTakerNickname)
+        public Task<Table> GiveAwayAsync(string tableId, string treasureCardId, string playerGiverNickname, string playerTakerNickname)
         {
             return ExecuteAndSave(tableId, async table =>
             {
@@ -30,7 +31,8 @@ namespace Munchkin.Runtime.Services
 
                 var charityUpdated = Charity.GiveAway(table, playerGiver, treasureCard, playerTaker);
                 return (charityUpdated, charityUpdated);
-            });
+            })
+            .SelectMany(x => x.Table.Unit());
         }
 
         private async Task<(Table Table, TResult Result)> ExecuteAndSave<TResult>(

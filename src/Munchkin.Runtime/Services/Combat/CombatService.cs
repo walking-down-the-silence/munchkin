@@ -17,13 +17,14 @@ namespace Munchkin.Runtime.Services
             _tableRepository = tableRepository ?? throw new ArgumentNullException(nameof(tableRepository));
         }
 
-        public Task RewardAsync(string tableId)
+        public Task<Table> RewardAsync(string tableId)
         {
             return ExecuteAndSave(tableId, table =>
             {
                 var tableUpdated = Combat.Reward(table);
                 return (tableUpdated, tableUpdated).Unit();
-            });
+            })
+            .SelectMany(x => x.Table.Unit());
         }
 
         private async Task<(Table Table, TResult Result)> ExecuteAndSave<TResult>(

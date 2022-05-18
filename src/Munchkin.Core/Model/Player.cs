@@ -2,6 +2,7 @@
 using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
+using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Cards.Doors;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Threading;
 namespace Munchkin.Core.Model
 {
     /// <summary>
-    /// The type that describes players behaviour
+    /// Represent the player in the game with a name, level and other attributes.
     /// </summary>
     public class Player
     {
@@ -20,8 +21,6 @@ namespace Munchkin.Core.Model
         private readonly List<Card> _equipped = new();
         private readonly List<IAction<Table>> _actions = new();
         private EPlayerLifeState _life;
-        private bool _isDead;
-        private bool _isRevived;
         private int _level = 1;
 
         public Player(string nickname, EGender gender)
@@ -47,6 +46,11 @@ namespace Munchkin.Core.Model
         /// Gets the players current level.
         /// </summary>
         public int Level => _level;
+
+        /// <summary>
+        /// Gets the total strength of all equipped items.
+        /// </summary>
+        public int Strength => _equipped.OfType<ItemCard>().Aggregate(0, (total, item) => total + item.StrengthBonus);
 
         /// <summary>
         /// Gets if the players hero has recently died, was being revived or is alive.
@@ -161,13 +165,6 @@ namespace Munchkin.Core.Model
         public void DiscardEquipped() => _equipped.Clear();
 
         /// <summary>
-        /// When the next player begins his turn, your new character appears and can
-        /// help others in combat with his Level and Class or Race abilities. . .but you
-        /// have no cards, unless you receive Charity or gifts from other players.
-        /// </summary>
-        public void Revive() => _life = EPlayerLifeState.Revived;
-
-        /// <summary>
         /// On your next turn, start by drawing four face-down cards from each deck
         /// and playing any legal cards you want to, just as when you started the game.
         /// Then take your turn normally.
@@ -187,6 +184,13 @@ namespace Munchkin.Core.Model
 
             _life = EPlayerLifeState.Alive;
         }
+
+        /// <summary>
+        /// When the next player begins his turn, your new character appears and can
+        /// help others in combat with his Level and Class or Race abilities. . .but you
+        /// have no cards, unless you receive Charity or gifts from other players.
+        /// </summary>
+        public void Revive() => _life = EPlayerLifeState.Revived;
 
         /// <summary>
         /// If you die, you lose all your stuff. You keep your Class(es), Race(s),

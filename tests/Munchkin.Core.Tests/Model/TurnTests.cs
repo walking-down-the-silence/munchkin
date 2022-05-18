@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using System.Collections.Generic;
 using Xunit;

@@ -82,18 +82,18 @@ namespace Munchkin.Runtime.Grains
             this.Unit()
                 .SelectMany(table => GrainFactory.GetGrain<IPlayer>(nickname).Unit())
                 .SelectMany(player => player.GetStateAsync())
-                .SelectMany(player => _tablePersistance.State.Join(player).Unit());
+                .SelectMany(player => _tablePersistance.State.Join(player).Result.Unit());
 
         public Task<JoinTableResult> LeaveAsync(string nickname) =>
             this.Unit()
                 .SelectMany(table => GrainFactory.GetGrain<IPlayer>(nickname).Unit())
                 .SelectMany(player => player.GetStateAsync())
-                .SelectMany(player => _tablePersistance.State.Leave(player).Unit());
+                .SelectMany(player => _tablePersistance.State.Leave(player).Result.Unit());
 
         public Task<SelectExpansionResult> MarkExpansionSelectionAsync(string expansionCode, bool selected) =>
             selected
-                ? _tablePersistance.State.IncludeExpansion(expansionCode).Unit()
-                : _tablePersistance.State.ExcludeExpansion(expansionCode).Unit();
+                ? _tablePersistance.State.IncludeExpansion(expansionCode).Unit().SelectMany(x => x.Item2.Unit())
+                : _tablePersistance.State.ExcludeExpansion(expansionCode).Unit().SelectMany(x => x.Item2.Unit());
 
         private static string GenerateUniqueId() => $"table_{Guid.NewGuid()}";
     }

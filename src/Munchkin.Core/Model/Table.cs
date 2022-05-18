@@ -1,11 +1,11 @@
 ﻿using MediatR;
-using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Expansions;
 using Munchkin.Extensions.Threading;
 using Munchkin.Primitives;
 using Munchkin.Primitives.Abstractions;
+using Munchkin.Primitives.Immutable;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -16,32 +16,35 @@ namespace Munchkin.Core.Model
     /// <summary>
     /// Defines a gaming table that hold the state of the game everything that is going on in the game.
     /// </summary>
-    public sealed class Table
+    public sealed record Table
     {
-        private readonly List<Card> _doorCards = new List<Card>();
-        private readonly List<Card> _treasureCards = new List<Card>();
-        private ImmutableDictionary<string, ExpansionOption> _availableExpansions = ImmutableDictionary<string, ExpansionOption>.Empty;
-        private ImmutableDictionary<string, ExpansionOption> _selectedExpansions = ImmutableDictionary<string, ExpansionOption>.Empty;
         private readonly IShuffleAlgorithm<Card> _shuffleAlgorithm;
+        private readonly List<object> _actionLog = new();
+        private ImmutableList<object> _eventLog = ImmutableList<object>.Empty;
+        private ImmutableDictionary<string, ExpansionOption> _availableExpansions;
+        private ImmutableDictionary<string, ExpansionOption> _selectedExpansions;
+        private ImmutableArray<Card> _doorCards;
+        private ImmutableArray<Card> _treasureCards;
 
         private Table(IShuffleAlgorithm<Card> shuffleAlgorithm)
         {
-            Players = new CircularList<Player>();
-            Turns = new CircularList<Turn>();
-            TreasureCardDeck = new CardDeck<TreasureCard>(shuffleAlgorithm);
-            DoorsCardDeck = new CardDeck<DoorsCard>(shuffleAlgorithm);
-            DiscardedTreasureCards = new CardDeck<TreasureCard>(shuffleAlgorithm);
-            DiscardedDoorsCards = new CardDeck<DoorsCard>(shuffleAlgorithm);
             _shuffleAlgorithm = shuffleAlgorithm;
-            TemporaryPile = ImmutableArray<Card>.Empty;
-            ActionLog = ImmutableStack<object>.Empty;
+            _availableExpansions = ImmutableDictionary<string, ExpansionOption>.Empty;
+            _selectedExpansions = ImmutableDictionary<string, ExpansionOption>.Empty;
+
+            Players = new CircularList<Player>();
+            TreasureCardDeck = ImmutableCardDeck.Create<TreasureCard>(shuffleAlgorithm);
+            DoorsCardDeck = ImmutableCardDeck.Create<DoorsCard>(shuffleAlgorithm);
+            DiscardedTreasureCards = ImmutableCardDeck.Create<TreasureCard>(shuffleAlgorithm);
+            DiscardedDoorsCards = ImmutableCardDeck.Create<DoorsCard>(shuffleAlgorithm);
+            DungeonCards = ImmutableArray<Card>.Empty;
         }
 
         /// <summary>
         /// Gets an empty table with default shuffle algorithm.
         /// </summary>
         /// <returns>Returns an instance of the table.</returns>
-        public static Table Empty() => new(default);
+        public static Table Empty() => new(new DefaultShuffleAlgorithm<Card>());
 
         /// <summary>
         /// Gets an empty table with custom shuffle algorithm.
@@ -58,29 +61,24 @@ namespace Munchkin.Core.Model
         public ICircularCollection<Player> Players { get; }
 
         /// <summary>
-        /// Gets a collection of each players turn and actions available during that turn.
-        /// </summary>
-        public ICircularCollection<Turn> Turns { get; }
-
-        /// <summary>
         /// Gets the treasures card deck.
         /// </summary>
-        public ICardDeck<TreasureCard> TreasureCardDeck { get; private set; }
+        public ImmutableCardDeck<TreasureCard> TreasureCardDeck { get; set; }
 
         /// <summary>
         /// Gets the doors card deck.
         /// </summary>
-        public ICardDeck<DoorsCard> DoorsCardDeck { get; private set; }
+        public ImmutableCardDeck<DoorsCard> DoorsCardDeck { get; set; }
 
         /// <summary>
         /// Gets the discarded treasure cards.
         /// </summary>
-        public ICardDeck<TreasureCard> DiscardedTreasureCards { get; }
+        public ImmutableCardDeck<TreasureCard> DiscardedTreasureCards { get; set; }
 
         /// <summary>
         /// Gets the discarded door cards.
         /// </summary>
-        public ICardDeck<DoorsCard> DiscardedDoorsCards { get; }
+        public ImmutableCardDeck<DoorsCard> DiscardedDoorsCards { get; set; }
 
         /// <summary>
         /// The winning level number.
@@ -90,7 +88,7 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Gets if the game has started the table is closed for joining.
         /// </summary>
-        public bool IsClosed { get; private set; }
+        public bool IsClosed { get; set; }
 
         /// <summary>
         /// Gets the expansions available for selection.
@@ -107,12 +105,17 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Gets the pile of cards played in the current turn.
         /// </summary>
-        public ImmutableArray<Card> TemporaryPile { get; private set; }
+        public ImmutableArray<Card> DungeonCards { get; set; }
+
+        /// <summary>
+        /// Gets an ordered collection of events that happened to the table.
+        /// </summary>
+        public IReadOnlyCollection<object> EventLog => _eventLog;
 
         /// <summary>
         /// Gets the series of events that happened as the result of any action performed.
         /// </summary>
-        public ImmutableStack<object> ActionLog { get; private set; }
+        public ICollection<object> ActionLog => _actionLog;
 
         /// <summary>
         /// Request sink that is used for player interaction when a selection or decision is needed.
@@ -129,8 +132,7 @@ namespace Munchkin.Core.Model
         /// <param name="winningLevel">Target level.</param>
         public Table WithWinningLevel(int winningLevel)
         {
-            WinningLevel = winningLevel;
-            return this;
+            return this with { WinningLevel = winningLevel };
         }
 
         /// <summary>
@@ -139,9 +141,10 @@ namespace Munchkin.Core.Model
         /// <param name="requestSink">The request sink implementation instance.</param>
         public Table WithRequestSink(IMediator requestSink)
         {
-            RequestSink = requestSink
-                ?? throw new ArgumentNullException(nameof(requestSink));
-            return this;
+            if (requestSink is null)
+                throw new ArgumentNullException(nameof(requestSink));
+
+            return this with { RequestSink = requestSink };
         }
 
         /// <summary>
@@ -150,13 +153,16 @@ namespace Munchkin.Core.Model
         /// <param name="cards">Cars to add.</param>
         public Table WithTreasureDeck(IReadOnlyCollection<TreasureCard> cards)
         {
-            _treasureCards.Clear();
-            _treasureCards.AddRange(cards);
+            if (cards is null)
+                throw new ArgumentNullException(nameof(cards));
 
-            TreasureCardDeck = cards is null
-                ? throw new ArgumentNullException(nameof(cards))
-                : new CardDeck<TreasureCard>(_shuffleAlgorithm, cards);
-            return this;
+            var table = this with
+            {
+                _treasureCards = ImmutableArray.CreateRange(cards.OfType<Card>()),
+                TreasureCardDeck = ImmutableCardDeck.Create<TreasureCard>(_shuffleAlgorithm, cards)
+            };
+
+            return table;
         }
 
         /// <summary>
@@ -165,13 +171,16 @@ namespace Munchkin.Core.Model
         /// <param name="cards">The cards to add.</param>
         public Table WithDoorDeck(IReadOnlyCollection<DoorsCard> cards)
         {
-            _doorCards.Clear();
-            _doorCards.AddRange(cards);
+            if (cards is null)
+                throw new ArgumentNullException(nameof(cards));
 
-            DoorsCardDeck = cards is null
-                ? throw new ArgumentNullException(nameof(cards))
-                : new CardDeck<DoorsCard>(_shuffleAlgorithm, cards);
-            return this;
+            var table = this with
+            {
+                _doorCards = ImmutableArray.CreateRange(cards.OfType<Card>()),
+                DoorsCardDeck = ImmutableCardDeck.Create<DoorsCard>(_shuffleAlgorithm, cards)
+            };
+
+            return table;
         }
 
         /// <summary>
@@ -182,67 +191,36 @@ namespace Munchkin.Core.Model
         public Table WithExpansions(IReadOnlyCollection<ExpansionOption> expansions)
         {
             if (expansions is null)
-                return this;
+                throw new ArgumentNullException(nameof(expansions));
 
-            _selectedExpansions = ImmutableDictionary<string, ExpansionOption>.Empty;
-            _availableExpansions = ImmutableDictionary.CreateRange(
-                expansions.Select(expansion => KeyValuePair.Create(expansion.Code, expansion)));
+            var table = this with
+            {
+                _selectedExpansions = ImmutableDictionary<string, ExpansionOption>.Empty,
+                _availableExpansions = ImmutableDictionary.CreateRange(
+                    expansions.Select(expansion => KeyValuePair.Create(expansion.Code, expansion)))
+            };
 
-            return this;
+            return table;
         }
 
         #endregion
 
-        /// <summary>
-        /// Closes the table for joining/leaving and shuffles the decks.
-        /// </summary>
-        /// <returns></returns>
-        public Table Setup()
-        {
-            IsClosed = true;
-
-            // NOTE: Divide the cards into the Door deck and the Treasure deck. Shuffle both decks.
-            DoorsCardDeck.Shuffle();
-            TreasureCardDeck.Shuffle();
-
-            // NOTE: Deal four cards from each deck to each player.
-            Players.ForEach(player => this.DealCards(player));
-            return this;
-        }
-
-        /// <summary>
-        /// Defines an action that moves the turn to the next player.
-        /// </summary>
-        /// <returns>Returns an updated isntance of the table after the turn has moved to another player.</returns>
-        public Table NextTurn()
-        {
-            var table = this;
-
-            // NOTE: Put all the cards player during this turn into the respective dicard piles.
-            table.DiscardedDoorsCards.PutRange(table.TemporaryPile.OfType<DoorsCard>());
-            table.DiscardedTreasureCards.PutRange(table.TemporaryPile.OfType<TreasureCard>());
-
-            // NOTE: When the next player begins his turn, your new character appears and can
-            // help others in combat with his Level and Class or Race abilities... but you
-            // have no cards, unless you receive Charity or gifts from other players.
-            if (table.Players.Current.IsDead())
-                table.Players.Current.Revive();
-
-            var nextPlayer = table.Players.Next();
-            table.Turns.Next();
-
-            // NOTE: On your next turn, start by drawing four face-down cards from each deck
-            // and playing any legal cards you want to, just as when you started the game.
-            if (nextPlayer.IsRevived())
-                table.DealCards(nextPlayer);
-
-            return this;
-        }
+        #region Working With Cards
 
         public Card FindCard(Func<Card, bool> filter)
         {
             return _doorCards.FirstOrDefault(filter)
                 ?? _treasureCards.FirstOrDefault(filter);
+        }
+
+        public Table TakeDoor(out DoorsCard card)
+        {
+            return this with { DoorsCardDeck = DoorsCardDeck.Take(out card) };
+        }
+
+        public Table TakeTreasure(out TreasureCard card)
+        {
+            return this with { TreasureCardDeck = TreasureCardDeck.Take(out card) };
         }
 
         /// <summary>
@@ -252,10 +230,10 @@ namespace Munchkin.Core.Model
         /// <returns></returns>
         public Table Play(Card card)
         {
-            card.Owner.Discard(card);
+            card.Owner?.Discard(card);
             card.Play(this);
-            TemporaryPile = TemporaryPile.Add(card);
-            return this;
+
+            return this with { DungeonCards = DungeonCards.Add(card) };
         }
 
         /// <summary>
@@ -265,16 +243,24 @@ namespace Munchkin.Core.Model
         /// <returns></returns>
         public Table Discard(Card card)
         {
-            card.Owner.Discard(card);
+            if (card is null)
+                throw new ArgumentNullException(nameof(card));
 
-            if (card is DoorsCard door)
-                DiscardedDoorsCards.Put(door);
+            card.Owner?.Discard(card);
 
-            if (card is TreasureCard treasure)
-                DiscardedTreasureCards.Put(treasure);
+            var table = this with { DungeonCards = DungeonCards.Remove(card) };
 
-            return this;
+            table = card switch
+            {
+                TreasureCard treasure => table with { DiscardedTreasureCards = DiscardedTreasureCards.Put(treasure) },
+                DoorsCard door => table with { DiscardedDoorsCards = DiscardedDoorsCards.Put(door) },
+                _ => throw new ArgumentException("The card should either be of type Door or Treasure.", nameof(card))
+            };
+
+            return table;
         }
+
+        #endregion
 
         #region Including Expansions
 
@@ -283,14 +269,18 @@ namespace Munchkin.Core.Model
         /// </summary>
         /// <param name="code">The code for the expansion.</param>
         /// <returns>Returns if the option was included.</returns>
-        public SelectExpansionResult IncludeExpansion(string code)
+        public (Table Table, SelectExpansionResult Result) IncludeExpansion(string code)
         {
             if (string.IsNullOrWhiteSpace(code))
-                return SelectExpansionResult.InvalidOptionCode;
+                return (this, SelectExpansionResult.InvalidOptionCode);
 
-            _selectedExpansions = _selectedExpansions.SetItem(code, _availableExpansions[code]);
-            _availableExpansions = _availableExpansions.Remove(code);
-            return SelectExpansionResult.OptionSelected;
+            var table = this with
+            {
+                _selectedExpansions = _selectedExpansions.SetItem(code, _availableExpansions[code]),
+                _availableExpansions = _availableExpansions.Remove(code)
+            };
+
+            return (table, SelectExpansionResult.OptionSelected);
         }
 
         /// <summary>
@@ -298,37 +288,40 @@ namespace Munchkin.Core.Model
         /// </summary>
         /// <param name="code">The code for the expansion.</param>
         /// <returns>Returns if the option was excluded.</returns>
-        public SelectExpansionResult ExcludeExpansion(string code)
+        public (Table Table, SelectExpansionResult Result) ExcludeExpansion(string code)
         {
             if (string.IsNullOrWhiteSpace(code))
-                return SelectExpansionResult.InvalidOptionCode;
+                return (this, SelectExpansionResult.InvalidOptionCode);
 
-            _availableExpansions = _availableExpansions.SetItem(code, _selectedExpansions[code]);
-            _selectedExpansions = _selectedExpansions.Remove(code);
-            return SelectExpansionResult.OptionUnselected;
+            var table = this with
+            {
+                _availableExpansions = _availableExpansions.SetItem(code, _selectedExpansions[code]),
+                _selectedExpansions = _selectedExpansions.Remove(code)
+            };
+
+            return (table, SelectExpansionResult.OptionUnselected);
         }
 
         #endregion
 
-        #region Player Joining The Table
+        #region Joining The Table
 
         /// <summary>
         /// Add the player to the table/game.
         /// </summary>
         /// <param name="player">The player to add.</param>
         /// <returns>Returns if the player was able to join.</returns>
-        public JoinTableResult Join(Player player)
+        public (Table Table, JoinTableResult Result) Join(Player player)
         {
             if (player is null)
-                return JoinTableResult.UserNotValid;
+                return (this, JoinTableResult.UserNotValid);
 
             if (IsClosed)
-                return JoinTableResult.Full;
+                return (this, JoinTableResult.Full);
 
             // TODO: Make sure the the player was not yet added.
             Players.Add(player);
-            Turns.Add(new Turn(player, ImmutableArray<IAction>.Empty));
-            return JoinTableResult.Joined;
+            return (this, JoinTableResult.Joined);
         }
 
         /// <summary>
@@ -336,21 +329,20 @@ namespace Munchkin.Core.Model
         /// </summary>
         /// <param name="player">The player to remove.</param>
         /// <returns>Returns if the player was able to leave.</returns>
-        public JoinTableResult Leave(Player player)
+        public (Table Table, JoinTableResult Result) Leave(Player player)
         {
             if (player is null)
-                return JoinTableResult.UserNotValid;
+                return (this, JoinTableResult.UserNotValid);
 
             if (IsClosed)
-                return JoinTableResult.Full;
+                return (this, JoinTableResult.Full);
 
             if (!Players.Any())
-                return JoinTableResult.Empty;
+                return (this, JoinTableResult.Empty);
 
             // TODO: Remove the actual instance by finding it first.
             Players.Remove(player);
-            Turns.Remove(new Turn(player, ImmutableArray<IAction>.Empty));
-            return JoinTableResult.Left;
+            return (this, JoinTableResult.Left);
         }
 
         #endregion

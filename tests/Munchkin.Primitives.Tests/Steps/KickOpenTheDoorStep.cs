@@ -19,7 +19,7 @@ namespace Munchkin.Core.Tests.Primitives
 
         protected override Task<Table> OnResolve(Table table)
         {
-            var door = table.DoorsCardDeck.Take();
+            table = table with { DoorsCardDeck = table.DoorsCardDeck.Take(out var door) };
 
             table = door is not MonsterCard && door is not CurseCard
                 ? TakeInHand(table, door)

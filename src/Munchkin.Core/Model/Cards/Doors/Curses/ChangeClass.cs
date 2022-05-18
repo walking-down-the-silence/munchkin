@@ -19,7 +19,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
                 }
             }
 
-            var firstDiscardedClass = context.DiscardedDoorsCards.TakeFirst<ClassCard>();
+            context = context with { DiscardedDoorsCards = context.DiscardedDoorsCards.TakeFirst<ClassCard>(out var firstDiscardedClass) };
             if (firstDiscardedClass != null)
             {
                 context.Players.Current.Equip(firstDiscardedClass);

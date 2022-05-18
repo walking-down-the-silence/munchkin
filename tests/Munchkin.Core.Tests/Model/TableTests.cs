@@ -58,10 +58,10 @@ namespace Munchkin.Core.Tests.Model
 
             // Assert
             Assert.NotNull(result);
-            Assert.NotEmpty(table.TreasureCardDeck);
-            Assert.Empty(table.DoorsCardDeck);
-            Assert.Empty(table.DiscardedTreasureCards);
-            Assert.Empty(table.DiscardedDoorsCards);
+            Assert.NotEmpty(result.TreasureCardDeck);
+            Assert.Empty(result.DoorsCardDeck);
+            Assert.Empty(result.DiscardedTreasureCards);
+            Assert.Empty(result.DiscardedDoorsCards);
         }
 
         [Fact]
@@ -76,10 +76,10 @@ namespace Munchkin.Core.Tests.Model
 
             // Assert
             Assert.NotNull(result);
-            Assert.Empty(table.TreasureCardDeck);
-            Assert.NotEmpty(table.DoorsCardDeck);
-            Assert.Empty(table.DiscardedTreasureCards);
-            Assert.Empty(table.DiscardedDoorsCards);
+            Assert.Empty(result.TreasureCardDeck);
+            Assert.NotEmpty(result.DoorsCardDeck);
+            Assert.Empty(result.DiscardedTreasureCards);
+            Assert.Empty(result.DiscardedDoorsCards);
         }
     }
 }
