@@ -1,4 +1,5 @@
 ﻿using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Model.Attributes;
 using System;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Races
         public HalflingRace() :
             base(MunchkinDeluxeCards.Doors.HalflingRace1, "Halfling")
         {
+            AddAttribute(new HalflingAttribute());
         }
 
         public override Task Play(Table context)

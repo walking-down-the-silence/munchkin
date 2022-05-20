@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
@@ -113,8 +114,8 @@ namespace Munchkin.Runtime.Services
             {
                 // TODO: move this to PlayerService
                 var player = await _playerRepository.GetPlayerByNicknameAsync(playerNickname);
-                var card = await _tableRepository.GetCardByIdAsync(tableId, cardId);
-                player.Equip(card);
+                var card = await _tableRepository.GetCardByIdAsync(tableId, cardId) as IEquippable;
+                card.Equip(table, player);
                 return (table, table);
             })
             .SelectMany(x => x.Table.Unit());

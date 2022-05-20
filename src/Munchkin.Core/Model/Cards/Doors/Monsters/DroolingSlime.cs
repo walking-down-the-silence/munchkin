@@ -23,7 +23,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
 
         public override Task BadStuff(Table state)
         {
-            var equippedFootgears = state.Players.Current.Equipped.OfType<PermanentItemCard>()
+            var equippedFootgears = state.Players.Current.Equipped.OfType<WearingCard>()
                 .Where(x => x.WearingType == EWearingType.Footgear);
 
             if (equippedFootgears.Any())

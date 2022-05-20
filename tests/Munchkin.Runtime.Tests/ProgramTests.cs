@@ -188,10 +188,12 @@ namespace Munchkin.Runtime.Tests
             table.Players.Current.Nickname.Should().BeEquivalentTo(PlayerElonMuskNickname);
 
             // PHASE: Play Cards
-            string elonCardEquipped1Id = table.Players.Current.FirstOrDefault<DaggerOfTreachery>().Code;
+            string elonCardEquipped1Id = table.Players.Current.FirstOrDefault<ThiefClass>().Code;
             string elonCardEquipped2Id = table.Players.Current.FirstOrDefault<CloakOfObscurity>().Code;
-            table = await tableService.EquipAsync(TableService.GetUniqueId(table), PlayerFrankSinatraNickname, elonCardEquipped1Id);
-            table = await tableService.EquipAsync(TableService.GetUniqueId(table), PlayerFrankSinatraNickname, elonCardEquipped2Id);
+            string elonCardEquipped3Id = table.Players.Current.FirstOrDefault<DaggerOfTreachery>().Code;
+            table = await tableService.EquipAsync(TableService.GetUniqueId(table), PlayerElonMuskNickname, elonCardEquipped1Id);
+            table = await tableService.EquipAsync(TableService.GetUniqueId(table), PlayerElonMuskNickname, elonCardEquipped2Id);
+            table = await tableService.EquipAsync(TableService.GetUniqueId(table), PlayerElonMuskNickname, elonCardEquipped3Id);
 
             // PHASE: Kick Open The Door
             table = await dungeonService.KickOpenTheDoorAsync(TableService.GetUniqueId(table));

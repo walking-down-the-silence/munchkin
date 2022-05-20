@@ -25,7 +25,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
         public override Task BadStuff(Table state)
         {
             state.Players.Current.Equipped
-                .OfType<PermanentItemCard>()
+                .OfType<WearingCard>()
                 .Where(x => x.WearingType == EWearingType.Headgear)
                 .ForEach(x => x.Discard(state));
 

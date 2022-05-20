@@ -1,14 +1,17 @@
 using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model.Actions;
+using Munchkin.Core.Model.Attributes;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Classes
 {
     public sealed class ThiefClass : ClassCard
     {
-        public ThiefClass() : base(MunchkinDeluxeCards.Doors.ThiefClass1, "Thief")
+        public ThiefClass() :
+            base(MunchkinDeluxeCards.Doors.ThiefClass1, "Thief")
         {
+            AddAttribute(new ThiefAttribute());
         }
 
         public IAction<Table> StealTheCard { get; private set; }

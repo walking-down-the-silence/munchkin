@@ -15,7 +15,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
         public override Task BadStuff(Table context)
         {
             context.Players.Current.Equipped
-                .OfType<PermanentItemCard>()
+                .OfType<WearingCard>()
                 .FirstOrDefault(x => x.WearingType == EWearingType.Armor)
                 ?.Discard(context);
             return Task.CompletedTask;

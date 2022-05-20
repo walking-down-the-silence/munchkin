@@ -8,7 +8,8 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
 {
     public sealed class ClericClass : ClassCard
     {
-        public ClericClass() : base(MunchkinDeluxeCards.Doors.ClericClass1, "Cleric")
+        public ClericClass() :
+            base(MunchkinDeluxeCards.Doors.ClericClass1, "Cleric")
         {
             AddAttribute(new ClericAttribute());
         }

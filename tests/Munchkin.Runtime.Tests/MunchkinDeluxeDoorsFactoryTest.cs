@@ -30,12 +30,12 @@ namespace Munchkin.Runtime.Tests
 
             // PLAYER 2: Cards to deal
             yield return new PottedPlant();
-            yield return new ThiefClass();
+            yield return new PlutoniumDragon();
             yield return new WizardClass();
             yield return new Enraged();
 
             // PLAYER 3: Cards to deal
-            yield return new PlutoniumDragon();
+            yield return new ThiefClass();
             yield return new ElfRace();
             yield return new ChangeSex();
             yield return new MaulRat();

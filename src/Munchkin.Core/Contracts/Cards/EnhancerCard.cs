@@ -17,12 +17,6 @@ namespace Munchkin.Core.Contracts.Cards
 
         public int TreasureBonus => GetAttribute<RewardTreasuresAttribute>().Bonus;
 
-        public override Task Play(Table context)
-        {
-            // TODO: check if current stage is actually a combat
-            //context.Dungeon.AddAtribute(new MonsterStrengthBonusAttribute(StrengthBonus));
-            //context.Dungeon.AddAtribute(new RewardTreasuresAttribute(TreasureBonus));
-            return Task.CompletedTask;
-        }
+        public override Task Play(Table context) => Task.CompletedTask;
     }
 }
