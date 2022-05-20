@@ -4,7 +4,8 @@ namespace Munchkin.Core.Model.Cards.Doors.Enhancers
 {
     public sealed class Baby : EnhancerCard
     {
-        public Baby() : base("Baby", -5, -1)
+        public Baby() : 
+            base(MunchkinDeluxeCards.Doors.Baby, "Baby", -5, -1)
         {
         }
     }

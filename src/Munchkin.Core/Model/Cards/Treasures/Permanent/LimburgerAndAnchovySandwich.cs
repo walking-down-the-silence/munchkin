@@ -1,16 +1,16 @@
 using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
-using Munchkin.Core.Model.Attributes;
+using Munchkin.Core.Model.Restrictions;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Treasures.Permanent
 {
     public sealed class LimburgerAndAnchovySandwich : PermanentItemCard
     {
-        public LimburgerAndAnchovySandwich() : base("Limburger And Anchovy Sandwich", 3, 0, EItemSize.Small, EWearingType.None, 400)
+        public LimburgerAndAnchovySandwich() :
+            base(MunchkinDeluxeCards.Treasures.LimburgerAndAnchovySandwich, "Limburger And Anchovy Sandwich", 3, 0, EItemSize.Small, EWearingType.None, 400)
         {
-            AddProperty(new HalflingOnlyRestriction());
+            AddRestriction(new UsableByHalflingOnlyRestriction());
         }
 
         public override Task Play(Table context)

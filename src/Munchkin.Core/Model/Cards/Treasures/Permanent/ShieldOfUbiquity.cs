@@ -3,9 +3,8 @@ using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model;
-using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Effects;
+using Munchkin.Core.Model.Restrictions;
 using Munchkin.Core.Model.Rules;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,15 +13,16 @@ namespace Munchkin.Core.Model.Cards.Treasures.Permanent
 {
     public sealed class ShieldOfUbiquity : PermanentItemCard
     {
-        public ShieldOfUbiquity() : base("Shield Of Ubiquity", 0, 0, EItemSize.Big, EWearingType.OneHanded, 600)
+        public ShieldOfUbiquity() :
+            base(MunchkinDeluxeCards.Treasures.ShieldOfUbiquity, "Shield Of Ubiquity", 0, 0, EItemSize.Big, EWearingType.OneHanded, 600)
         {
-            AddProperty(new WarriorOnlyRestriction());
+            AddRestriction(new UsableByWarriorOnlyRestriction());
             AddEffect(Effect
                 .New(new PlayerStrengthBonusEffect(4))
                 .With(() => Rule
                     .New(new CanCarryBigItemRule())
                     .And(new HasOneFreeHandRule())
-                    .And(new HasWarriorClassRule())));
+                    .And(new UsableByWarriorOnlyRestriction())));
         }
 
         public override Task Play(Table context)

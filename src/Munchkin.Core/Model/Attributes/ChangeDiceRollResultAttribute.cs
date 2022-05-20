@@ -2,12 +2,6 @@
 
 namespace Munchkin.Core.Model.Attributes
 {
-    public sealed class ChangeDiceRollResultAttribute : Attribute
-    {
-        public ChangeDiceRollResultAttribute()
-        {
-            Title = "Change the dice roll result";
-            Description = string.Empty;
-        }
-    }
+    public record ChangeDiceRollResultAttribute() :
+        Attribute("Change the dice roll result");
 }

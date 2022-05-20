@@ -1,12 +1,12 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Munchkin.Core.Model;
 
 namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 {
     public sealed class StealALevel : LevelUpTreasure
     {
-        public StealALevel() : base("Steal A Level")
+        public StealALevel() :
+            base(MunchkinDeluxeCards.Treasures.StealALevel, "Steal A Level")
         {
         }
 

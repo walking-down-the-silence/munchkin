@@ -6,7 +6,8 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class LargeAngryChicken : MonsterCard
     {
-        public LargeAngryChicken() : base("Large Angry Chicken", 2, 1, 1, 0, false)
+        public LargeAngryChicken() : 
+            base(MunchkinDeluxeCards.Doors.LargeAngryChicken, "Large Angry Chicken", 2, 1, 1, 0, false)
         {
         }
 

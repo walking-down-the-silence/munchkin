@@ -16,11 +16,15 @@ namespace Munchkin.Core.Contracts.Cards
         private readonly List<Card> _boundCards = new();
         private readonly List<IConditionalEffect<Table>> _effects = new();
         private readonly List<IAttribute> _attributes = new();
+        private readonly List<IRule<Table>> _restrictions = new();
 
-        protected Card(string title)
+        protected Card(string code, string title)
         {
+            Code = code ?? throw new ArgumentNullException(nameof(code));
             Title = title ?? throw new ArgumentNullException(nameof(title));
         }
+
+        public string Code { get; }
 
         /// <summary>
         /// Gets or sets the title for the card.
@@ -46,6 +50,11 @@ namespace Munchkin.Core.Contracts.Cards
         /// Gets the list of effects of the card.
         /// </summary>
         public IReadOnlyCollection<IConditionalEffect<Table>> Effects => _effects.AsReadOnly();
+
+        /// <summary>
+        /// Gets the list of restriction rules where and when the cad can be played.
+        /// </summary>
+        public IReadOnlyCollection<IRule<Table>> Restrictions => _restrictions.AsReadOnly();
 
         /// <summary>
         /// Gets the traits of the card.
@@ -74,15 +83,15 @@ namespace Munchkin.Core.Contracts.Cards
         /// <summary>
         /// Executes logic of the card being played.
         /// </summary>
-        /// <param name="context"> Game context that contains everything in the game. </param>
+        /// <param name="table"> Game table that contains everything in the game. </param>
         /// <returns> The task to be awaited if playing a card requires players interaction. </returns>
-        public abstract Task Play(Table context);
+        public abstract Task Play(Table table);
 
         /// <summary>
         /// Executes the discard logic for the card.
         /// </summary>
-        /// <param name="context"> Game context that contains everything in the game. </param>
-        public abstract void Discard(Table context);
+        /// <param name="table"> Game table that contains everything in the game. </param>
+        public abstract void Discard(Table table);
 
         /// <summary>
         /// Adds an effect to the card.
@@ -91,16 +100,22 @@ namespace Munchkin.Core.Contracts.Cards
         protected void AddEffect(IConditionalEffect<Table> effect) => _effects.Add(effect);
 
         /// <summary>
+        /// Adds the restriction to the card.
+        /// </summary>
+        /// <param name="restiction"></param>
+        protected void AddRestriction(IRule<Table> restiction) => _restrictions.Add(restiction);
+
+        /// <summary>
         /// Add the property to the card.
         /// </summary>
         /// <param name="property"> The concrete property instance. </param>
-        protected void AddProperty(Attributes.Attribute property) => _attributes.Add(property);
+        protected void AddAttribute(Attributes.Attribute property) => _attributes.Add(property);
 
         /// <summary>
         /// Gets the concrete property of type <see cref="T"/>
         /// </summary>
         /// <typeparam name="T"> The <see cref="T"/> type of property. </typeparam>
         /// <returns> The concrete property instance. </returns>
-        protected T GetProperty<T>() where T : Attributes.Attribute => _attributes.OfType<T>().FirstOrDefault();
+        protected T GetAttribute<T>() where T : Attributes.Attribute => _attributes.OfType<T>().FirstOrDefault();
     }
 }

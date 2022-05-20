@@ -8,28 +8,29 @@ namespace Munchkin.Core.Contracts.Cards
 {
     public abstract class MonsterCard : DoorsCard
     {
-        protected MonsterCard(string title, int level, int rewardLevels, int rewardTreasures, int runAwayBonus, bool isUndead) : base(title)
+        protected MonsterCard(string code, string title, int level, int rewardLevels, int rewardTreasures, int runAwayBonus, bool isUndead) : 
+            base(code, title)
         {
-            AddProperty(new MonsterStrengthBonusAttribute(level));
-            AddProperty(new RewardLevelsAttribute(rewardLevels));
-            AddProperty(new RewardTreasuresAttribute(rewardTreasures));
-            AddProperty(new RunAwayBonusAttribute(runAwayBonus));
+            AddAttribute(new MonsterStrengthBonusAttribute(level));
+            AddAttribute(new RewardLevelsAttribute(rewardLevels));
+            AddAttribute(new RewardTreasuresAttribute(rewardTreasures));
+            AddAttribute(new RunAwayBonusAttribute(runAwayBonus));
 
             if (isUndead)
             {
-                AddProperty(new UndeadMonsterAttribute());
+                AddAttribute(new UndeadMonsterAttribute());
             }
         }
 
-        public int Level => GetProperty<MonsterStrengthBonusAttribute>().Bonus;
+        public int Level => GetAttribute<MonsterStrengthBonusAttribute>().Bonus;
 
-        public int RewardLevels => GetProperty<RewardLevelsAttribute>().Bonus;
+        public int RewardLevels => GetAttribute<RewardLevelsAttribute>().Bonus;
 
-        public int RewardTreasures => GetProperty<RewardTreasuresAttribute>().Bonus;
+        public int RewardTreasures => GetAttribute<RewardTreasuresAttribute>().Bonus;
 
-        public int RunAwayBonus => GetProperty<RunAwayBonusAttribute>().Bonus;
+        public int RunAwayBonus => GetAttribute<RunAwayBonusAttribute>().Bonus;
 
-        public bool IsUndead => GetProperty<UndeadMonsterAttribute>() != null;
+        public bool IsUndead => GetAttribute<UndeadMonsterAttribute>() != null;
 
         public override Task Play(Table context)
         {

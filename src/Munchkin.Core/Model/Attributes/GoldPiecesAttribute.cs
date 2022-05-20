@@ -2,13 +2,6 @@
 
 namespace Munchkin.Core.Model.Attributes
 {
-    public class GoldPiecesAttribute : Attribute
-    {
-        public GoldPiecesAttribute(int gold)
-        {
-            Gold = gold;
-        }
-
-        public int Gold { get; }
-    }
+    public record GoldPiecesAttribute(int Gold) :
+        Attribute("Gold Pieces");
 }

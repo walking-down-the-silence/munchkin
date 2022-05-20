@@ -6,7 +6,8 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class NetTroll : MonsterCard
     {
-        public NetTroll() : base("Net Troll", 10, 1, 3, 0, false)
+        public NetTroll() : 
+            base(MunchkinDeluxeCards.Doors.NetTroll, "Net Troll", 10, 1, 3, 0, false)
         {
         }
 

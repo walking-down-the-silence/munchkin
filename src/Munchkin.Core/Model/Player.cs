@@ -121,6 +121,7 @@ namespace Munchkin.Core.Model
         {
             if (card is not null)
             {
+                card.Take(this);
                 _equipped.Add(card);
                 _backpack.Remove(card);
                 _yourHand.Remove(card);
@@ -134,6 +135,7 @@ namespace Munchkin.Core.Model
         {
             if (card is not null)
             {
+                card.Take(this);
                 _backpack.Add(card);
                 _equipped.Remove(card);
                 _yourHand.Remove(card);

@@ -1,13 +1,13 @@
+using Munchkin.Core.Model.Cards.Treasures.Permanent;
 using System.Linq;
 using System.Threading.Tasks;
-using Munchkin.Core.Model;
-using Munchkin.Core.Model.Cards.Treasures.Permanent;
 
 namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 {
     public sealed class KillTheHireling : LevelUpTreasure
     {
-        public KillTheHireling() : base("Kill The Hireling")
+        public KillTheHireling() : 
+            base(MunchkinDeluxeCards.Treasures.KillTheHireling, "Kill The Hireling")
         {
         }
 

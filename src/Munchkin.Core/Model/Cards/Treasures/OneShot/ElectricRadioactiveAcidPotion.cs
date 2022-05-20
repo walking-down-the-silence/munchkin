@@ -4,7 +4,8 @@ namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 {
     public sealed class ElectricRadioactiveAcidPotion : OneShotItemCard
     {
-        public ElectricRadioactiveAcidPotion() : base("Electric Radioactive Acid Potion", 5, 0, 200)
+        public ElectricRadioactiveAcidPotion() : 
+            base(MunchkinDeluxeCards.Treasures.ElectricRadioactiveAcidPotion, "Electric Radioactive Acid Potion", 5, 0, 200)
         {
         }
     }

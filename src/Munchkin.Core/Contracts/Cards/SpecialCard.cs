@@ -2,7 +2,8 @@
 {
     public abstract class SpecialCard : DoorsCard
     {
-        protected SpecialCard(string title) : base(title)
+        protected SpecialCard(string code, string title) : 
+            base(code, title)
         {
         }
     }

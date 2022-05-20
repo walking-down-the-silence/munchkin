@@ -141,9 +141,8 @@ namespace Munchkin.Core.Model
         /// <param name="requestSink">The request sink implementation instance.</param>
         public Table WithRequestSink(IMediator requestSink)
         {
-            if (requestSink is null)
-                throw new ArgumentNullException(nameof(requestSink));
-
+            ArgumentNullException.ThrowIfNull(requestSink);
+            
             return this with { RequestSink = requestSink };
         }
 
@@ -153,8 +152,7 @@ namespace Munchkin.Core.Model
         /// <param name="cards">Cars to add.</param>
         public Table WithTreasureDeck(IReadOnlyCollection<TreasureCard> cards)
         {
-            if (cards is null)
-                throw new ArgumentNullException(nameof(cards));
+            ArgumentNullException.ThrowIfNull(cards);
 
             var table = this with
             {
@@ -171,8 +169,7 @@ namespace Munchkin.Core.Model
         /// <param name="cards">The cards to add.</param>
         public Table WithDoorDeck(IReadOnlyCollection<DoorsCard> cards)
         {
-            if (cards is null)
-                throw new ArgumentNullException(nameof(cards));
+            ArgumentNullException.ThrowIfNull(cards);
 
             var table = this with
             {
@@ -190,8 +187,7 @@ namespace Munchkin.Core.Model
         /// <returns></returns>
         public Table WithExpansions(IReadOnlyCollection<ExpansionOption> expansions)
         {
-            if (expansions is null)
-                throw new ArgumentNullException(nameof(expansions));
+            ArgumentNullException.ThrowIfNull(expansions);
 
             var table = this with
             {
@@ -230,6 +226,8 @@ namespace Munchkin.Core.Model
         /// <returns></returns>
         public Table Play(Card card)
         {
+            ArgumentNullException.ThrowIfNull(card);
+
             card.Owner?.Discard(card);
             card.Play(this);
 
@@ -243,8 +241,7 @@ namespace Munchkin.Core.Model
         /// <returns></returns>
         public Table Discard(Card card)
         {
-            if (card is null)
-                throw new ArgumentNullException(nameof(card));
+            ArgumentNullException.ThrowIfNull(card);
 
             card.Owner?.Discard(card);
 

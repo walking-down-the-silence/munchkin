@@ -6,7 +6,8 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class PlutoniumDragon : MonsterCard
     {
-        public PlutoniumDragon() : base("Plutonium Dragon", 20, 2, 5, 0, false)
+        public PlutoniumDragon() :
+            base(MunchkinDeluxeCards.Doors.PlutoniumDragon, "Plutonium Dragon", 20, 2, 5, 0, false)
         {
         }
 

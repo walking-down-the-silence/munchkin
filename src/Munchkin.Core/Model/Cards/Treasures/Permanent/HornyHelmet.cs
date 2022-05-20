@@ -3,18 +3,19 @@ using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Model.Effects;
-using Munchkin.Core.Model.Rules;
+using Munchkin.Core.Model.Restrictions;
 
 namespace Munchkin.Core.Model.Cards.Treasures.Permanent
 {
     public sealed class HornyHelmet : PermanentItemCard
     {
-        public HornyHelmet() : base("Horny Helmet", 1, 0, EItemSize.Small, EWearingType.Headgear, 600)
+        public HornyHelmet() : 
+            base(MunchkinDeluxeCards.Treasures.HornyHelmet, "Horny Helmet", 1, 0, EItemSize.Small, EWearingType.Headgear, 600)
         {
             AddEffect(Effect
                 .New(new PlayerStrengthBonusEffect(2))
                 .With(() => Rule
-                    .New(new HasElfRaceRule())));
+                    .New(new UsableByElfOnlyRestriction())));
         }
     }
 }

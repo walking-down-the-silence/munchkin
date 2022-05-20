@@ -2,13 +2,6 @@
 
 namespace Munchkin.Core.Model.Attributes
 {
-    public abstract class BonusAttribute : Attribute
-    {
-        protected BonusAttribute(int bonus)
-        {
-            Bonus = bonus;
-        }
-
-        public int Bonus { get; }
-    }
+    public abstract record BonusAttribute(int Bonus) :
+        Attribute("Bonus");
 }

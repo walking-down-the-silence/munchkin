@@ -1,24 +1,24 @@
-using System.Linq;
-using System.Threading.Tasks;
 using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model;
 using Munchkin.Core.Model.Effects;
-using Munchkin.Core.Model.Rules;
+using Munchkin.Core.Model.Restrictions;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class FaceSucker : MonsterCard
     {
-        public FaceSucker() : base("Face Sucker", 8, 1, 2, 0, false)
+        public FaceSucker() :
+            base(MunchkinDeluxeCards.Doors.FaceSucker, "Face Sucker", 8, 1, 2, 0, false)
         {
             AddEffect(Effect
                .New(new MonsterStrengthBonusEffect(6))
                .With(() => Rule
-                 .New(new HasElfRaceRule())));
+                 .New(new UsableByElfOnlyRestriction())));
         }
 
         public override Task BadStuff(Table state)

@@ -110,26 +110,26 @@ namespace Munchkin.Runtime.Tests
             yield return new ShriekingGeek();
 
             // races
-            yield return new DwarfRace();
-            yield return new DwarfRace();
-            yield return new ElfRace();
-            yield return new ElfRace();
-            yield return new HalflingRace();
-            yield return new HalflingRace();
+            //yield return new DwarfRace();
+            //yield return new DwarfRace();
+            //yield return new ElfRace();
+            //yield return new ElfRace();
+            //yield return new HalflingRace();
+            //yield return new HalflingRace();
 
             // classes
-            yield return new ClericClass();
-            yield return new ClericClass();
-            yield return new ThiefClass();
-            yield return new ThiefClass();
-            yield return new WizardClass();
-            yield return new WizardClass();
-            yield return new WarriorClass();
-            yield return new WarriorClass();
+            //yield return new ClericClass();
+            //yield return new ClericClass();
+            //yield return new ThiefClass();
+            //yield return new ThiefClass();
+            //yield return new WizardClass();
+            //yield return new WizardClass();
+            //yield return new WarriorClass();
+            //yield return new WarriorClass();
 
             // specials
             yield return new WanderingMonster();
-            yield return new WanderingMonster();
+            //yield return new WanderingMonster();
             yield return new Cheat();
             yield return new DivineIntervention();
             yield return new HelpMeOutHere();
@@ -151,10 +151,10 @@ namespace Munchkin.Runtime.Tests
             yield return new LoseOneBigItem();
             yield return new LoseOneSmallItem();
             yield return new LoseALevel();
-            yield return new LoseALevel();
+            //yield return new LoseALevel();
             yield return new LoseTheArmorYouAreWearing();
             yield return new LoseTheFootgearYouAreWearing();
-            yield return new LoseTheHeadgearYouAreWearing();
+            //yield return new LoseTheHeadgearYouAreWearing();
             yield return new LoseTwoCards();
             yield return new LoseYourClass();
             yield return new LoseYourRace();

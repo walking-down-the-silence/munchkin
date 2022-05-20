@@ -1,12 +1,12 @@
-using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class FlyingFrogs : MonsterCard
     {
-        public FlyingFrogs() : base("Flying Frogs", 2, 1, 1, -1, false)
+        public FlyingFrogs() :
+            base(MunchkinDeluxeCards.Doors.FlyingFrogs, "Flying Frogs", 2, 1, 1, -1, false)
         {
         }
 

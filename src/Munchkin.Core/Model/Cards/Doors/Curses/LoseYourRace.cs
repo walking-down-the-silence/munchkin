@@ -1,13 +1,13 @@
-﻿using System.Linq;
+﻿using Munchkin.Core.Contracts.Cards;
+using System.Linq;
 using System.Threading.Tasks;
-using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
     public sealed class LoseYourRace : CurseCard
     {
-        public LoseYourRace() : base("Lose Your Race")
+        public LoseYourRace() :
+            base(MunchkinDeluxeCards.Doors.LoseYourRace, "Lose Your Race")
         {
         }
 

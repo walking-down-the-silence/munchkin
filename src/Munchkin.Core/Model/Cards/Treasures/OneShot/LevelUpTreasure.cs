@@ -6,7 +6,8 @@ namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 {
     public class LevelUpTreasure : OneShotItemCard
     {
-        public LevelUpTreasure(string title) : base(title, 0, 0, 0)
+        public LevelUpTreasure(string code, string title) : 
+            base(code, title, 0, 0, 0)
         {
         }
 

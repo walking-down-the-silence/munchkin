@@ -6,7 +6,8 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class Bullrog : MonsterCard
     {
-        public Bullrog() : base("Bullrog", 18, 2, 5, 0, false)
+        public Bullrog() :
+            base(MunchkinDeluxeCards.Doors.Bullrog, "Bullrog", 18, 2, 5, 0, false)
         {
         }
 

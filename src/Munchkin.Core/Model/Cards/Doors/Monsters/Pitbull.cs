@@ -5,7 +5,8 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class Pitbull : MonsterCard
     {
-        public Pitbull() : base("Pit Bull", 2, 1, 1, 0, false)
+        public Pitbull() : 
+            base(MunchkinDeluxeCards.Doors.PitBull, "Pit Bull", 2, 1, 1, 0, false)
         {
             //TODO: handle logic here
         }

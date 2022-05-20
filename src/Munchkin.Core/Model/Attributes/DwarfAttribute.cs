@@ -2,7 +2,6 @@
 
 namespace Munchkin.Core.Model.Attributes
 {
-    public class WarriorOnlyRestriction : Attribute
-    {
-    }
+    public record DwarfAttribute() :
+        Attribute("Dwarf");
 }

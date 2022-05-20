@@ -11,26 +11,11 @@ namespace Munchkin.Runtime.Services
     public class DungeonService
     {
         private readonly ITableRepository _tableRepository;
-        private readonly IPlayerRepository _playerRepository;
 
         public DungeonService(
-            ITableRepository tableRepository,
-            IPlayerRepository playerRepository)
+            ITableRepository tableRepository)
         {
             _tableRepository = tableRepository ?? throw new ArgumentNullException(nameof(tableRepository));
-            _playerRepository = playerRepository ?? throw new ArgumentNullException(nameof(playerRepository));
-        }
-
-        public Task<Table> PlayCardAsync(string tableId, string nickname, string cardId)
-        {
-            return ExecuteAndSave(tableId, async table =>
-            {
-                var player = await _playerRepository.GetPlayerByNicknameAsync(nickname);
-                var card = await _tableRepository.GetCardByIdAsync(tableId, cardId);
-                table = table.Play(card);
-                return (table, table);
-            })
-            .SelectMany(x => x.Table.Unit());
         }
 
         public Task<Table> KickOpenTheDoorAsync(string tableId)

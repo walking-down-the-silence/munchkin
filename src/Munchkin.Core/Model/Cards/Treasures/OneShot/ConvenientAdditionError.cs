@@ -2,7 +2,8 @@
 {
     public sealed class ConvenientAdditionError : LevelUpTreasure
     {
-        public ConvenientAdditionError() : base("Convenient Addition Error")
+        public ConvenientAdditionError() : 
+            base(MunchkinDeluxeCards.Treasures.ConvenientAdditionError, "Convenient Addition Error")
         {
         }
     }

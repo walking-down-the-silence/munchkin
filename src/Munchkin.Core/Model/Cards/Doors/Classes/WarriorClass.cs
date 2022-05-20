@@ -1,6 +1,5 @@
 using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
 using Munchkin.Core.Model.Actions;
 using System.Threading.Tasks;
 
@@ -8,7 +7,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
 {
     public sealed class WarriorClass : ClassCard
     {
-        public WarriorClass() : base("Warrior")
+        public WarriorClass() : base(MunchkinDeluxeCards.Doors.WarriorClass1, "Warrior")
         {
         }
 

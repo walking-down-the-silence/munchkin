@@ -1,12 +1,12 @@
-using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors
 {
     public sealed class Illusion : SpecialCard
     {
-        public Illusion() : base("Illusion")
+        public Illusion() :
+            base(MunchkinDeluxeCards.Doors.Illusion, "Illusion")
         {
         }
 

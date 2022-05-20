@@ -1,13 +1,14 @@
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model.Attributes;
+using Munchkin.Core.Model.Restrictions;
 
 namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 {
     public sealed class YuppieWater : OneShotItemCard
     {
-        public YuppieWater() : base("Yuppie Water", 2, 0, 100)
+        public YuppieWater() :
+            base(MunchkinDeluxeCards.Treasures.YuppieWater, "Yuppie Water", 2, 0, 100)
         {
-            AddProperty(new ElfOnlyRestriction());
+            AddRestriction(new UsableByElfOnlyRestriction());
         }
     }
 }

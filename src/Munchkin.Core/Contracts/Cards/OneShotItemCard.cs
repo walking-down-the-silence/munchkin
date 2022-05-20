@@ -6,8 +6,8 @@ namespace Munchkin.Core.Contracts.Cards
 {
     public abstract class OneShotItemCard : ItemCard
     {
-        protected OneShotItemCard(string title, int strength, int runAwayBonus, int price)
-            : base(title, strength, runAwayBonus, price, EItemSize.Small)
+        protected OneShotItemCard(string code, string title, int strength, int runAwayBonus, int price)
+            : base(code, title, strength, runAwayBonus, price, EItemSize.Small)
         {
         }
 

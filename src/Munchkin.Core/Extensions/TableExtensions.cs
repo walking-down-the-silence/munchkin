@@ -1,5 +1,6 @@
 ﻿using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
+using Munchkin.Core.Model.Exceptions;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -44,6 +45,9 @@ namespace Munchkin.Core.Extensions
         /// <returns>Returns an updated isntance of the table after the turn has moved to another player.</returns>
         public static Table NextTurn(this Table table)
         {
+            if (table.Players.Current.YourHand.Count > 5)
+                throw new PlayerHasTooManyCardsInHandException();
+
             var doorCardsToDiscard = table.DungeonCards.OfType<DoorsCard>();
             var treasureCardsToDiscard = table.DungeonCards.OfType<TreasureCard>();
 

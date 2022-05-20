@@ -1,15 +1,16 @@
 using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
 using Munchkin.Core.Model.Actions;
+using Munchkin.Core.Model.Attributes;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Classes
 {
     public sealed class ClericClass : ClassCard
     {
-        public ClericClass() : base("Cleric")
+        public ClericClass() : base(MunchkinDeluxeCards.Doors.ClericClass1, "Cleric")
         {
+            AddAttribute(new ClericAttribute());
         }
 
         public IAction<Table> ReviveTheCard { get; private set; }

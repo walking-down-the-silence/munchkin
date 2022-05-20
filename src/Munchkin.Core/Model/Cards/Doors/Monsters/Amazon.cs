@@ -1,7 +1,6 @@
 using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model;
 using Munchkin.Core.Model.Cards.Doors.Curses;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +9,8 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class Amazon : MonsterCard
     {
-        public Amazon() : base("Amazon", 8, 1, 2, 0, false)
+        public Amazon() :
+            base(MunchkinDeluxeCards.Doors.Amazon, "Amazon", 8, 1, 2, 0, false)
         {
         }
 

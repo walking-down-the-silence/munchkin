@@ -3,7 +3,7 @@ using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Effects;
-using Munchkin.Core.Model.Rules;
+using Munchkin.Core.Model.Restrictions;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,12 +11,13 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class Platycore : MonsterCard
     {
-        public Platycore() : base("Platycore", 6, 1, 2, 0, false)
+        public Platycore() :
+            base(MunchkinDeluxeCards.Doors.ChangeClass, "Platycore", 6, 1, 2, 0, false)
         {
             AddEffect(Effect
                 .New(new MonsterStrengthBonusEffect(6))
                 .With(() => Rule
-                    .New(new HasWizardClassRule())));
+                    .New(new UsableByWizardOnlyRestriction())));
         }
 
         public override Task Play(Table context)

@@ -1,15 +1,15 @@
-using System.Linq;
-using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model;
 using Munchkin.Core.Model.Attributes;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors
 {
     public sealed class Mate : SpecialCard
     {
-        public Mate() : base("Mate")
+        public Mate() :
+            base(MunchkinDeluxeCards.Doors.Mate, "Mate")
         {
         }
 

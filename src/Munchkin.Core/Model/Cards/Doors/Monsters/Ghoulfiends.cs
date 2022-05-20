@@ -1,13 +1,13 @@
-﻿using System.Linq;
+﻿using Munchkin.Core.Contracts.Cards;
+using System.Linq;
 using System.Threading.Tasks;
-using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class Ghoulfiends : MonsterCard
     {
-        public Ghoulfiends() : base("Ghoulfiends", 8, 1, 2, 0, false)
+        public Ghoulfiends() :
+            base(MunchkinDeluxeCards.Doors.Ghoulfiends, "Ghoulfiends", 8, 1, 2, 0, false)
         {
             //TODO: fight with your level only
         }

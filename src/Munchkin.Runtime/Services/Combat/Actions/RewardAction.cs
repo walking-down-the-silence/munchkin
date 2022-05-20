@@ -1,4 +1,5 @@
 ﻿using Munchkin.Core.Contracts.Actions;
+using Munchkin.Runtime.Services;
 
 namespace Munchkin.Core.Model.Phases
 {

@@ -3,6 +3,7 @@ using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Expansions;
+using Munchkin.Core.Model.Phases;
 using Munchkin.Extensions.Threading;
 using Munchkin.Primitives.Abstractions;
 using Munchkin.Runtime.Abstractions;
@@ -94,6 +95,18 @@ namespace Munchkin.Runtime.Services
             .SelectMany(x => x.Table.Unit());
         }
 
+        public Task<Table> CursePlayerAsync(string tableId, string nickname, string curseCardId)
+        {
+            return ExecuteAndSave(tableId, async table =>
+            {
+                var player = await _playerRepository.GetPlayerByNicknameAsync(nickname);
+                var card = await _tableRepository.GetCardByIdAsync(tableId, curseCardId) as CurseCard;
+                var tableUpdated = Dungeon.Curse(table, card, player);
+                return (tableUpdated, tableUpdated);
+            })
+            .SelectMany(x => x.Table.Unit());
+        }
+
         public Task<Table> EquipAsync(string tableId, string playerNickname, string cardId)
         {
             return ExecuteAndSave(tableId, async table =>
@@ -142,8 +155,8 @@ namespace Munchkin.Runtime.Services
             return ExecuteAndSave(tableId, table =>
             {
                 var result = selected
-                    ? table.IncludeExpansion(expansionCode).Item2
-                    : table.ExcludeExpansion(expansionCode).Item2;
+                    ? table.IncludeExpansion(expansionCode).Result
+                    : table.ExcludeExpansion(expansionCode).Result;
                 return (table, result).Unit();
             })
             .SelectMany(x => x.Result.Unit());

@@ -1,12 +1,12 @@
-using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class WannabeVampire : MonsterCard
     {
-        public WannabeVampire() : base("Wannabe Vampire", 12, 1, 3, 0, false)
+        public WannabeVampire() :
+            base(MunchkinDeluxeCards.Doors.WannabeVampire, "Wannabe Vampire", 12, 1, 3, 0, false)
         {
         }
 

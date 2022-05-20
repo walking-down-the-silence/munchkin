@@ -2,7 +2,6 @@ using Munchkin.Core.Contracts.Attributes;
 
 namespace Munchkin.Core.Model.Attributes
 {
-    public class ElfOnlyRestriction : Attribute
-    {
-    }
+    public record WizardAttribute() :
+        Attribute("Wizard");
 }

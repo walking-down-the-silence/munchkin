@@ -2,7 +2,6 @@
 
 namespace Munchkin.Core.Model.Attributes
 {
-    public class NoTreasuresAttribute : Attribute
-    {
-    }
+    public record NoTreasuresAttribute() :
+        Attribute("No Treasure");
 }

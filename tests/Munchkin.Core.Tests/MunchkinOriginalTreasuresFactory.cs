@@ -14,17 +14,17 @@ namespace Munchkin.Core.Tests
             return CreateCardCollection().ToArray();
         }
 
-        private IEnumerable<TreasureCard> CreateCardCollection()
+        private static IEnumerable<TreasureCard> CreateCardCollection()
         {
             // level ups
-            yield return new LevelUpTreasure("1,000 Gold Pieces");
-            yield return new LevelUpTreasure("Boil An Anthill");
-            yield return new LevelUpTreasure("Bribe GM With Food");
-            yield return new LevelUpTreasure("Convenient Addition Error");
-            yield return new LevelUpTreasure("Whine At The GM");
-            yield return new LevelUpTreasure("Mutilate The Bodies");
-            yield return new LevelUpTreasure("Invoke Obscure Rules");
-            yield return new LevelUpTreasure("Potion Of General Studliness");
+            yield return new ThousandGoldPieces();
+            yield return new BoilAnAnthill();
+            yield return new BribeGMWithFood();
+            yield return new ConvenientAdditionError();
+            yield return new WhineAtTheGM();
+            yield return new MutilateTheBodies();
+            yield return new InvokeObscureRules();
+            yield return new PotionOfGeneralStudliness();
             yield return new KillTheHireling();
             yield return new StealALevel();
 

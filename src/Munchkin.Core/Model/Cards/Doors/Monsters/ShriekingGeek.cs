@@ -1,15 +1,15 @@
+using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Model.Cards.Doors.Classes;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
-using Munchkin.Core.Model.Cards.Doors.Classes;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class ShriekingGeek : MonsterCard
     {
-        public ShriekingGeek() : base("Shrieking Geek", 6, 1, 2, 0, false)
+        public ShriekingGeek() :
+            base(MunchkinDeluxeCards.Doors.ShriekingGeek, "Shrieking Geek", 6, 1, 2, 0, false)
         {
         }
 

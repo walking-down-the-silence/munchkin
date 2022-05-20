@@ -1,16 +1,16 @@
 using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
-using Munchkin.Core.Model.Attributes;
+using Munchkin.Core.Model.Restrictions;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Treasures.Permanent
 {
     public sealed class SingingAndDancingSword : PermanentItemCard
     {
-        public SingingAndDancingSword() : base("Singing And Dancing Sword", 2, 0, EItemSize.Small, EWearingType.None, 400)
+        public SingingAndDancingSword() :
+            base(MunchkinDeluxeCards.Treasures.SingingAndDancingSword, "Singing And Dancing Sword", 2, 0, EItemSize.Small, EWearingType.None, 400)
         {
-            AddProperty(new NotForThiefRestriction());
+            AddRestriction(new NotUsableByThiefRestriction());
         }
 
         public override Task Play(Table context)

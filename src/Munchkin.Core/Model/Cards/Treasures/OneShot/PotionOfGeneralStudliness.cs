@@ -2,7 +2,8 @@
 {
     public sealed class PotionOfGeneralStudliness : LevelUpTreasure
     {
-        public PotionOfGeneralStudliness() : base("Potion Of General Studliness")
+        public PotionOfGeneralStudliness() : 
+            base(MunchkinDeluxeCards.Treasures.PotionOfGeneralStudliness, "Potion Of General Studliness")
         {
         }
     }

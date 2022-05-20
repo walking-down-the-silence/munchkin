@@ -1,13 +1,13 @@
 using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Treasures.Permanent
 {
     public sealed class ReallyImpressiveTitle : PermanentItemCard
     {
-        public ReallyImpressiveTitle() : base("Really Impressive Title", 3, 0, EItemSize.Small, EWearingType.None, 0)
+        public ReallyImpressiveTitle() : 
+            base(MunchkinDeluxeCards.Treasures.ReallyImpressiveTitle, "Really Impressive Title", 3, 0, EItemSize.Small, EWearingType.None, 0)
         {
         }
 

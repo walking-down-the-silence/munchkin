@@ -1,5 +1,6 @@
 ﻿using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model.Phases.Events;
+using System;
 
 namespace Munchkin.Core.Model.Phases
 {
@@ -12,8 +13,21 @@ namespace Munchkin.Core.Model.Phases
     /// </summary>
     public static class Charity
     {
+        /// <summary>
+        /// Gives the chosen card from one player to another.
+        /// </summary>
+        /// <param name="table">The table where the game takes place.</param>
+        /// <param name="giver">The player who gives away the card.</param>
+        /// <param name="card">The card that is given</param>
+        /// <param name="taker">The player who takes the card.</param>
+        /// <returns>Returns an updated instance of the table.</returns>
         public static Table GiveAway(Table table, Player giver, Card card, Player taker)
         {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(giver, nameof(giver));
+            ArgumentNullException.ThrowIfNull(card, nameof(card));
+            ArgumentNullException.ThrowIfNull(taker, nameof(taker));
+
             giver.Discard(card);
             taker.PutInBackpack(card);
 

@@ -2,7 +2,8 @@
 {
     public sealed class InvokeObscureRules : LevelUpTreasure
     {
-        public InvokeObscureRules() : base("Invoke Obscure Rules")
+        public InvokeObscureRules() : 
+            base(MunchkinDeluxeCards.Treasures.InvokeObscureRules, "Invoke Obscure Rules")
         {
         }
     }

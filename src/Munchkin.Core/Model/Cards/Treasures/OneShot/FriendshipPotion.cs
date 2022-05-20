@@ -1,5 +1,4 @@
 ﻿using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
 using Munchkin.Core.Model.Attributes;
 using System.Threading.Tasks;
 
@@ -7,10 +6,11 @@ namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 {
     public sealed class FriendshipPotion : OneShotItemCard
     {
-        public FriendshipPotion() : base("Friendship Potion", 0, 0, 200)
+        public FriendshipPotion() :
+            base(MunchkinDeluxeCards.Treasures.FriendshipPotion, "Friendship Potion", 0, 0, 200)
         {
-            AddProperty(new NoTreasuresAttribute());
-            AddProperty(new NoLevelAttribute());
+            AddAttribute(new NoTreasuresAttribute());
+            AddAttribute(new NoLevelAttribute());
         }
 
         public override Task Play(Table gameContext)

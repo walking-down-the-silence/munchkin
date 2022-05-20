@@ -1,13 +1,13 @@
+using Munchkin.Core.Contracts.Cards;
 using System;
 using System.Threading.Tasks;
-using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class Pukachu : MonsterCard
     {
-        public Pukachu() : base("Pukachu", 6, 1, 2, 0, false)
+        public Pukachu() : 
+            base(MunchkinDeluxeCards.Doors.Pukachu, "Pukachu", 6, 1, 2, 0, false)
         {
         }
 

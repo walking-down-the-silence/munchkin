@@ -1,13 +1,12 @@
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Extensions;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class SnailsOnSpeed : MonsterCard
     {
-        public SnailsOnSpeed() : base("Snails On Speed", 4, 1, 2, -2, false)
+        public SnailsOnSpeed() :
+            base(MunchkinDeluxeCards.Doors.SnailsOnSpeed, "Snails On Speed", 4, 1, 2, -2, false)
         {
         }
 

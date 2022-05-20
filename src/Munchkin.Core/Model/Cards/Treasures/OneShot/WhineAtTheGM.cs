@@ -2,7 +2,8 @@
 {
     public sealed class WhineAtTheGM : LevelUpTreasure
     {
-        public WhineAtTheGM() : base("Whine At The GM")
+        public WhineAtTheGM() :
+            base(MunchkinDeluxeCards.Treasures.WhineAtTheGM, "Whine At The GM")
         {
         }
     }

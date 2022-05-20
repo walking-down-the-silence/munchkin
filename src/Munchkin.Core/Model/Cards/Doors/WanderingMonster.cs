@@ -1,12 +1,12 @@
-using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors
 {
     public sealed class WanderingMonster : SpecialCard
     {
-        public WanderingMonster() : base("Wandering Monster")
+        public WanderingMonster() :
+            base(MunchkinDeluxeCards.Doors.WanderingMonster1, "Wandering Monster")
         {
         }
 

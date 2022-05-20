@@ -2,7 +2,8 @@
 {
     public sealed class BoilAnAnthill : LevelUpTreasure
     {
-        public BoilAnAnthill() : base("Boil An Anthill")
+        public BoilAnAnthill() : 
+            base(MunchkinDeluxeCards.Treasures.BoilAnAnthill, "Boil An Anthill")
         {
         }
     }

@@ -2,7 +2,6 @@
 
 namespace Munchkin.Core.Model.Attributes
 {
-    public class UndeadMonsterAttribute : Attribute
-    {
-    }
+    public record UndeadMonsterAttribute() :
+        Attribute("Undead");
 }

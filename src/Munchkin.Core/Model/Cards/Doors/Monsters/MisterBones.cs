@@ -1,12 +1,12 @@
-using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class MisterBones : MonsterCard
     {
-        public MisterBones() : base("Mister Bones", 2, 1, 1, 0, true)
+        public MisterBones() : 
+            base(MunchkinDeluxeCards.Doors.MisterBones, "Mister Bones", 2, 1, 1, 0, true)
         {
             //TODO: lose level event if you escape
         }

@@ -2,7 +2,28 @@
 {
     public class TurnActions
     {
-        public const string NextTurn = "munchkin.action.next-turn";
+        public class Table
+        {
+            public const string NextTurn = "munchkin.action.next-turn";
+        }
+
+        public class Player
+        {
+            public static string[] All = new[]
+            {
+                Equip,
+                TakeInHand,
+                PutInBackpack,
+                DiscardCard,
+                Sell
+            };
+
+            public const string Equip = "munchkin.action.equip";
+            public const string TakeInHand = "munchkin.action.take-in-hand";
+            public const string PutInBackpack = "munchkin.action.put-in-backpack";
+            public const string DiscardCard = "munchkin.action.dicard-card";
+            public const string Sell = "munchkin.action.treasure.sell";
+        }
 
         public class Dungeon
         {
@@ -119,24 +140,6 @@
             };
 
             public const string GiveAway = "munchkin.action.give-away";
-        }
-
-        public class Player
-        {
-            public static string[] All = new[]
-            {
-                Equip,
-                TakeInHand,
-                PutInBackpack,
-                DiscardCard,
-                Sell
-            };
-
-            public const string Equip = "munchkin.action.equip";
-            public const string TakeInHand = "munchkin.action.take-in-hand";
-            public const string PutInBackpack = "munchkin.action.put-in-backpack";
-            public const string DiscardCard = "munchkin.action.dicard-card";
-            public const string Sell = "munchkin.action.treasure.sell";
         }
     }
 }

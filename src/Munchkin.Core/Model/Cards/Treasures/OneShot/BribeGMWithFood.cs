@@ -2,7 +2,8 @@
 {
     public sealed class BribeGMWithFood : LevelUpTreasure
     {
-        public BribeGMWithFood() : base("Bribe GM With Food")
+        public BribeGMWithFood() : 
+            base(MunchkinDeluxeCards.Treasures.BribeGMWithFood, "Bribe GM With Food")
         {
         }
     }

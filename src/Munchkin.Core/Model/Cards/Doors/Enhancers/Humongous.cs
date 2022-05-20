@@ -4,7 +4,8 @@ namespace Munchkin.Core.Model.Cards.Doors.Enhancers
 {
     public sealed class Humongous : EnhancerCard
     {
-        public Humongous() : base("Humongous", 10, 2)
+        public Humongous() : 
+            base(MunchkinDeluxeCards.Doors.Humongous, "Humongous", 10, 2)
         {
         }
     }

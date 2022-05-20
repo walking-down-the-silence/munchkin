@@ -1,12 +1,12 @@
-using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class Gazebo : MonsterCard
     {
-        public Gazebo() : base("Gazebo", 8, 1, 2, 0, false)
+        public Gazebo() :
+            base(MunchkinDeluxeCards.Doors.Gazebo, "Gazebo", 8, 1, 2, 0, false)
         {
             //TODO: no one can help you
         }

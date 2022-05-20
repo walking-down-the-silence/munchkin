@@ -1,5 +1,4 @@
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
 using Munchkin.Core.Model.Cards.Doors.Classes;
 using System;
 using System.Linq;
@@ -9,7 +8,8 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class TongueDemon : MonsterCard
     {
-        public TongueDemon() : base("Tongue Demon", 12, 1, 3, 0, false)
+        public TongueDemon() :
+            base(MunchkinDeluxeCards.Doors.TongueDemon, "Tongue Demon", 12, 1, 3, 0, false)
         {
         }
 
@@ -24,7 +24,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
 
             //if (currentHeroIsCleric || helpingHeroIsCleric != null && helpingHeroIsCleric.Value)
             //{
-            //    gameContext.Dungeon.Combat.AddProperty(new MonsterStrengthBonusAttribute(4));
+            //    gameContext.Dungeon.Combat.AddAttribute(new MonsterStrengthBonusAttribute(4));
             //}
 
             return base.Play(gameContext);

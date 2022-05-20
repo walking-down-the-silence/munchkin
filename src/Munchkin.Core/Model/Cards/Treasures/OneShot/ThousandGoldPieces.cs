@@ -2,7 +2,8 @@
 {
     public sealed class ThousandGoldPieces : LevelUpTreasure
     {
-        public ThousandGoldPieces() : base("1,000 Gold Pieces")
+        public ThousandGoldPieces() :
+            base(MunchkinDeluxeCards.Treasures.ThousandGoldPieces, "1,000 Gold Pieces")
         {
         }
     }

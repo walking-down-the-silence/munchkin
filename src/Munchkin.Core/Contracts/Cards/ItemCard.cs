@@ -8,21 +8,22 @@ namespace Munchkin.Core.Contracts.Cards
 {
     public abstract class ItemCard : TreasureCard
     {
-        protected ItemCard(string title, int strength, int runAwayBonus, int goldPieces, EItemSize itemSize) : base(title)
+        protected ItemCard(string code, string title, int strength, int runAwayBonus, int goldPieces, EItemSize itemSize) : 
+            base(code, title)
         {
-            AddProperty(new StrengthBonusAttribute(strength));
-            AddProperty(new RunAwayBonusAttribute(runAwayBonus));
-            AddProperty(new GoldPiecesAttribute(goldPieces));
-            AddProperty(new ItemSizeAttribute(itemSize));
+            AddAttribute(new StrengthBonusAttribute(strength));
+            AddAttribute(new RunAwayBonusAttribute(runAwayBonus));
+            AddAttribute(new GoldPiecesAttribute(goldPieces));
+            AddAttribute(new ItemSizeAttribute(itemSize));
         }
 
-        public int StrengthBonus => GetProperty<StrengthBonusAttribute>().Bonus;
+        public int StrengthBonus => GetAttribute<StrengthBonusAttribute>().Bonus;
 
-        public int RunAwayBonus => GetProperty<RunAwayBonusAttribute>().Bonus;
+        public int RunAwayBonus => GetAttribute<RunAwayBonusAttribute>().Bonus;
 
-        public int GoldPieces => GetProperty<GoldPiecesAttribute>().Gold;
+        public int GoldPieces => GetAttribute<GoldPiecesAttribute>().Gold;
 
-        public EItemSize ItemSize => GetProperty<ItemSizeAttribute>().ItemSize;
+        public EItemSize ItemSize => GetAttribute<ItemSizeAttribute>().ItemSize;
 
         public override Task Play(Table context)
         {

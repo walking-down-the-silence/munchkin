@@ -1,12 +1,12 @@
-using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
     public sealed class DuckOfDoom : CurseCard
     {
-        public DuckOfDoom() : base("Duck Of Doom")
+        public DuckOfDoom() : 
+            base(MunchkinDeluxeCards.Doors.DuckOfDoom, "Duck Of Doom")
         {
         }
 

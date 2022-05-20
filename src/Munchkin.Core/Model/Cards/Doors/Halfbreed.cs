@@ -1,12 +1,12 @@
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors
 {
     public class Halfbreed : RaceCard
     {
-        public Halfbreed() : base("Half-breed")
+        public Halfbreed() :
+            base(MunchkinDeluxeCards.Doors.Halfbreed1, "Half-breed")
         {
         }
 

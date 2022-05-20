@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Munchkin.Core.Contracts.Cards;
+using System;
 using System.Threading.Tasks;
-using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
     public sealed class LoseOneBigItem : CurseCard
     {
-        public LoseOneBigItem() : base("Lose One Big Item")
+        public LoseOneBigItem() : 
+            base(MunchkinDeluxeCards.Doors.LoseOneBigItem, "Lose One Big Item")
         {
         }
 

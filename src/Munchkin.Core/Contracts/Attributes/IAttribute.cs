@@ -1,14 +1,13 @@
 ﻿namespace Munchkin.Core.Contracts.Attributes
 {
     /// <summary>
-    /// Defines the ability and it's description which can be used.
-    /// Produces an action instance that can be executed.
+    /// Defines the attribute and how it can be used.
     /// </summary>
-    /// <typeparam name="TState"></typeparam>
     public interface IAttribute
     {
+        /// <summary>
+        /// Get the human readable title of the attribute.
+        /// </summary>
         string Title { get; }
-
-        string Description { get; }
     }
 }

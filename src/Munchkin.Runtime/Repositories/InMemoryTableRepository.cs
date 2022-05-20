@@ -32,7 +32,7 @@ namespace Munchkin.Runtime.Repositories
         {
             return GetTableByIdAsync(tableId).SelectMany(table =>
             {
-                return table.FindCard(card => CardService.GetUniqueId(card) == cardId).Unit();
+                return table.FindCard(card => card.Code == cardId).Unit();
             });
         }
     }

@@ -3,9 +3,8 @@ using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model;
 using Munchkin.Core.Model.Effects;
-using Munchkin.Core.Model.Rules;
+using Munchkin.Core.Model.Restrictions;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,12 +12,13 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class DroolingSlime : MonsterCard
     {
-        public DroolingSlime() : base("Drooling Slime", 1, 1, 1, 0, false)
+        public DroolingSlime() :
+            base(MunchkinDeluxeCards.Doors.DroolingSlime, "Drooling Slime", 1, 1, 1, 0, false)
         {
             AddEffect(Effect
                 .New(new MonsterStrengthBonusEffect(4))
                 .With(() => Rule
-                    .New(new HasElfRaceRule())));
+                    .New(new UsableByElfOnlyRestriction())));
         }
 
         public override Task BadStuff(Table state)

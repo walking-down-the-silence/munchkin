@@ -17,7 +17,8 @@ namespace Munchkin.Runtime
                 .AddScoped<TableService>()
                 .AddScoped<CharityService>()
                 .AddScoped<CombatService>()
-                .AddScoped<RunningAwayService>();
+                .AddScoped<RunningAwayService>()
+                .AddScoped<CurseService>();
         }
 
         public static IServiceCollection AddMunchkinInMemoryPersistance(this IServiceCollection services)

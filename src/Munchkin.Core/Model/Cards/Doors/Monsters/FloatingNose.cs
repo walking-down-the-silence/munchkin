@@ -1,12 +1,12 @@
-using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class FloatingNose : MonsterCard
     {
-        public FloatingNose() : base("Floating Nose", 10, 1, 3, 0, false)
+        public FloatingNose() :
+            base(MunchkinDeluxeCards.Doors.FloatingNose, "Floating Nose", 10, 1, 3, 0, false)
         {
             //TODO: double check rules about fight it
         }

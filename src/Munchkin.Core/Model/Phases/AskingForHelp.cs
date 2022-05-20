@@ -7,7 +7,7 @@ using System.Linq;
 namespace Munchkin.Core.Model.Phases
 {
     /// <summary>
-    /// Defines the state when a fighting pllayer asks another player for help in combat.
+    /// Defines the state when a fighting pllayer asks another player to help in combat.
     /// </summary>
     /// <param name="PlayersLeftToAsk">A collection of remaining players to ask.</param>
     /// <param name="PlayerAsked">A player recently asked to help.</param>
@@ -18,8 +18,15 @@ namespace Munchkin.Core.Model.Phases
         ImmutableArray<Player> PlayersWhoRejected,
         Player PlayerAsked)
     {
+        /// <summary>
+        /// Creates an object with state of fighting player asking for help during the combat.
+        /// </summary>
+        /// <param name="table">The table where th game takes place.</param>
+        /// <returns>Returns a modified instance of the state.</returns>
         public static AskingForHelp From(Table table)
         {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+
             // TODO: decide if this object requires the player recently asked or simply all players left to ask
             // TODO: filter by player selected above
             var playersLeftToAsk = ImmutableArray.CreateRange(table.Players
@@ -75,6 +82,8 @@ namespace Munchkin.Core.Model.Phases
         /// <returns>Retuns a modified instance of the state.</returns>
         public AskingForHelp WithAskedPlayer(Player askedPlayer)
         {
+            ArgumentNullException.ThrowIfNull(askedPlayer, nameof(askedPlayer));
+
             return this with
             {
                 PlayersLeftToAsk = PlayersLeftToAsk.Remove(askedPlayer),

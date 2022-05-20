@@ -5,7 +5,8 @@ namespace Munchkin.Core.Contracts.Cards
 {
     public abstract class CurseCard : DoorsCard
     {
-        protected CurseCard(string title) : base(title)
+        protected CurseCard(string code, string title) : 
+            base(code, title)
         {
         }
 

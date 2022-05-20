@@ -1,9 +1,5 @@
 ﻿namespace Munchkin.Core.Model.Attributes
 {
-    public class PlayerStrengthBonusAttribute : BonusAttribute
-    {
-        public PlayerStrengthBonusAttribute(int bonus) : base(bonus)
-        {
-        }
-    }
+    public record PlayerStrengthBonusAttribute(int Bonus) :
+        BonusAttribute(Bonus);
 }

@@ -2,7 +2,6 @@
 
 namespace Munchkin.Core.Model.Attributes
 {
-    public class MaleOnlyRestriction : Attribute
-    {
-    }
+    public record ClericAttribute() :
+        Attribute("Cleric");
 }

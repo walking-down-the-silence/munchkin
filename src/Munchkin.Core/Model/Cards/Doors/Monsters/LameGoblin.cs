@@ -1,12 +1,12 @@
-using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class LameGoblin : MonsterCard
     {
-        public LameGoblin() : base("Lame Goblin", 1, 1, 1, 1, false)
+        public LameGoblin() : 
+            base(MunchkinDeluxeCards.Doors.LameGoblin, "Lame Goblin", 1, 1, 1, 1, false)
         {
         }
 

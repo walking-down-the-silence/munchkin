@@ -1,5 +1,4 @@
 ﻿using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
 using System;
 using System.Threading.Tasks;
 
@@ -7,7 +6,8 @@ namespace Munchkin.Core.Model.Cards.Doors.Races
 {
     public class ElfRace : RaceCard
     {
-        public ElfRace() : base("Elf")
+        public ElfRace() :
+            base(MunchkinDeluxeCards.Doors.ElfRace1, "Elf")
         {
         }
 

@@ -5,9 +5,10 @@ namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 {
     public sealed class WishingRing : OneShotItemCard
     {
-        public WishingRing() : base("Wishing Ring", 0, 0, 500)
+        public WishingRing() :
+            base(MunchkinDeluxeCards.Treasures.WishingRing1, "Wishing Ring", 0, 0, 500)
         {
-            AddProperty(new CancelCurseAttribute());
+            AddAttribute(new CancelCurseAttribute());
         }
     }
 }

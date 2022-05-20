@@ -1,6 +1,7 @@
 ﻿using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,6 +29,8 @@ namespace Munchkin.Core.Model.Phases
         /// <returns>Return the statistic object.</returns>
         public static CombatStats From(Table table)
         {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+
             // NOTE: Gets all the monsters in play.
             var monsters = table.DungeonCards
                 .OfType<MonsterCard>()

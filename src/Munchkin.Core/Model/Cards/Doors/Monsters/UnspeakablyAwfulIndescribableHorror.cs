@@ -1,15 +1,15 @@
+using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Model.Cards.Doors.Classes;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
-using Munchkin.Core.Model.Cards.Doors.Classes;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class UnspeakablyAwfulIndescribableHorror : MonsterCard
     {
-        public UnspeakablyAwfulIndescribableHorror() : base("Unspeakably Awful Indescribable Horror", 14, 1, 4, 0, false)
+        public UnspeakablyAwfulIndescribableHorror() :
+            base(MunchkinDeluxeCards.Doors.UnspeakablyAwfulIndescribableHorror, "Unspeakably Awful Indescribable Horror", 14, 1, 4, 0, false)
         {
         }
 

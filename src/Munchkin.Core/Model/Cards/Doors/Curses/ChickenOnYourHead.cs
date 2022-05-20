@@ -1,5 +1,4 @@
 ﻿using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Model;
 using Munchkin.Core.Model.Attributes;
 using System.Threading.Tasks;
 
@@ -7,9 +6,10 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
     public sealed class ChickenOnYourHead : CurseCard
     {
-        public ChickenOnYourHead() : base("Chiken On Your Head")
+        public ChickenOnYourHead() : 
+            base(MunchkinDeluxeCards.Doors.ChickenOnYourHead, "Chiken On Your Head")
         {
-            AddProperty(new RunAwayBonusAttribute(-1));
+            AddAttribute(new RunAwayBonusAttribute(-1));
         }
 
         public override Task BadStuff(Table context)

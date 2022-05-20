@@ -1,15 +1,15 @@
-using System.Linq;
-using System.Threading.Tasks;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model;
 using Munchkin.Core.Model.Attributes;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 {
     public sealed class Doppleganger : OneShotItemCard
     {
-        public Doppleganger() : base("Doppleganger", 0, 0, 300)
+        public Doppleganger() :
+            base(MunchkinDeluxeCards.Treasures.Doppleganger, "Doppleganger", 0, 0, 300)
         {
         }
 
@@ -32,7 +32,7 @@ namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 
             // add doppleganger strength
             // TODO: check if current stage actually is a combat
-            //gameContext.Dungeon.Combat.AddProperty(new PlayerStrengthBonusAttribute(strength));
+            //gameContext.Dungeon.Combat.AddAttribute(new PlayerStrengthBonusAttribute(strength));
             return base.Play(gameContext);
         }
     }

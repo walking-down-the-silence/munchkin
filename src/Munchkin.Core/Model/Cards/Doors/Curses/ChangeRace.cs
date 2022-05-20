@@ -5,7 +5,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
     public sealed class ChangeRace : CurseCard
     {
-        public ChangeRace() : base("Change Race")
+        public ChangeRace() : base(MunchkinDeluxeCards.Doors.ChangeRace, "Change Race")
         {
         }
 

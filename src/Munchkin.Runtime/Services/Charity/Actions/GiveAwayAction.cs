@@ -1,6 +1,7 @@
 ﻿using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
+using Munchkin.Runtime.Services;
 
 namespace Munchkin.Runtime.Actions
 {

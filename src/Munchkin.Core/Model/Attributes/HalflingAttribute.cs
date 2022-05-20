@@ -2,7 +2,6 @@ using Munchkin.Core.Contracts.Attributes;
 
 namespace Munchkin.Core.Model.Attributes
 {
-    public class ClericOnlyRestriction : Attribute
-    {
-    }
+    public record HalflingAttribute() :
+        Attribute("Halfling");
 }

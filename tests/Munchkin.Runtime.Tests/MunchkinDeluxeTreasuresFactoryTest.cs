@@ -76,7 +76,7 @@ namespace Munchkin.Runtime.Tests
             yield return new Doppleganger();
             yield return new ElectricRadioactiveAcidPotion();
             yield return new Hoard();
-            yield return new WishingRing();
+            //yield return new WishingRing();
             yield return new InvisibilityPotion();
             yield return new LoadedDie();
             yield return new MagicMissile();
