@@ -12,7 +12,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
     public sealed class Platycore : MonsterCard
     {
         public Platycore() :
-            base(MunchkinDeluxeCards.Doors.ChangeClass, "Platycore", 6, 1, 2, 0, false)
+            base(MunchkinDeluxeCards.Doors.Platycore, "Platycore", 6, 1, 2, 0, false)
         {
             AddEffect(Effect
                 .New(new MonsterStrengthBonusEffect(6))

@@ -3,7 +3,7 @@
     public sealed class MutilateTheBodies : LevelUpTreasure
     {
         public MutilateTheBodies() : 
-            base(MunchkinDeluxeCards.Treasures.MultilateTheBodies, "Mutilate The Bodies")
+            base(MunchkinDeluxeCards.Treasures.MutilateTheBodies, "Mutilate The Bodies")
         {
         }
     }

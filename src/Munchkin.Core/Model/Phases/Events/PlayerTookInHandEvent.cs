@@ -1,4 +1,8 @@
-﻿namespace Munchkin.Core.Model.Phases.Events
+﻿using Munchkin.Core.Contracts.Events;
+using System;
+
+namespace Munchkin.Core.Model.Phases.Events
 {
-    public record PlayerTookInHandEvent(string PlayerNickname, string CardId);
+    public record PlayerTookInHandEvent(string PlayerNickname, string CardId) :
+        EventBase(DateTimeOffset.UtcNow);
 }

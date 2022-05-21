@@ -10,7 +10,7 @@
             public const string BribeGMWithFood                  = "munchkin.card.treasure.bribe-gm-with-food";
             public const string ConvenientAdditionError          = "munchkin.card.treasure.convenient-addition-error";
             public const string WhineAtTheGM                     = "munchkin.card.treasure.whine-at-the-gm";
-            public const string MultilateTheBodies               = "munchkin.card.treasure.mutilate-the-bodies";
+            public const string MutilateTheBodies                = "munchkin.card.treasure.mutilate-the-bodies";
             public const string InvokeObscureRules               = "munchkin.card.treasure.invoke-obscure-rules";
             public const string PotionOfGeneralStudliness        = "munchkin.card.treasure.potion-of-general-studliness";
             public const string KillTheHireling                  = "munchkin.card.treasure.kill-the-hireling";

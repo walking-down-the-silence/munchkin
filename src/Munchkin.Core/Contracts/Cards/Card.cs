@@ -62,7 +62,7 @@ namespace Munchkin.Core.Contracts.Cards
         public IReadOnlyCollection<IAttribute> Attributes => _attributes.AsReadOnly();
 
         /// <inheritdoc />
-        public override string ToString() => $"{Title}, Owner: {(Owner is null ? "None" : Owner.Nickname)}";
+        public override string ToString() => $"{Title}, owned by: {(Owner is null ? "None" : Owner.Nickname)}";
 
         /// <summary>
         /// Binds the card to the current one to be played along with it.
@@ -70,6 +70,8 @@ namespace Munchkin.Core.Contracts.Cards
         /// <param name="card">The card to bind onto the current one.</param>
         public void Bind(Card card)
         {
+            ArgumentNullException.ThrowIfNull(card, nameof(card));
+
             _boundCards.Add(card);
             card.BoundTo = this;
         }
@@ -78,7 +80,12 @@ namespace Munchkin.Core.Contracts.Cards
         /// Assigns the card to the player that took it.
         /// </summary>
         /// <param name="player">The player who took the card.</param>
-        public void Take(Player player) => Owner = player;
+        public void TakenBy(Player player)
+        {
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
+            Owner = player;
+        }
 
         /// <summary>
         /// Executes logic of the card being played.
@@ -91,7 +98,14 @@ namespace Munchkin.Core.Contracts.Cards
         /// Executes the discard logic for the card.
         /// </summary>
         /// <param name="table"> Game table that contains everything in the game. </param>
-        public abstract void Discard(Table table);
+        public virtual void Discard(Table table)
+        {
+            Owner = null;
+            BoundTo = null;
+
+            _boundCards.ForEach(card => card.Discard(table));
+            _boundCards.Clear();
+        }
 
         /// <summary>
         /// Adds an effect to the card.

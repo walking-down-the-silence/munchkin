@@ -21,12 +21,13 @@ namespace Munchkin.Runtime.Services
             _playerRepository = playerRepository ?? throw new ArgumentNullException(nameof(playerRepository));
         }
 
-        public Task<Table> ResolveAsync(string tableId, string cardId)
+        public Task<Table> ResolveAsync(string tableId, string curseCardId, string cardId)
         {
             return ExecuteAndSave(tableId, table =>
             {
+                var curse = table.FindCard(x => x.Code == curseCardId) as CurseCard;
                 var wishingRing = table.FindCard(x => x.Code == cardId);
-                var tableUpdated = Cursing.Resolve(table, wishingRing);
+                var tableUpdated = Cursing.Resolve(table, curse, wishingRing);
                 return (tableUpdated, tableUpdated).Unit();
             })
             .SelectMany(x => x.Table.Unit());

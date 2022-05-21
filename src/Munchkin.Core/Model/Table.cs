@@ -14,7 +14,7 @@ using System.Linq;
 namespace Munchkin.Core.Model
 {
     /// <summary>
-    /// Defines a gaming table that hold the state of the game everything that is going on in the game.
+    /// Defines a gaming table that holds the state of the game and everything that is going on in it.
     /// </summary>
     public sealed record Table
     {

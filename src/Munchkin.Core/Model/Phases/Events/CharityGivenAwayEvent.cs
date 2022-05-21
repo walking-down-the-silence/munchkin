@@ -1,7 +1,13 @@
-﻿namespace Munchkin.Core.Model.Phases.Events
+﻿using Munchkin.Core.Contracts.Events;
+using System;
+
+namespace Munchkin.Core.Model.Phases.Events
 {
-    public record CharityGivenAwayEvent(
-        string GiverNickname,
-        string TakerNickname,
-        string CardId);
+    /// <summary>
+    /// Defines an event when one player gave the card to another player as charity.
+    /// </summary>
+    public record CharityGivenAwayEvent(string GiverNickname, string TakerNickname, string CardId) :
+        EventBase(DateTimeOffset.UtcNow),
+        ICharityEvent,
+        IEnteredStateEvent;
 }

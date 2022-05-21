@@ -2,6 +2,7 @@
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Exceptions;
+using Munchkin.Core.Model.Phases.Events;
 
 namespace Munchkin.Core.Model.Phases
 {
@@ -16,13 +17,19 @@ namespace Munchkin.Core.Model.Phases
         /// <param name="table">The table where the game takes place.</param>
         /// <param name="card">The card that should resolve the curse.</param>
         /// <returns>Returns an updated instance of the table.</returns>
-        /// <exception cref="InvalidCardUsedException">Thrown if the card cannot resolve curses.</exception>
-        public static Table Resolve(Table table, Card card)
+        /// <exception cref="CurseCannotBeCancelledWithTheChosenCardException">Thrown if the card cannot resolve curses.</exception>
+        public static Table Resolve(Table table, CurseCard curse, Card card)
         {
+            if (card.Owner?.Nickname != table.Players.Current.Nickname)
+                throw new PlayerDoesNotOwnTheCardException();
+
             // NOTE: remove from player's cards and add it to the temporary pile,
             // before the step is resolved completely
-            if (!card.HasAttribute<CancelCurseAttribute>())
-                throw new InvalidCardUsedException("The card used does not have the attribute for cancelling curses.");
+            if (!card.HasAttribute<ResolveCurseAttribute>())
+                throw new CurseCannotBeCancelledWithTheChosenCardException();
+
+            var curseResolvedEvent = new PlayerCurseResolvedEvent(table.Players.Current.Nickname, curse.Code, card.Code);
+            table.ActionLog.Add(curseResolvedEvent);
 
             // NOTE: The curse should be added to CardsInPlay when played
             table.Discard(card);
@@ -40,6 +47,9 @@ namespace Munchkin.Core.Model.Phases
         {
             curse.BadStuff(table);
             table.Discard(curse);
+
+            var curseBadStuffEvent = new PlayerCurseBadStuffTakenEvent(table.Players.Current.Nickname, curse.Code);
+            table.ActionLog.Add(curseBadStuffEvent);
 
             return table;
         }

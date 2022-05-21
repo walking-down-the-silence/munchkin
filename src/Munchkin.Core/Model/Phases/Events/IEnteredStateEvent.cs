@@ -3,9 +3,9 @@
 namespace Munchkin.Core.Model.Phases.Events
 {
     /// <summary>
-    /// A marker interface that defines running away from monster event.
+    /// A marker interface that defines the start of some new state.
     /// </summary>
-    public interface IRunningAwayEvent : IEvent
+    public interface IEnteredStateEvent : IEvent
     {
     }
 }

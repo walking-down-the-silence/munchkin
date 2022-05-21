@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Munchkin.Core.Contracts.Events;
 
 namespace Munchkin.Core.Model.Phases.Events
 {
-    public interface IAskingForHelpEvent
+    /// <summary>
+    /// A marker interface that defines asking for help event.
+    /// </summary>
+    public interface IAskingForHelpEvent : IEvent
     {
-        DateTimeOffset CreatedDate { get; }
     }
 }

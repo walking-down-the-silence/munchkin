@@ -1,4 +1,13 @@
-﻿namespace Munchkin.Core.Model.Phases.Events
+﻿using Munchkin.Core.Contracts.Events;
+using System;
+
+namespace Munchkin.Core.Model.Phases.Events
 {
-    public record CombatStartedEvent(string PlayerNickname, string MonsterCardId);
+    /// <summary>
+    /// Defines an event when the combat started in the dungeon.
+    /// </summary>
+    public record CombatStartedEvent(string PlayerNickname, string MonsterCardId) :
+        EventBase(DateTimeOffset.UtcNow),
+        ICombatEvent,
+        IEnteredStateEvent;
 }

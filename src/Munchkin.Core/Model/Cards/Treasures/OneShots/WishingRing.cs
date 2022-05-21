@@ -8,7 +8,7 @@ namespace Munchkin.Core.Model.Cards.Treasures.OneShot
         public WishingRing() :
             base(MunchkinDeluxeCards.Treasures.WishingRing1, "Wishing Ring", 0, 0, 500)
         {
-            AddAttribute(new CancelCurseAttribute());
+            AddAttribute(new ResolveCurseAttribute());
         }
     }
 }

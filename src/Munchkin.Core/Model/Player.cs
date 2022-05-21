@@ -107,7 +107,7 @@ namespace Munchkin.Core.Model
         {
             if (card is not null)
             {
-                card.Take(this);
+                card.TakenBy(this);
                 _yourHand.Add(card);
                 _backpack.Remove(card);
                 _equipped.Remove(card);
@@ -121,7 +121,7 @@ namespace Munchkin.Core.Model
         {
             if (card is not null)
             {
-                card.Take(this);
+                card.TakenBy(this);
                 _equipped.Add(card);
                 _backpack.Remove(card);
                 _yourHand.Remove(card);
@@ -135,7 +135,7 @@ namespace Munchkin.Core.Model
         {
             if (card is not null)
             {
-                card.Take(this);
+                card.TakenBy(this);
                 _backpack.Add(card);
                 _equipped.Remove(card);
                 _yourHand.Remove(card);
@@ -175,6 +175,9 @@ namespace Munchkin.Core.Model
         /// <param name="treasures">The 4 Treasure cards to take into hand.</param>
         public void ReceiveCards(IReadOnlyCollection<DoorsCard> doors, IReadOnlyCollection<TreasureCard> treasures)
         {
+            ArgumentNullException.ThrowIfNull(doors, nameof(doors));
+            ArgumentNullException.ThrowIfNull(treasures, nameof(treasures));
+
             if (!doors.Any())
                 throw new ArgumentException("Player should be revived with 4 door cards.", nameof(doors));
 

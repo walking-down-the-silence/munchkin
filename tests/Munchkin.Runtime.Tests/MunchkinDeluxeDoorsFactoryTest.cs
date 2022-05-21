@@ -31,7 +31,7 @@ namespace Munchkin.Runtime.Tests
             // PLAYER 2: Cards to deal
             yield return new PottedPlant();
             yield return new PlutoniumDragon();
-            yield return new WizardClass();
+            yield return new ChickenOnYourHead();
             yield return new Enraged();
 
             // PLAYER 3: Cards to deal
@@ -48,7 +48,7 @@ namespace Munchkin.Runtime.Tests
             yield return new DwarfRace();
             yield return new WanderingMonster();
             yield return new WarriorClass();
-            yield return new HalflingRace();
+            yield return new ChangeClass();
 
             // PLAYER 2: Dungeon cards
 
@@ -114,6 +114,7 @@ namespace Munchkin.Runtime.Tests
             //yield return new DwarfRace();
             //yield return new ElfRace();
             //yield return new ElfRace();
+            yield return new HalflingRace();
             //yield return new HalflingRace();
             //yield return new HalflingRace();
 
@@ -122,6 +123,7 @@ namespace Munchkin.Runtime.Tests
             //yield return new ClericClass();
             //yield return new ThiefClass();
             //yield return new ThiefClass();
+            yield return new WizardClass();
             //yield return new WizardClass();
             //yield return new WizardClass();
             //yield return new WarriorClass();
@@ -143,9 +145,7 @@ namespace Munchkin.Runtime.Tests
             yield return new Intelligent();
 
             // curses
-            yield return new ChangeClass();
             yield return new ChangeRace();
-            yield return new ChickenOnYourHead();
             yield return new DuckOfDoom();
             yield return new IncomeTax();
             yield return new LoseOneBigItem();

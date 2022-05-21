@@ -2,5 +2,6 @@
 
 namespace Munchkin.Core.Contracts.Events
 {
-    public abstract record EventBase(DateTimeOffset CreatedDate);
+    public abstract record EventBase(DateTimeOffset CreatedDate) :
+        IEvent;
 }

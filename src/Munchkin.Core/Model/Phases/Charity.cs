@@ -1,4 +1,5 @@
 ﻿using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Model.Exceptions;
 using Munchkin.Core.Model.Phases.Events;
 using System;
 
@@ -27,6 +28,9 @@ namespace Munchkin.Core.Model.Phases
             ArgumentNullException.ThrowIfNull(giver, nameof(giver));
             ArgumentNullException.ThrowIfNull(card, nameof(card));
             ArgumentNullException.ThrowIfNull(taker, nameof(taker));
+
+            if (card.Owner?.Nickname != giver.Nickname)
+                throw new PlayerDoesNotOwnTheCardException();
 
             giver.Discard(card);
             taker.PutInBackpack(card);

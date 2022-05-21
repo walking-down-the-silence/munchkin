@@ -1,4 +1,5 @@
 ﻿using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Model.Exceptions;
 using Munchkin.Core.Model.Phases.Events;
 using System;
 
@@ -21,7 +22,7 @@ namespace Munchkin.Core.Model.Phases
             // NOTE: 'Kick Open the Door' by drawing a card from the Doors Deck
             table = table.TakeDoor(out var doors);
 
-            var kickOpenedTheDoorEvent = new KickOpenedTheDoorEvent(table.Players.Current.Nickname, doors.GetHashCode().ToString());
+            var kickOpenedTheDoorEvent = new KickOpenedTheDoorEvent(table.Players.Current.Nickname, doors.Code);
             table.ActionLog.Add(kickOpenedTheDoorEvent);
 
             table = doors switch
@@ -47,7 +48,7 @@ namespace Munchkin.Core.Model.Phases
             table = table.TakeDoor(out var doors);
             table.Players.Current.TakeInHand(doors);
 
-            var playerTookInHandEvent = new PlayerTookInHandEvent(table.Players.Current.Nickname, doors.GetHashCode().ToString());
+            var playerTookInHandEvent = new PlayerTookInHandEvent(table.Players.Current.Nickname, doors.Code);
             table.ActionLog.Add(playerTookInHandEvent);
 
             return table;
@@ -61,6 +62,9 @@ namespace Munchkin.Core.Model.Phases
         /// <returns>Returns an updated instance of the table.</returns>
         public static Table LookForTrouble(Table table, MonsterCard monster)
         {
+            if (monster.Owner?.Nickname != table.Players.Current.Nickname)
+                throw new PlayerDoesNotOwnTheCardException();
+
             return CreateCombatRoom(table, monster);
         }
 
@@ -84,8 +88,7 @@ namespace Munchkin.Core.Model.Phases
 
             table = table.Play(curse);
 
-            // TODO: use the real card id
-            var playerCursedEvent = new PlayerCursedEvent(player.Nickname, curse.GetHashCode().ToString());
+            var playerCursedEvent = new PlayerCursedEvent(player.Nickname, curse.Code);
             table.ActionLog.Add(playerCursedEvent);
 
             return table;
@@ -98,8 +101,7 @@ namespace Munchkin.Core.Model.Phases
 
             table = table.Play(monster);
 
-            // TODO: use the real card id
-            var combatEvent = new CombatStartedEvent(table.Players.Current.Nickname, monster.GetHashCode().ToString());
+            var combatEvent = new CombatStartedEvent(table.Players.Current.Nickname, monster.Code);
             table.ActionLog.Add(combatEvent);
 
             return table;
@@ -114,7 +116,7 @@ namespace Munchkin.Core.Model.Phases
             // go into your hand and may be played on any player at any time.
             table.Players.Current.TakeInHand(card);
 
-            var playerHandEvent = new PlayerTookInHandEvent(table.Players.Current.Nickname, card.GetHashCode().ToString());
+            var playerHandEvent = new PlayerTookInHandEvent(table.Players.Current.Nickname, card.Code);
             table.ActionLog.Add(playerHandEvent);
 
             return table;

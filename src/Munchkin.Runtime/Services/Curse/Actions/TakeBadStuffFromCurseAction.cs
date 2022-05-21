@@ -5,6 +5,6 @@ using Munchkin.Runtime.Services;
 namespace Munchkin.Core.Model.Phases
 {
     public record TakeBadStuffFromCurseAction(Table Table, CurseCard Curse) :
-        ActionBase(TurnActions.Curse.TakeBadStuff, "Take Bad Stuff", string.Empty),
+        ActionBase(TurnActions.Curse.TakeBadStuff, "TakenBy Bad Stuff", string.Empty),
         ICurseAction;
 }

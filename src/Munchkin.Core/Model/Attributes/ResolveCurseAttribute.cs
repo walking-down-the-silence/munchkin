@@ -2,6 +2,6 @@
 
 namespace Munchkin.Core.Model.Attributes
 {
-    public record CancelCurseAttribute() :
-        Attribute("Cancel Curse");
+    public record ResolveCurseAttribute() :
+        Attribute("Resolve Curse");
 }
