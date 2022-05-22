@@ -11,6 +11,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Races
             base(MunchkinDeluxeCards.Doors.ElfRace1, "Elf")
         {
             AddAttribute(new ElfAttribute());
+            AddAttribute(new RunAwayBonusAttribute(1));
         }
 
         public override Task Play(Table context)

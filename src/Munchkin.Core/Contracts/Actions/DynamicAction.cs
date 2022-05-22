@@ -7,8 +7,26 @@ namespace Munchkin.Core.Contracts.Actions
         ActionBase(Type, Title, Description),
         IAction<Table>
     {
-        public abstract bool CanExecute(Table state);
+        public bool CanExecute(Table table)
+        {
+            return OnCanExecute(table);
+        }
 
-        public abstract Task<Table> ExecuteAsync(Table state);
+        public async Task<Table> ExecuteAsync(Table table)
+        {
+            table = await OnBeforeExecuteAsync(table);
+            table = await OnExecuteAsync(table);
+            table = await OnAfterExecuteAsync(table);
+            return table;
+        }
+
+
+        protected abstract bool OnCanExecute(Table table);
+
+        protected virtual Task<Table> OnBeforeExecuteAsync(Table table) => Task.FromResult(table);
+
+        protected virtual Task<Table> OnExecuteAsync(Table table) => Task.FromResult(table);
+
+        protected virtual Task<Table> OnAfterExecuteAsync(Table table) => Task.FromResult(table);
     }
 }

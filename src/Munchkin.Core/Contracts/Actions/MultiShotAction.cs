@@ -12,7 +12,7 @@ namespace Munchkin.Core.Contracts.Actions
 
         public int ExecutionsLeft => _executionsLeft;
 
-        public override Task<Table> ExecuteAsync(Table table)
+        protected override Task<Table> OnBeforeExecuteAsync(Table table)
         {
             Interlocked.Decrement(ref _executionsLeft);
             return Task.FromResult(table);

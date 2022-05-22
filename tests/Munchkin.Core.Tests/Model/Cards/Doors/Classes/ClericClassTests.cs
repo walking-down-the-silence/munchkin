@@ -11,7 +11,7 @@ namespace Munchkin.Core.Tests.Model.Cards.Doors.Classes
     public class ClericClassTests
     {
         [Fact]
-        public void Take__OnPlayerNull__ShouldThrowArgumentNullException()
+        public void TakenBy__OnPlayerNull__ShouldThrowArgumentNullException()
         {
             // Arrange
             var table = Table.Empty();
@@ -27,7 +27,7 @@ namespace Munchkin.Core.Tests.Model.Cards.Doors.Classes
         }
 
         [Fact]
-        public void Take__OnPlayer__ShouldHaveOwnerNotNull()
+        public void TakenBy__OnPlayer__ShouldHaveOwnerNotNull()
         {
             // Arrange
             var playerJohny = new Player("johny.cash", Contracts.EGender.Male);
@@ -91,6 +91,51 @@ namespace Munchkin.Core.Tests.Model.Cards.Doors.Classes
             clericClass.BoundCards.Should().BeEmpty();
             superMunchkin.BoundTo.Should().BeNull();
             playerJohny.AllCards().Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Equip__OnEmptyTableAndNullPlayer__ShouldThrow_ArgumentNullException()
+        {
+            // Arrange
+            var table = Table.Empty();
+            var clericClass = new ClericClass();
+
+            // Act
+            var argumentNullException = Record.Exception(() => clericClass.Equip(table, null));
+
+            // Assert
+            argumentNullException.Should().NotBeNull();
+            argumentNullException.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Equip__OnNullTableAndNotNullPlayer__ShouldThrow_ArgumentNullException()
+        {
+            // Arrange
+            var playerJohny = new Player("johny.cash", Contracts.EGender.Male);
+            var clericClass = new ClericClass();
+
+            // Act
+            var argumentNullException = Record.Exception(() => clericClass.Equip(null, playerJohny));
+
+            // Assert
+            argumentNullException.Should().NotBeNull();
+            argumentNullException.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Equip__OnEmptyTableAndNotNullPlayer__ShouldHave_ClericEquipped()
+        {
+            // Arrange
+            var table = Table.Empty();
+            var playerJohny = new Player("johny.cash", Contracts.EGender.Male);
+            var clericClass = new ClericClass();
+
+            // Act
+            clericClass.Equip(table, playerJohny);
+
+            // Assert
+            playerJohny.Equipped.Should().Contain(clericClass);
         }
     }
 }

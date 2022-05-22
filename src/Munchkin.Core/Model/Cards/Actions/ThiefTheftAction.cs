@@ -1,18 +1,19 @@
 using Munchkin.Core.Contracts.Actions;
 using System;
 using System.Threading.Tasks;
+using static Munchkin.Core.Model.Cards.MunchkinDeluxeCards;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal record ThiefStealCardAction() :
-        DynamicAction(string.Empty, "Steal A Card", string.Empty)
+    internal record ThiefTheftAction() :
+        DynamicAction(ThiefClass.Theft, "Theft", "Try To Steal A Card")
     {
-        public override bool CanExecute(Table state)
+        protected override bool OnCanExecute(Table table)
         {
             throw new NotImplementedException();
         }
 
-        public override Task<Table> ExecuteAsync(Table state)
+        protected override Task<Table> OnExecuteAsync(Table table)
         {
             throw new NotImplementedException();
             // TODO: if stabbing failed, can player try and stab once more?

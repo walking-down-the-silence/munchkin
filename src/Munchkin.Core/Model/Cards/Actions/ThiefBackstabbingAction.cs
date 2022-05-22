@@ -1,18 +1,19 @@
 using Munchkin.Core.Contracts.Actions;
 using System;
 using System.Threading.Tasks;
+using static Munchkin.Core.Model.Cards.MunchkinDeluxeCards;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal record ThiefStabFor2Action() :
-        DynamicAction(string.Empty, "Stab (-2)", string.Empty)
+    internal record ThiefBackstabbingAction() :
+        DynamicAction(ThiefClass.Backstabbing, "Backstabbing", "Stab (-2)")
     {
-        public override bool CanExecute(Table state)
+        protected override bool OnCanExecute(Table table)
         {
             throw new NotImplementedException();
         }
 
-        public override Task<Table> ExecuteAsync(Table state)
+        protected override Task<Table> OnExecuteAsync(Table table)
         {
             throw new NotImplementedException();
             //var playerCards = Player.Equipped

@@ -1,20 +1,28 @@
 using Munchkin.Core.Contracts.Actions;
+using System;
 using System.Threading.Tasks;
+using static Munchkin.Core.Model.Cards.MunchkinDeluxeCards;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal record WizardFleeMonsterAction() :
-        DynamicAction(string.Empty, "Flee Monster", string.Empty),
+    internal record WizardCharmSpellAction() :
+        DynamicAction(WizardClass.CharmSpell, "Charm Spell", "Flee Monster From Combat"),
         IRenewableAction<Table>
     {
         private bool _wasExecuted = false;
 
-        public override bool CanExecute(Table state)
+        public bool Reset(Table state)
         {
-            return !_wasExecuted && state.Players.Current.YourHand.Count >= 3;
+            _wasExecuted = false;
+            return true;
         }
 
-        public override async Task<Table> ExecuteAsync(Table table)
+        protected override bool OnCanExecute(Table table)
+        {
+            return !_wasExecuted && table.Players.Current.YourHand.Count >= 3;
+        }
+
+        protected override Task<Table> OnExecuteAsync(Table table)
         {
             //var selectCardFromHandRequest = new PlayerSelectSingleCardRequest(table.Players.Current, table, table.Players.Current.YourHand);
             //await state.RequestSink.Send(selectCardFromHandRequest).ContinueWith(x => x.Result.Discard(state));
@@ -26,14 +34,7 @@ namespace Munchkin.Core.Model.Actions
             //var selectMonsterInPlayRequest = new PlayerSelectSingleCardRequest(table.Players.Current, table, table.Players.Current.YourHand);
             //await state.RequestSink.Send(selectMonsterInPlayRequest).ContinueWith(x => x.Result.Discard(state));
 
-            _wasExecuted = true;
-            return table;
-        }
-
-        public bool Reset(Table state)
-        {
-            _wasExecuted = false;
-            return true;
+            throw new NotImplementedException();
         }
     }
 }

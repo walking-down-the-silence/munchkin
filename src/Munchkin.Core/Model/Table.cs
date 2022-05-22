@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Contracts.Events;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Expansions;
 using Munchkin.Extensions.Threading;
@@ -19,8 +20,8 @@ namespace Munchkin.Core.Model
     public sealed record Table
     {
         private readonly IShuffleAlgorithm<Card> _shuffleAlgorithm;
-        private readonly List<object> _actionLog = new();
-        private ImmutableList<object> _eventLog = ImmutableList<object>.Empty;
+        private readonly List<IEvent> _actionLog = new();
+        private ImmutableList<IEvent> _eventLog = ImmutableList<IEvent>.Empty;
         private ImmutableDictionary<string, ExpansionOption> _availableExpansions;
         private ImmutableDictionary<string, ExpansionOption> _selectedExpansions;
         private ImmutableArray<Card> _doorCards;
@@ -110,12 +111,12 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Gets an ordered collection of events that happened to the table.
         /// </summary>
-        public IReadOnlyCollection<object> EventLog => _eventLog;
+        public IReadOnlyCollection<IEvent> EventLog => _eventLog;
 
         /// <summary>
         /// Gets the series of events that happened as the result of any action performed.
         /// </summary>
-        public ICollection<object> ActionLog => _actionLog;
+        public ICollection<IEvent> ActionLog => _actionLog;
 
         /// <summary>
         /// Request sink that is used for player interaction when a selection or decision is needed.

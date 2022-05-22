@@ -21,8 +21,8 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
         public override Task Play(Table context)
         {
             // TODO: Owner here is null because it is not set yet
-            StealTheCard = new ThiefStealCardAction();
-            Backstab = new ThiefStabFor2Action();
+            StealTheCard = new ThiefTheftAction();
+            Backstab = new ThiefBackstabbingAction();
 
             return Task.CompletedTask;
         }

@@ -1,8 +1,8 @@
 ﻿namespace Munchkin.Core.Model.Cards
 {
-    public class MunchkinDeluxeCards
+    public static partial class MunchkinDeluxeCards
     {
-        public class Treasures
+        public static class Treasures
         {
             // level ups
             public const string ThousandGoldPieces               = "munchkin.card.treasure.1000-gold-pieces";
@@ -85,7 +85,7 @@
             public const string TubaOfCharm                      = "munchkin.card.treasure.tuba-of-charm";
         }
 
-        public class Doors
+        public static class Doors
         {
             // specials
             public const string Halfbreed1                           = "munchkin.card.door.halfbreed1";

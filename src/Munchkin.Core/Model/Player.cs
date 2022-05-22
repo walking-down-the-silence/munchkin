@@ -2,7 +2,6 @@
 using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Cards.Doors;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,7 @@ namespace Munchkin.Core.Model
     /// <summary>
     /// Represent the player in the game with a name, level and other attributes.
     /// </summary>
-    public class Player
+    public class Player : IEquatable<Player>
     {
         private readonly List<Card> _yourHand = new();
         private readonly List<Card> _backpack = new();
@@ -79,6 +78,9 @@ namespace Munchkin.Core.Model
 
         /// <inheritdoc />
         public override string ToString() => $"{Nickname}, Level {Level}, {Life}";
+
+        /// <inheritdoc />
+        public bool Equals(Player other) => string.Equals(Nickname, other?.Nickname, StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// Levels up the player.

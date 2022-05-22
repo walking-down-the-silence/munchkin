@@ -1,6 +1,6 @@
 ﻿using Munchkin.Core.Contracts;
-using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Rules;
+using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Attributes;
 using System.Linq;
 
@@ -8,10 +8,16 @@ namespace Munchkin.Core.Model.Rules
 {
     public class CanCarryBigItemRule : IRule<Table>
     {
-        public bool Satisfies(Table state)
+        public bool Satisfies(Table table)
         {
-            return state.Players.Current.Equipped.Any(card => card.Attributes.OfType<CarryAnyAmountOfBigItemsAttribute>().Any())
-                && state.Players.Current.Equipped.OfType<ItemCard>().All(item => item.ItemSize != EItemSize.Big);
+            var currentPlayer = table.Players.Current;
+            var bigItemsCarried = currentPlayer.Equipped
+                .Concat(currentPlayer.Backpack)
+                .Where(x => x.HasAttribute<ItemSizeAttribute>())
+                .Where(x => x.GetAttribute<ItemSizeAttribute>().ItemSize == EItemSize.Big)
+                .Count();
+
+            return bigItemsCarried < currentPlayer.GetMaximumBigItemsCarried();
         }
     }
 }

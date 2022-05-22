@@ -1,6 +1,7 @@
 ﻿using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Exceptions;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -11,13 +12,21 @@ namespace Munchkin.Core.Extensions
         /// <summary>
         /// Gets if any of the players has won the game.
         /// </summary>
-        public static bool IsGameOver(this Table table) => table.Players.Any(x => x.Level >= table.WinningLevel);
+        public static bool IsGameOver(this Table table)
+        {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            return table.Players.Any(x => x.Level >= table.WinningLevel);
+        }
 
         /// <summary>
         /// Gets if the table is empty and has no players besides it.
         /// </summary>
         /// <param name="table">The table to chak against.</param>
-        public static bool IsEmpty(this Table table) => !table.Players.Any();
+        public static bool IsEmpty(this Table table)
+        {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            return !table.Players.Any();
+        }
 
         /// <summary>
         /// Closes the table for joining/leaving and shuffles the decks.
@@ -25,6 +34,8 @@ namespace Munchkin.Core.Extensions
         /// <returns></returns>
         public static Table Setup(this Table table)
         {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+
             // NOTE: Divide the cards into the Door deck and the Treasure deck. Shuffle both decks.
             // NOTE: Deal four cards from each deck to each player.
             table = table with
@@ -45,7 +56,11 @@ namespace Munchkin.Core.Extensions
         /// <returns>Returns an updated isntance of the table after the turn has moved to another player.</returns>
         public static Table NextTurn(this Table table)
         {
-            if (table.Players.Current.YourHand.Count > 5)
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+
+            var currentPlayer = table.Players.Current;
+
+            if (currentPlayer.YourHand.Count > currentPlayer.GetMaximumCardsInHand())
                 throw new PlayerHasTooManyCardsInHandException();
 
             var doorCardsToDiscard = table.DungeonCards.OfType<DoorsCard>();
@@ -61,8 +76,8 @@ namespace Munchkin.Core.Extensions
             // NOTE: When the next player begins his turn, your new character appears and can
             // help others in combat with his Level and Class or Race abilities... but you
             // have no cards, unless you receive Charity or gifts from other players.
-            if (table.Players.Current.IsDead())
-                table.Players.Current.Revive();
+            if (currentPlayer.IsDead())
+                currentPlayer.Revive();
 
             var nextPlayer = table.Players.Next();
 
@@ -83,6 +98,9 @@ namespace Munchkin.Core.Extensions
         /// <returns>Return an updated table instance.</returns>
         public static Table DealCards(this Table table, Player player)
         {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
             table = table with { DoorsCardDeck = table.DoorsCardDeck.TakeRange(4, out var doorCards) };
             table = table with { TreasureCardDeck = table.TreasureCardDeck.TakeRange(4, out var treasureCards) };
             player.ReceiveCards(doorCards.ToArray(), treasureCards.ToArray());
@@ -97,6 +115,9 @@ namespace Munchkin.Core.Extensions
         /// <returns>Return an updated table instance.</returns>
         public static Table KillPlayer(this Table table, Player player)
         {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
             var cardsToDiscard = player.Die();
             cardsToDiscard.ForEach(card => card.Discard(table));
             return table;
@@ -110,6 +131,9 @@ namespace Munchkin.Core.Extensions
         /// <returns>Return an updated table instance.</returns>
         public static Table DiscardPlayersHand(this Table table, Player player)
         {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
             player.YourHand.OfType<DoorsCard>().ForEach(card => card.Discard(table));
             player.YourHand.OfType<TreasureCard>().ForEach(card => card.Discard(table));
             return table;
@@ -123,6 +147,9 @@ namespace Munchkin.Core.Extensions
         /// <returns>Return an updated table instance.</returns>
         public static Table DiscardPlayersBackpack(this Table table, Player player)
         {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
             player.Backpack.OfType<DoorsCard>().ForEach(card => card.Discard(table));
             player.Backpack.OfType<TreasureCard>().ForEach(card => card.Discard(table));
             return table;
@@ -136,6 +163,9 @@ namespace Munchkin.Core.Extensions
         /// <returns>Return an updated table instance.</returns>
         public static Table DiscardPlayersEquipped(this Table table, Player player)
         {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
             player.Equipped.OfType<DoorsCard>().ForEach(card => card.Discard(table));
             player.Equipped.OfType<TreasureCard>().ForEach(card => card.Discard(table));
             return table;

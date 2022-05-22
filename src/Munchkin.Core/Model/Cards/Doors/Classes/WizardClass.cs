@@ -19,7 +19,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
         public override Task Play(Table context)
         {
             // TODO: Owner here is null because it is not set yet
-            FleeMonster = new WizardFleeMonsterAction();
+            FleeMonster = new WizardCharmSpellAction();
 
             return Task.CompletedTask;
         }

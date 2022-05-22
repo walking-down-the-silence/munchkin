@@ -17,5 +17,15 @@ namespace Munchkin.Core.Model.Cards.Doors.Races
         {
             throw new NotImplementedException();
         }
+
+        public Table SellDoublePrice(Table table, ItemCard card)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Table RerollTheDice(Table table, Card dicardCard)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
