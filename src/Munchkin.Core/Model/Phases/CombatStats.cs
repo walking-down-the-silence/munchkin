@@ -1,4 +1,5 @@
-﻿using Munchkin.Core.Contracts.Cards;
+﻿using Munchkin.Core.Contracts;
+using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Attributes;
 using System;
@@ -56,8 +57,8 @@ namespace Munchkin.Core.Model.Phases
                 .Where(x => x.Owner == fightingPlayer || x.Owner == helpingPlayer)
                 .ToArray();
 
-            var monsterStrength = GetMonstersStrength(monsters, monsterEnhancers);
-            var playersStrength = GetPlayersStrength(fightingPlayer, helpingPlayer, playerEnhancers);
+            var monsterStrength = GetMonstersStrength(table, monsters, monsterEnhancers);
+            var playersStrength = GetPlayersStrength(table, fightingPlayer, helpingPlayer, playerEnhancers);
 
             return new CombatStats(
                 fightingPlayer,
@@ -72,31 +73,47 @@ namespace Munchkin.Core.Model.Phases
         /// </summary>
         /// <returns>An integer value that indicates the strength.</returns>
         private static int GetMonstersStrength(
+            Table table,
             IReadOnlyCollection<MonsterCard> Monsters,
             IReadOnlyCollection<Card> MonsterEnhancers)
         {
-            var monsterEnhancersStrength = MonsterEnhancers.Aggregate(0, (total, card) =>
-                total + card.AggregateAttributes<StrengthBonusAttribute>(x => x.Bonus));
-            var monsterLevelsStrength = Monsters.Aggregate(0, (totalStrength, monster) => totalStrength + monster.Level);
-            return monsterLevelsStrength + monsterEnhancersStrength;
+            var monsterEnhancersStrength = MonsterEnhancers
+                .Sum(card => card.AggregateAttributes<StrengthBonusAttribute>(x => x.Bonus));
+
+            var monsterLevelsStrength = Monsters.Sum(monster => monster.Level);
+
+            var monsterEffectStrength = table.ActionLog
+                .OfType<ISupportAttributes>()
+                .Where(x => x.HasAttribute<MonsterStrengthBonusAttribute>())
+                .Sum(x => x.MonsterStrength());
+
+            return monsterLevelsStrength + monsterEnhancersStrength + monsterEffectStrength;
         }
 
         /// <summary>
-        /// Gets the players in combat strength combined.
+        /// Gets the players in combat x combined.
         /// </summary>
-        /// <returns>An integer value that indicates the strength.</returns>
+        /// <returns>An integer value that indicates the x.</returns>
         private static int GetPlayersStrength(
+            Table table,
             Player FightingPlayer,
             Player HelpingPlayer,
             IReadOnlyCollection<Card> PlayerEnhancers)
         {
-            var playerEnhancersStrength = PlayerEnhancers.Aggregate(0, (total, card) =>
-                total + card.AggregateAttributes<StrengthBonusAttribute>(x => x.Bonus));
-            var playerLevelStrength = FightingPlayer.Level
+            var playerEnhancersStrength = PlayerEnhancers
+                .Sum(card => card.AggregateAttributes<StrengthBonusAttribute>(x => x.Bonus));
+
+            var playerLevelsStrength = FightingPlayer.Level
                 + FightingPlayer.Strength
                 + (HelpingPlayer?.Level ?? 0)
                 + (HelpingPlayer?.Strength ?? 0);
-            return playerLevelStrength + playerEnhancersStrength;
+
+            var playerEffectStrength = table.ActionLog
+                .OfType<ISupportAttributes>()
+                .Where(x => x.HasAttribute<PlayerStrengthBonusAttribute>())
+                .Sum(x => x.PlayersStrength());
+
+            return playerLevelsStrength + playerEnhancersStrength + playerEffectStrength;
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Munchkin.Core.Model.Phases
             ArgumentNullException.ThrowIfNull(card, nameof(card));
             ArgumentNullException.ThrowIfNull(taker, nameof(taker));
 
-            if (card.Owner?.Nickname != giver.Nickname)
+            if (card.Owner != giver)
                 throw new PlayerDoesNotOwnTheCardException();
 
             giver.Discard(card);

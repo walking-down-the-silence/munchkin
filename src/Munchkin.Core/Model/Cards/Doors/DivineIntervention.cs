@@ -1,6 +1,6 @@
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
-using Munchkin.Core.Model.Cards.Doors.Classes;
+using Munchkin.Core.Model.Attributes;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,11 +13,12 @@ namespace Munchkin.Core.Model.Cards.Doors
         {
         }
 
-        public override Task Play(Table context)
+        public override Task Play(Table table)
         {
-            context.Players
-                .Where(player => player.Equipped.FirstOrDefault(x => x is ClericClass) != null)
+            table.Players
+                .Where(player => player.Equipped.Any(x => x.HasAttribute<ClericAttribute>()))
                 .ForEach(player => player.LevelUp());
+
             return Task.CompletedTask;
         }
     }

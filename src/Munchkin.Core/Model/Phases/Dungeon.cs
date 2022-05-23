@@ -62,7 +62,10 @@ namespace Munchkin.Core.Model.Phases
         /// <returns>Returns an updated instance of the table.</returns>
         public static Table LookForTrouble(Table table, MonsterCard monster)
         {
-            if (monster.Owner?.Nickname != table.Players.Current.Nickname)
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(monster, nameof(monster));
+
+            if (monster.Owner != table.Players.Current)
                 throw new PlayerDoesNotOwnTheCardException();
 
             return CreateCombatRoom(table, monster);
@@ -77,15 +80,15 @@ namespace Munchkin.Core.Model.Phases
         /// <returns>Returns an updated instance of the table.</returns>
         public static Table Curse(Table table, CurseCard curse, Player player)
         {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(curse, nameof(curse));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
             return CreateCursedRoom(table, player, curse);
         }
 
         private static Table CreateCursedRoom(Table table, Player player, CurseCard curse)
         {
-            ArgumentNullException.ThrowIfNull(table, nameof(table));
-            ArgumentNullException.ThrowIfNull(player, nameof(player));
-            ArgumentNullException.ThrowIfNull(curse, nameof(curse));
-
             table = table.Play(curse);
 
             var playerCursedEvent = new PlayerCursedEvent(player.Nickname, curse.Code);
@@ -96,9 +99,6 @@ namespace Munchkin.Core.Model.Phases
 
         private static Table CreateCombatRoom(Table table, MonsterCard monster)
         {
-            ArgumentNullException.ThrowIfNull(table, nameof(table));
-            ArgumentNullException.ThrowIfNull(monster, nameof(monster));
-
             table = table.Play(monster);
 
             var combatEvent = new CombatStartedEvent(table.Players.Current.Nickname, monster.Code);
@@ -109,9 +109,6 @@ namespace Munchkin.Core.Model.Phases
 
         private static Table CreateEmptyRoom(Table table, DoorsCard card)
         {
-            ArgumentNullException.ThrowIfNull(table, nameof(table));
-            ArgumentNullException.ThrowIfNull(card, nameof(card));
-
             // NOTE: If acquired some other way, such as by Looting The Room, Curse cards
             // go into your hand and may be played on any player at any time.
             table.Players.Current.TakeInHand(card);

@@ -23,8 +23,8 @@ namespace Munchkin.Core.Model.Phases
             var combatStats = CombatStats.From(table);
 
             var monsters = table.DungeonCards.OfType<MonsterCard>();
-            var rewardTreasures = monsters.Aggregate(0, (total, monster) => total + monster.RewardTreasures);
-            var rewardLevels = monsters.Aggregate(0, (total, monster) => total + monster.RewardLevels);
+            var rewardTreasures = monsters.Sum(monster => monster.RewardTreasures);
+            var rewardLevels = monsters.Sum(monster => monster.RewardLevels);
 
             // TODO: Check if the helping player receives the levels
             combatStats.FightingPlayer.LevelUp(rewardLevels);

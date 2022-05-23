@@ -3,6 +3,7 @@ using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Exceptions;
 using Munchkin.Core.Model.Phases.Events;
+using System;
 
 namespace Munchkin.Core.Model.Phases
 {
@@ -20,7 +21,11 @@ namespace Munchkin.Core.Model.Phases
         /// <exception cref="CurseCannotBeCancelledWithTheChosenCardException">Thrown if the card cannot resolve curses.</exception>
         public static Table Resolve(Table table, CurseCard curse, Card card)
         {
-            if (card.Owner?.Nickname != table.Players.Current.Nickname)
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(curse, nameof(curse));
+            ArgumentNullException.ThrowIfNull(card, nameof(card));
+
+            if (card.Owner != table.Players.Current)
                 throw new PlayerDoesNotOwnTheCardException();
 
             // NOTE: remove from player's cards and add it to the temporary pile,
@@ -45,6 +50,9 @@ namespace Munchkin.Core.Model.Phases
         /// <returns>Returns an updated instance of the table.</returns>
         public static Table TakeBadStuff(Table table, CurseCard curse)
         {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(curse, nameof(curse));
+
             curse.BadStuff(table);
             table.Discard(curse);
 

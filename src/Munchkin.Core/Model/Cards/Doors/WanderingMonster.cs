@@ -1,5 +1,4 @@
 using Munchkin.Core.Contracts.Cards;
-using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors
 {
@@ -8,11 +7,6 @@ namespace Munchkin.Core.Model.Cards.Doors
         public WanderingMonster() :
             base(MunchkinDeluxeCards.Doors.WanderingMonster1, "Wandering Monster")
         {
-        }
-
-        public override Task Play(Table context)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

@@ -1,7 +1,22 @@
-﻿using System;
+﻿using Munchkin.Core.Extensions;
+using Munchkin.Core.Model.Attributes;
 
 namespace Munchkin.Core.Contracts.Events
 {
-    public record PlayerCardSoldEvent(string PlayerNickname, string CardId, int GoldPieces) :
-        EventBase(DateTimeOffset.UtcNow);
+    public sealed class PlayerCardSoldEvent : EventSupportingAttributes
+    {
+        public PlayerCardSoldEvent(string playerNickname, string cardId, int GoldPieces)
+        {
+            PlayerNickname = playerNickname;
+            CardId = cardId;
+
+            AddAttribute(new GoldPiecesAttribute(GoldPieces));
+        }
+
+        public string PlayerNickname { get; }
+
+        public string CardId { get; }
+
+        public int GoldPieces => this.GetAttribute<GoldPiecesAttribute>().Gold;
+    }
 }

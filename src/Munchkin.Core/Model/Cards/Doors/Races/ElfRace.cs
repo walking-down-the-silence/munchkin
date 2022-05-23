@@ -1,7 +1,5 @@
 ﻿using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model.Attributes;
-using System;
-using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Races
 {
@@ -12,11 +10,6 @@ namespace Munchkin.Core.Model.Cards.Doors.Races
         {
             AddAttribute(new ElfAttribute());
             AddAttribute(new RunAwayBonusAttribute(1));
-        }
-
-        public override Task Play(Table context)
-        {
-            throw new NotImplementedException();
         }
     }
 }

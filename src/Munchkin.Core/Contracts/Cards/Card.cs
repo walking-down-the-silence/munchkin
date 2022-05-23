@@ -11,7 +11,7 @@ namespace Munchkin.Core.Contracts.Cards
     /// <summary>
     /// The base card type that describes the behaviour.
     /// </summary>
-    public abstract class Card
+    public abstract class Card : ISupportAttributes
     {
         private readonly List<Card> _boundCards = new();
         private readonly List<IConditionalEffect<Table>> _effects = new();
@@ -92,7 +92,7 @@ namespace Munchkin.Core.Contracts.Cards
         /// </summary>
         /// <param name="table"> Game table that contains everything in the game. </param>
         /// <returns> The task to be awaited if playing a card requires players interaction. </returns>
-        public abstract Task Play(Table table);
+        public virtual Task Play(Table table) => Task.CompletedTask;
 
         /// <summary>
         /// Executes the discard logic for the card.

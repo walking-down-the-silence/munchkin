@@ -1,6 +1,5 @@
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model.Attributes;
-using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors
 {
@@ -11,7 +10,5 @@ namespace Munchkin.Core.Model.Cards.Doors
         {
             AddAttribute(new MaximumEquippedRacesAttribute(2));
         }
-
-        public override Task Play(Table context) => Task.CompletedTask;
     }
 }
