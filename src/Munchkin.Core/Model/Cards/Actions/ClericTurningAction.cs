@@ -30,7 +30,7 @@ namespace Munchkin.Core.Model.Actions
         {
             table = await base.OnExecuteAsync(table);
 
-            var clericBonus3Event = new ClericTurningBonus3AgainstUndeadEvent(table.Players.Current.Nickname, string.Empty);
+            var clericBonus3Event = new ClericTurningActionEvent(table.Players.Current.Nickname, string.Empty);
             table.ActionLog.Add(clericBonus3Event);
 
             return table;

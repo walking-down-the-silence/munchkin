@@ -3,7 +3,7 @@ using System;
 
 namespace Munchkin.Core.Model.Cards.Events
 {
-    public sealed record ClericClassCardRevivedEvent(string PlayerNickname, string RevivedCardId) :
+    public sealed record WizardFlightSpellActionEvent(string PlayerNickname, string DiscardCardId) :
         EventBase(DateTimeOffset.UtcNow),
         IClassActionEvent;
 }

@@ -5,6 +5,7 @@ using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Cards.Events;
 using Munchkin.Core.Model.Exceptions;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Classes
@@ -34,6 +35,9 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
             ArgumentNullException.ThrowIfNull(table, nameof(table));
             ArgumentNullException.ThrowIfNull(discardCard, nameof(discardCard));
 
+            if (table.ActionLog.OfType<ThiefBackstabbingActionEvent>().Count() >= 2)
+                throw new PlayerCannotPerformActionException("Player cannot use 'Backstabbing' ability, because it was used maximum times (maximum 1 per each player in combat).");
+
             if (Owner != discardCard.Owner)
                 throw new PlayerDoesNotOwnTheCardException();
 
@@ -41,6 +45,9 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
 
             var playerStrengthEvent = new PlayerStrengthBonusChangedEvent(Owner.Nickname, -2);
             table.ActionLog.Add(playerStrengthEvent);
+
+            var berserkingEvent = new ThiefBackstabbingActionEvent(Owner.Nickname, discardCard.Code);
+            table.ActionLog.Add(berserkingEvent);
 
             return table;
         }
@@ -60,6 +67,9 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
             var diceRollResult = Dice.Roll();
             var playerDiceRolledEvent = new PlayerDiceRolledEvent(Owner.Nickname, diceRollResult);
             table.ActionLog.Add(playerDiceRolledEvent);
+
+            var berserkingEvent = new ThiefTheftActionEvent(Owner.Nickname, discardCard.Code);
+            table.ActionLog.Add(berserkingEvent);
 
             if (diceRollResult >= 4)
             {

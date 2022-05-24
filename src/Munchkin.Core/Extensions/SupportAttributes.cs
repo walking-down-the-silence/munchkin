@@ -55,32 +55,62 @@ namespace Munchkin.Core.Extensions
         /// <summary>
         /// Monster strength if any present.
         /// </summary>
-        public static int MonsterStrength(this ISupportAttributes attributes) =>
-            attributes.AggregateAttributes<MonsterStrengthBonusAttribute>(x => x.Bonus);
+        public static int UniversalStrength(this ISupportAttributes attributes)
+        {
+            return attributes.HasAttribute<StrengthBonusAttribute>()
+                ? attributes.AggregateAttributes<StrengthBonusAttribute>(x => x.Bonus)
+                : 0;
+        }
+
+        /// <summary>
+        /// Monster strength if any present.
+        /// </summary>
+        public static int MonsterStrength(this ISupportAttributes attributes)
+        {
+            return attributes.HasAttribute<MonsterStrengthBonusAttribute>()
+                ? attributes.AggregateAttributes<MonsterStrengthBonusAttribute>(x => x.Bonus)
+                : 0;
+        }
 
         /// <summary>
         /// Players strength if any present.
         /// </summary>
-        public static int PlayersStrength(this ISupportAttributes attributes) =>
-            attributes.AggregateAttributes<PlayerStrengthBonusAttribute>(x => x.Bonus);
+        public static int PlayersStrength(this ISupportAttributes attributes)
+        {
+            return attributes.HasAttribute<PlayerStrengthBonusAttribute>()
+                ? attributes.AggregateAttributes<PlayerStrengthBonusAttribute>(x => x.Bonus)
+                : 0;
+        }
 
         /// <summary>
         /// RewardTreasures to run away from dungeon.
         /// </summary>
-        public static int RunAwayBonus(this ISupportAttributes attributes) =>
-            attributes.AggregateAttributes<RunAwayBonusAttribute>(x => x.Bonus);
+        public static int RunAwayBonus(this ISupportAttributes attributes)
+        {
+            return attributes.HasAttribute<RunAwayBonusAttribute>()
+                ? attributes.AggregateAttributes<RunAwayBonusAttribute>(x => x.Bonus)
+                : 0;
+        }
 
         /// <summary>
         /// Levels gained if dungeon is cleared.
         /// </summary>
-        public static int RewardLevels(this ISupportAttributes attributes) =>
-            attributes.AggregateAttributes<RewardLevelsAttribute>(x => x.Bonus);
+        public static int RewardLevels(this ISupportAttributes attributes)
+        {
+            return attributes.HasAttribute<RewardLevelsAttribute>()
+                ? attributes.AggregateAttributes<RewardLevelsAttribute>(x => x.Bonus)
+                : 0;
+        }
 
         /// <summary>
         /// Treasures gained if dungeon is cleared.
         /// </summary>
-        public static int RewardTreasures(this ISupportAttributes attributes) =>
-            attributes.AggregateAttributes<RewardTreasuresAttribute>(x => x.Bonus);
+        public static int RewardTreasures(this ISupportAttributes attributes)
+        {
+            return attributes.HasAttribute<RewardTreasuresAttribute>()
+                ? attributes.AggregateAttributes<RewardTreasuresAttribute>(x => x.Bonus)
+                : 0;
+        }
 
         #endregion
     }

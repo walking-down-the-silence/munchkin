@@ -5,6 +5,7 @@ using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Cards.Events;
 using Munchkin.Core.Model.Exceptions;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Classes
@@ -34,13 +35,16 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
             if (Owner != discardCard.Owner)
                 throw new PlayerDoesNotOwnTheCardException();
 
+            if (table.ActionLog.OfType<WarriorBerserkingBonus1Event>().Count() >= 3)
+                throw new PlayerCannotPerformActionException("Player cannot use 'Berserking' ability, because it was used maximum times (3 times per turn).");
+
             table.Discard(discardCard);
 
             var playerStrengthEvent = new PlayerStrengthBonusChangedEvent(Owner.Nickname, 1);
             table.ActionLog.Add(playerStrengthEvent);
 
-            var clericBonus3Event = new WarriorBerserkingBonus1Event(Owner.Nickname, discardCard.Code);
-            table.ActionLog.Add(clericBonus3Event);
+            var berserkingEvent = new WarriorBerserkingBonus1Event(Owner.Nickname, discardCard.Code);
+            table.ActionLog.Add(berserkingEvent);
 
             return table;
         }

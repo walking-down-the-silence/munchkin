@@ -221,15 +221,16 @@ namespace Munchkin.Runtime.Tests
             cannotCancelCurseExeption.Should().BeOfType<CurseCannotBeCancelledWithTheChosenCardException>();
 
             table = await curseService.ResolveAsync(table.GetUniqueId(), Doors.ChangeClass, Treasures.WishingRing1);
-            table = await tableService.CursePlayerAsync(table.GetUniqueId(), PlayerElonMuskNickname, Doors.ChangeClass);
+            table = await tableService.CursePlayerAsync(table.GetUniqueId(), PlayerElonMuskNickname, Doors.ChickenOnYourHead);
             table = await curseService.TakeBadStuffAsync(table.GetUniqueId(), Doors.ChickenOnYourHead);
 
-            table.Players.Current.Level.Should().Be(4);
-            table.Players.Current.YourHand.Should().HaveCount(7);
-            table.DiscardedDoorsCards.Should().HaveCount(2);
-            table.DungeonCards.Should().HaveCount(3);
+            table.Players.Current.Level.Should().Be(1);
+            table.Players.Current.YourHand.Should().HaveCount(5);
+            table.DiscardedDoorsCards.Should().HaveCount(3);
+            table.DungeonCards.Should().HaveCount(1);
 
             // PHASE: Loot The Room / Look For Trouble
+            table = await dungeonService.LookForTroubleAsync(table.GetUniqueId(), Doors.PlutoniumDragon);
 
             // PHASE: Charity
             table = await charityService.GiveAwayAsync(table.GetUniqueId(), Treasures.BoilAnAnthill, PlayerFrankSinatraNickname, PlayerElonMuskNickname);

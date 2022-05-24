@@ -36,7 +36,6 @@ namespace Munchkin.Core.Model.Phases
             var curseResolvedEvent = new PlayerCurseResolvedEvent(table.Players.Current.Nickname, curse.Code, card.Code);
             table.ActionLog.Add(curseResolvedEvent);
 
-            // NOTE: The curse should be added to CardsInPlay when played
             table.Discard(card);
 
             return table;
@@ -54,7 +53,9 @@ namespace Munchkin.Core.Model.Phases
             ArgumentNullException.ThrowIfNull(curse, nameof(curse));
 
             curse.BadStuff(table);
-            table.Discard(curse);
+
+            if (curse.OneShot)
+                table.Discard(curse);
 
             var curseBadStuffEvent = new PlayerCurseBadStuffTakenEvent(table.Players.Current.Nickname, curse.Code);
             table.ActionLog.Add(curseBadStuffEvent);

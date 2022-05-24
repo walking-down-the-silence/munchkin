@@ -40,6 +40,9 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
             var rewardTreasuredBonusEvent = new CombatRewardTreasuresBonusEvent(monster.RewardTreasures);
             table.ActionLog.Add(rewardTreasuredBonusEvent);
 
+            var charmSpellEvent = new WizardCharmSpellActionEvent(Owner.Nickname, monster.Code);
+            table.ActionLog.Add(charmSpellEvent);
+
             Owner.DiscardHand();
             table.Discard(monster);
 
@@ -59,6 +62,9 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
 
             var runAwayBonus = new CombatRunAwayBonusEvent(Owner.Nickname, 1);
             table.ActionLog.Add(runAwayBonus);
+
+            var flightSpellEvent = new WizardFlightSpellActionEvent(Owner.Nickname, discardCard.Code);
+            table.ActionLog.Add(flightSpellEvent);
 
             return table;
         }

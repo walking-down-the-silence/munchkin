@@ -30,7 +30,7 @@ namespace Munchkin.Runtime.Tests
 
             // PLAYER 2: Cards to deal
             yield return new PottedPlant();
-            yield return new PlutoniumDragon();
+            yield return new MaulRat();
             yield return new ChickenOnYourHead();
             yield return new Enraged();
 
@@ -38,7 +38,7 @@ namespace Munchkin.Runtime.Tests
             yield return new ThiefClass();
             yield return new ElfRace();
             yield return new ChangeSex();
-            yield return new MaulRat();
+            yield return new PlutoniumDragon();
 
             #endregion
 

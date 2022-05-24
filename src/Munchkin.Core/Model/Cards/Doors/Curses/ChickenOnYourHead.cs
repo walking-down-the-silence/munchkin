@@ -6,25 +6,21 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
-    public sealed class ChickenOnYourHead : CurseCard, IEquippable
+    public sealed class ChickenOnYourHead : CurseCard
     {
         public ChickenOnYourHead() :
             base(MunchkinDeluxeCards.Doors.ChickenOnYourHead, "Chiken On Your Head")
         {
             AddAttribute(new RunAwayBonusAttribute(-1));
-        }
-
-        public void Equip(Table table, Player player)
-        {
-            ArgumentNullException.ThrowIfNull(table, nameof(table));
-            ArgumentNullException.ThrowIfNull(player, nameof(player));
-
-            player.Equip(this);
+            AddAttribute(new WearingTypeAttribute(EWearingType.Headgear));
         }
 
         public override Task BadStuff(Table table)
         {
-            Equip(table, Owner);
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+
+            Owner.Equip(this);
+            table.DungeonCards.Remove(this);
 
             return Task.CompletedTask;
         }

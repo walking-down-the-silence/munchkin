@@ -3,11 +3,11 @@ using Munchkin.Core.Model.Attributes;
 
 namespace Munchkin.Core.Model.Cards.Events
 {
-    public sealed class ClericTurningBonus3AgainstUndeadEvent :
+    public sealed class ClericTurningActionEvent :
         EventSupportingAttributes,
         IClassActionEvent
     {
-        public ClericTurningBonus3AgainstUndeadEvent(string playerNickname, string discardedCardId)
+        public ClericTurningActionEvent(string playerNickname, string discardedCardId)
         {
             PlayerNickname = playerNickname;
             DiscardedCardId = discardedCardId;

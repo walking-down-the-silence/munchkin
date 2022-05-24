@@ -5,6 +5,7 @@ using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Cards.Events;
 using Munchkin.Core.Model.Exceptions;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Classes
@@ -25,29 +26,42 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
         {
             ArgumentNullException.ThrowIfNull(table, nameof(table));
 
-            // TODO: Owner here is null because it is not set yet
             RessurectAction = new ClericRessurectionAction(Owner);
             TurningAction = new ClericTurningAction();
 
             return Task.CompletedTask;
         }
 
-        public Table RessurectFromDoorDiscard(Table table)
+        public Table RessurectFromDoorDiscard(Table table, Card discardCard)
         {
             ArgumentNullException.ThrowIfNull(table, nameof(table));
 
+            if (Owner != discardCard.Owner)
+                throw new PlayerDoesNotOwnTheCardException();
+
+            table = table.Discard(discardCard);
             table = table.TakeDoor(out var card);
             Owner.TakeInHand(card);
+
+            var ressurectEvent = new ClericRessurectActionEvent(Owner.Nickname, discardCard.Code, card.Code);
+            table.ActionLog.Add(ressurectEvent);
 
             return table;
         }
 
-        public Table RessurectFromTreasureDiscard(Table table)
+        public Table RessurectFromTreasureDiscard(Table table, Card discardCard)
         {
             ArgumentNullException.ThrowIfNull(table, nameof(table));
 
+            if (Owner != discardCard.Owner)
+                throw new PlayerDoesNotOwnTheCardException();
+
+            table = table.Discard(discardCard);
             table = table.TakeTreasure(out var card);
             Owner.TakeInHand(card);
+
+            var ressurectEvent = new ClericRessurectActionEvent(Owner.Nickname, discardCard.Code, card.Code);
+            table.ActionLog.Add(ressurectEvent);
 
             return table;
         }
@@ -57,6 +71,9 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
             ArgumentNullException.ThrowIfNull(table, nameof(table));
             ArgumentNullException.ThrowIfNull(discardCard, nameof(discardCard));
 
+            if (table.ActionLog.OfType<ClericTurningActionEvent>().Count() >= 3)
+                throw new PlayerCannotPerformActionException("Player cannot use 'Turning' ability, because it was used maximum times (3 times per turn).");
+
             if (Owner != discardCard.Owner)
                 throw new PlayerDoesNotOwnTheCardException();
 
@@ -65,8 +82,8 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
             var playerStrengthEvent = new PlayerStrengthBonusChangedEvent(Owner.Nickname, 3);
             table.ActionLog.Add(playerStrengthEvent);
 
-            var clericBonus3Event = new ClericTurningBonus3AgainstUndeadEvent(Owner.Nickname, discardCard.Code);
-            table.ActionLog.Add(clericBonus3Event);
+            var turningEvent = new ClericTurningActionEvent(Owner.Nickname, discardCard.Code);
+            table.ActionLog.Add(turningEvent);
 
             return table;
         }

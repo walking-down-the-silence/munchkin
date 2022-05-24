@@ -21,11 +21,27 @@ namespace Munchkin.Core.Extensions
         /// <summary>
         /// Gets if the table is empty and has no players besides it.
         /// </summary>
-        /// <param name="table">The table to chak against.</param>
+        /// <param name="table">The table to check against.</param>
         public static bool IsEmpty(this Table table)
         {
             ArgumentNullException.ThrowIfNull(table, nameof(table));
             return !table.Players.Any();
+        }
+
+        /// <summary>
+        /// Gets if the card waas played and is in the discard pile.
+        /// </summary>
+        /// <param name="table">The table where the game takes place.</param>
+        /// <param name="card">The card to check against the discard piles.</param>
+        /// <returns></returns>
+        public static bool IsDiscarded(this Table table, Card card)
+        {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+
+            return table.DungeonCards.Any(x => x.Code == card.Code)
+                || table.DiscardedTreasureCards.Any(x => x.Code == card.Code)
+                || table.DiscardedDoorsCards.Any(x => x.Code == card.Code);
+
         }
 
         /// <summary>

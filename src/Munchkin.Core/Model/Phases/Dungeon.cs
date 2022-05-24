@@ -1,4 +1,5 @@
 ﻿using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Exceptions;
 using Munchkin.Core.Model.Phases.Events;
 using System;
@@ -89,6 +90,9 @@ namespace Munchkin.Core.Model.Phases
 
         private static Table CreateCursedRoom(Table table, Player player, CurseCard curse)
         {
+            if (table.IsDiscarded(curse))
+                throw new CardWasAlreadyPlayedException();
+
             table = table.Play(curse);
 
             var playerCursedEvent = new PlayerCursedEvent(player.Nickname, curse.Code);
@@ -99,6 +103,9 @@ namespace Munchkin.Core.Model.Phases
 
         private static Table CreateCombatRoom(Table table, MonsterCard monster)
         {
+            if (table.IsDiscarded(monster))
+                throw new CardWasAlreadyPlayedException();
+
             table = table.Play(monster);
 
             var combatEvent = new CombatStartedEvent(table.Players.Current.Nickname, monster.Code);
@@ -109,6 +116,9 @@ namespace Munchkin.Core.Model.Phases
 
         private static Table CreateEmptyRoom(Table table, DoorsCard card)
         {
+            if (table.IsDiscarded(card))
+                throw new CardWasAlreadyPlayedException();
+
             // NOTE: If acquired some other way, such as by Looting The Room, Curse cards
             // go into your hand and may be played on any player at any time.
             table.Players.Current.TakeInHand(card);

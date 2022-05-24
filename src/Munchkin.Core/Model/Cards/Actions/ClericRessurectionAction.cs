@@ -22,7 +22,7 @@ namespace Munchkin.Core.Model.Actions
         {
             table = await base.OnExecuteAsync(table);
 
-            var clericCardRevivedEvent = new ClericClassCardRevivedEvent(table.Players.Current.Nickname, string.Empty);
+            var clericCardRevivedEvent = new ClericTurningActionEvent(table.Players.Current.Nickname, string.Empty);
             table.ActionLog.Add(clericCardRevivedEvent);
 
             // TODO: think how to pass the respective deck to take the card from it

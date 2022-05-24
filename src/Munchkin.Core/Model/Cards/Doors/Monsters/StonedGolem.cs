@@ -7,7 +7,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
     public sealed class StonedGolem : MonsterCard
     {
         public StonedGolem() :
-            base(MunchkinDeluxeCards.Doors.ChangeClass, "Stoned Golem", 14, 1, 4, 0, false)
+            base(MunchkinDeluxeCards.Doors.StonedGolem, "Stoned Golem", 14, 1, 4, 0, false)
         {
         }
 
