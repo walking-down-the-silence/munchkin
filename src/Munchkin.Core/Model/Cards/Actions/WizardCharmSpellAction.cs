@@ -9,10 +9,17 @@ using static Munchkin.Core.Model.Cards.MunchkinDeluxeCards;
 
 namespace Munchkin.Core.Model.Actions
 {
-    public record WizardCharmSpellAction(Player Owner) :
-        DynamicAction(WizardClass.CharmSpell, "Charm Spell", "Flee Monster From Combat")
+    public sealed class WizardCharmSpellAction : DynamicAction
     {
-        public MonsterCard Monster { get; }
+        public WizardCharmSpellAction(Player owner) :
+            base(WizardClass.CharmSpell, "Charm Spell")
+        {
+            Owner = owner ?? throw new ArgumentNullException(nameof(owner));
+        }
+
+        public Player Owner { get; }
+
+        public MonsterCard Monster { get; set; }
 
         protected override bool OnCanExecute(Table table)
         {

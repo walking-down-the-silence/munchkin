@@ -1,9 +1,16 @@
 ﻿using Munchkin.Core.Contracts.Actions;
-using Munchkin.Runtime.Services;
+using System;
 
 namespace Munchkin.Core.Model.Phases
 {
-    public record AskForHelpAction(Player AskedPlayer) :
-        ActionBase(TurnActions.AskingForHelp.AskForHelp, "Ask Player For Help", string.Empty),
-        ICombatAction;
+    public sealed class AskForHelpAction : ActionBase, ICombatAction
+    {
+        public AskForHelpAction(Player askedPlayer) :
+            base(TurnActions.AskingForHelp.AskForHelp, "Ask Player For Help")
+        {
+            AskedPlayer = askedPlayer ?? throw new ArgumentNullException(nameof(askedPlayer));
+        }
+
+        public Player AskedPlayer { get; }
+    }
 }

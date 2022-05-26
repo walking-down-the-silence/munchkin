@@ -1,7 +1,7 @@
-using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model.Actions;
 using Munchkin.Core.Model.Attributes;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Classes
 {
@@ -11,13 +11,18 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
             base(MunchkinDeluxeCards.Doors.WizardClass1, "Wizard")
         {
             AddAttribute(new WizardAttribute());
-
-            CharmSpell = new WizardCharmSpellAction(Owner);
-            FlightSpell = new WizardFlightSpellAction(Owner);
         }
 
-        public WizardCharmSpellAction CharmSpell { get; }
+        public override Task Play(Table table)
+        {
+            CharmSpell = new WizardCharmSpellAction(Owner);
+            FlightSpell = new WizardFlightSpellAction(Owner);
 
-        public WizardFlightSpellAction FlightSpell { get; }
+            return base.Play(table);
+        }
+
+        public WizardCharmSpellAction CharmSpell { get; private set; }
+
+        public WizardFlightSpellAction FlightSpell { get; private set; }
     }
 }

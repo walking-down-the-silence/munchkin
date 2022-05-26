@@ -11,7 +11,10 @@ namespace Munchkin.Core.Contracts.Cards
     /// <summary>
     /// The base card type that describes the behaviour.
     /// </summary>
-    public abstract class Card : ISupportAttributes, IDiscardable
+    public abstract class Card :
+        IDiscardable,
+        IPlayable,
+        ISupportAttributes
     {
         private readonly List<Card> _boundCards = new();
         private readonly List<IConditionalEffect<Table>> _effects = new();

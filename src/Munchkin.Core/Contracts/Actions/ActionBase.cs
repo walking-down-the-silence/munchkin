@@ -1,5 +1,15 @@
 ﻿namespace Munchkin.Core.Contracts.Actions
 {
-    public record ActionBase(string Type, string Title, string Description) :
-        IAction;
+    public abstract class ActionBase : IAction
+    {
+        protected ActionBase(string type, string title)
+        {
+            Type = type;
+            Title = title;
+        }
+
+        public string Type { get; }
+
+        public string Title { get; }
+    }
 }

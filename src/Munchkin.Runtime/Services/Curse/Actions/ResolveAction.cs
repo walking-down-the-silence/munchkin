@@ -1,10 +1,17 @@
 ﻿using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Runtime.Services;
+using System;
 
 namespace Munchkin.Core.Model.Phases
 {
-    public record ResolveAction(Card Card) :
-        ActionBase(TurnActions.Curse.Resolve, "Resolve The Curse", string.Empty),
-        ICurseAction;
+    public sealed class ResolveAction : ActionBase, ICurseAction
+    {
+        public ResolveAction(Card card) :
+            base(TurnActions.Curse.Resolve, "Resolve The Curse")
+        {
+            Card = card ?? throw new ArgumentNullException(nameof(card));
+        }
+
+        public Card Card { get; }
+    }
 }

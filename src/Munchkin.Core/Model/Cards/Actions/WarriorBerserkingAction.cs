@@ -10,10 +10,17 @@ using static Munchkin.Core.Model.Cards.MunchkinDeluxeCards;
 
 namespace Munchkin.Core.Model.Actions
 {
-    public record WarriorBerserkingAction(Player Owner) :
-        DynamicAction(WarriorClass.Berserking, "Berserking", "Bonus (+1)")
+    public sealed class WarriorBerserkingAction : DynamicAction
     {
-        public Card DiscardCard { get; }
+        public WarriorBerserkingAction(Player owner) :
+            base(WarriorClass.Berserking, "Berserking")
+        {
+            Owner = owner ?? throw new ArgumentNullException(nameof(owner));
+        }
+
+        public Player Owner { get; }
+
+        public Card DiscardCard { get; set; }
 
         protected override bool OnCanExecute(Table table)
         {

@@ -1,6 +1,7 @@
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model.Actions;
 using Munchkin.Core.Model.Attributes;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Classes
 {
@@ -10,13 +11,18 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
             base(MunchkinDeluxeCards.Doors.ClericClass1, "Cleric")
         {
             AddAttribute(new ClericAttribute());
-
-            Ressurect = new ClericRessurectionAction(Owner);
-            Turning = new ClericTurningAction(Owner);
         }
 
-        public ClericRessurectionAction Ressurect { get; }
+        public override Task Play(Table table)
+        {
+            Ressurect = new ClericRessurectionAction(Owner);
+            Turning = new ClericTurningAction(Owner);
 
-        public ClericTurningAction Turning { get; }
+            return base.Play(table);
+        }
+
+        public ClericRessurectionAction Ressurect { get; private set; }
+
+        public ClericTurningAction Turning { get; private set; }
     }
 }

@@ -1,6 +1,7 @@
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model.Actions;
 using Munchkin.Core.Model.Attributes;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Classes
 {
@@ -10,13 +11,18 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
             base(MunchkinDeluxeCards.Doors.ThiefClass1, "Thief")
         {
             AddAttribute(new ThiefAttribute());
-
-            Theft = new ThiefTheftAction(Owner);
-            Backstabbing = new ThiefBackstabbingAction(Owner);
         }
 
-        public ThiefTheftAction Theft { get; }
+        public override Task Play(Table table)
+        {
+            Theft = new ThiefTheftAction(Owner);
+            Backstabbing = new ThiefBackstabbingAction(Owner);
 
-        public ThiefBackstabbingAction Backstabbing { get; }
+            return base.Play(table);
+        }
+
+        public ThiefTheftAction Theft { get; private set; }
+
+        public ThiefBackstabbingAction Backstabbing { get; private set; }
     }
 }

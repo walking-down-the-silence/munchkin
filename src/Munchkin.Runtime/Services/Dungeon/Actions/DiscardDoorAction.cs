@@ -1,11 +1,20 @@
 ﻿using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Runtime.Actions;
-using Munchkin.Runtime.Services;
+using System;
 
 namespace Munchkin.Core.Model.Phases
 {
-    public record DiscardDoorAction(Player Player, DoorsCard Card) :
-        ActionBase(TurnActions.Player.DiscardCard, "Discard The Door Card", string.Empty),
-        ICharityAction;
+    public sealed class DiscardDoorAction : ActionBase, ICharityAction
+    {
+        public DiscardDoorAction(Player player, DoorsCard card) :
+            base(TurnActions.Player.DiscardCard, "Discard The Door card")
+        {
+            Player = player ?? throw new ArgumentNullException(nameof(player));
+            Card = card ?? throw new ArgumentNullException(nameof(card));
+        }
+
+        public Player Player { get; }
+        public DoorsCard Card { get; }
+    }
 }

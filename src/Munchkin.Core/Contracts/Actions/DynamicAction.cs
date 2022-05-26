@@ -3,10 +3,13 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Contracts.Actions
 {
-    public abstract record DynamicAction(string Type, string Title, string Description) :
-        ActionBase(Type, Title, Description),
-        IAction<Table>
+    public abstract class DynamicAction : ActionBase, IAction<Table>
     {
+        protected DynamicAction(string type, string title) :
+            base(type, title)
+        {
+        }
+
         public bool CanExecute(Table table)
         {
             return OnCanExecute(table);
@@ -19,7 +22,6 @@ namespace Munchkin.Core.Contracts.Actions
             table = await OnAfterExecuteAsync(table);
             return table;
         }
-
 
         protected abstract bool OnCanExecute(Table table);
 

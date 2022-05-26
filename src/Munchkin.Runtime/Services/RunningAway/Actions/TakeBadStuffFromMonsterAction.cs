@@ -1,9 +1,16 @@
 ﻿using Munchkin.Core.Contracts.Actions;
-using Munchkin.Runtime.Services;
+using System;
 
 namespace Munchkin.Core.Model.Phases
 {
-    public record TakeBadStuffFromMonsterAction(Table Table, Player Player) :
-        ActionBase(TurnActions.RunAway.TakeBadStuff, "TakenBy Bad Stuff", string.Empty),
-        IRunningAwayAction;
+    public sealed class TakeBadStuffFromMonsterAction : ActionBase, IRunningAwayAction
+    {
+        public TakeBadStuffFromMonsterAction(Player player) :
+            base(TurnActions.RunAway.TakeBadStuff, "TakenBy Bad Stuff")
+        {
+            Player = player ?? throw new ArgumentNullException(nameof(player));
+        }
+
+        public Player Player { get; }
+    }
 }

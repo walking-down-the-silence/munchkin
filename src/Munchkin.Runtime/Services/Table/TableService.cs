@@ -125,7 +125,6 @@ namespace Munchkin.Runtime.Services
         {
             var table = await _tableRepository.GetTableByIdAsync(tableId);
             table = await _tableRepository.SaveTableAsync(table.NextTurn());
-            await _mediator.Publish(new SetPlayerTurnActions(null));
             return table;
         }
 

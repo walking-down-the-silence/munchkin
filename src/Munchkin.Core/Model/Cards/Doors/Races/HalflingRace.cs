@@ -1,9 +1,7 @@
 ﻿using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model.Attributes;
-using Munchkin.Core.Model.Cards.Events;
-using Munchkin.Core.Model.Exceptions;
-using System;
-using System.Linq;
+using Munchkin.Core.Model.Cards.Actions;
+using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Races
 {
@@ -15,37 +13,16 @@ namespace Munchkin.Core.Model.Cards.Doors.Races
             AddAttribute(new HalflingAttribute());
         }
 
-        public Table SellDoublePrice(Table table, ItemCard card)
+        public override Task Play(Table table)
         {
-            ArgumentNullException.ThrowIfNull(table, nameof(table));
-            ArgumentNullException.ThrowIfNull(card, nameof(card));
+            SellDoublePrice = new HalflingSellDoublePriceAction(Owner);
+            RerollTheDice = new HalflingRerollTheDiceAction(Owner);
 
-            // TODO: Think how to perform check per turn
-            if (table.ActionLog.OfType<PlayerCardSoldEvent>().Any())
-                throw new PlayerCannotPerformActionException("Plyer cannot sell another item for the double price in the same turn.");
-
-            if (Owner != card.Owner)
-                throw new PlayerDoesNotOwnTheCardException();
-
-            var cardSoldEvent = new PlayerCardSoldEvent(Owner.Nickname, card.Code, card.GoldPieces * 2);
-            table = table.WithActionEvent(cardSoldEvent);
-
-            return table;
+            return base.Play(table);
         }
 
-        public Table RerollTheDice(Table table, Card dicardCard)
-        {
-            ArgumentNullException.ThrowIfNull(table, nameof(table));
-            ArgumentNullException.ThrowIfNull(dicardCard, nameof(dicardCard));
+        public HalflingSellDoublePriceAction SellDoublePrice { get; private set; }
 
-            if (Owner != dicardCard.Owner)
-                throw new PlayerDoesNotOwnTheCardException();
-
-            var diceRollResult = Dice.Roll();
-            var diceRollEvent = new PlayerDiceRolledEvent(table.Players.Current.Nickname, diceRollResult);
-            table = table.WithActionEvent(diceRollEvent);
-
-            return table;
-        }
+        public HalflingRerollTheDiceAction RerollTheDice { get; private set; }
     }
 }

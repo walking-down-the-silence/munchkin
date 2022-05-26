@@ -1,9 +1,16 @@
 ﻿using Munchkin.Core.Contracts.Actions;
-using Munchkin.Runtime.Services;
+using System;
 
 namespace Munchkin.Core.Model.Phases
 {
-    public record RollTheDiceAction(Player Player) :
-        ActionBase(TurnActions.RunAway.RollTheDice, "Roll The Dice", string.Empty),
-        IRunningAwayAction;
+    public sealed class RollTheDiceAction : ActionBase, IRunningAwayAction
+    {
+        public RollTheDiceAction(Player player) :
+            base(TurnActions.RunAway.RollTheDice, "Roll The Dice")
+        {
+            Player = player ?? throw new ArgumentNullException(nameof(player));
+        }
+
+        public Player Player { get; }
+    }
 }

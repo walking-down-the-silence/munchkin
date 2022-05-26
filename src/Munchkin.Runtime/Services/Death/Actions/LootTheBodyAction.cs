@@ -1,10 +1,19 @@
 ﻿using Munchkin.Core.Contracts.Actions;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Runtime.Services;
+using System;
 
 namespace Munchkin.Core.Model.Phases
 {
-    public record LootTheBodyAction(Table Table, Player Player, Card Card) :
-        ActionBase(TurnActions.Death.LootTheBody, "Loot The Body", string.Empty),
-        IDeathAction;
+    public sealed class LootTheBodyAction : ActionBase, IDeathAction
+    {
+        public LootTheBodyAction(Player player, Card card) :
+            base(TurnActions.Death.LootTheBody, "Loot The Body")
+        {
+            Player = player ?? throw new ArgumentNullException(nameof(player));
+            Card = card ?? throw new ArgumentNullException(nameof(card));
+        }
+
+        public Player Player { get; }
+        public Card Card { get; }
+    }
 }

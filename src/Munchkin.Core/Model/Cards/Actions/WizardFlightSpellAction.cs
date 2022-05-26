@@ -10,10 +10,17 @@ using static Munchkin.Core.Model.Cards.MunchkinDeluxeCards;
 
 namespace Munchkin.Core.Model.Actions
 {
-    public record WizardFlightSpellAction(Player Owner) :
-        DynamicAction(WizardClass.FlightSpell, "Flight Spell", "Get +1 To Run Away")
+    public sealed class WizardFlightSpellAction : DynamicAction
     {
-        public Card DicardCard { get; }
+        public WizardFlightSpellAction(Player owner) :
+            base(WizardClass.FlightSpell, "Flight Spell")
+        {
+            Owner = owner ?? throw new ArgumentNullException(nameof(owner));
+        }
+
+        public Player Owner { get; }
+
+        public Card DicardCard { get; set; }
 
         protected override bool OnCanExecute(Table table)
         {

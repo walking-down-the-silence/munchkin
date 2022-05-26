@@ -9,12 +9,19 @@ using static Munchkin.Core.Model.Cards.MunchkinDeluxeCards;
 
 namespace Munchkin.Core.Model.Actions
 {
-    public record ClericRessurectionAction(Player Owner) :
-        DynamicAction(ClericClass.Ressurection, "Ressurection", "Take From Discard")
+    public sealed class ClericRessurectionAction : DynamicAction
     {
-        public Card DiscardCard { get; }
+        public ClericRessurectionAction(Player owner) :
+            base(ClericClass.Ressurection, "Ressurection")
+        {
+            Owner = owner ?? throw new ArgumentNullException(nameof(owner));
+        }
 
-        public bool IsRessurectingFromDoorDeck { get; }
+        public Player Owner { get; }
+
+        public Card DiscardCard { get; set; }
+
+        public bool IsRessurectingFromDoorDeck { get; set; }
 
         protected override bool OnCanExecute(Table table)
         {
