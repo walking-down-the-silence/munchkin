@@ -1,6 +1,5 @@
 using Munchkin.Core.Contracts.Cards;
-using System.Linq;
-using System.Threading.Tasks;
+using System;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
@@ -11,22 +10,12 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
         {
         }
 
-        public async override Task BadStuff(Table state)
+        public override Table BadStuff(Table table, Player player)
         {
-            var maxLevel = state.Players.Max(x => x.Level);
-            var players = state.Players.Where(x => x.Level == maxLevel).GetEnumerator();
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
 
-            // until the current pllayer still has cards and more player of max level
-            while (players.MoveNext() && state.Players.Current.Equipped.OfType<TreasureCard>().Any())
-            {
-                var treasures = state.Players.Current.Equipped.OfType<TreasureCard>().ToList();
-                //var request = new PlayerSelectSingleCardRequest(players.Current, state, treasures);
-                //var response = await state.RequestSink.Send(request);
-                //var card = await response.Task;
-
-                //state.Players.Current.Discard(card);
-                //players.Current.PutInBackpack(card);
-            }
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,5 +1,5 @@
 using Munchkin.Core.Contracts.Cards;
-using System.Threading.Tasks;
+using System;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
@@ -10,9 +10,12 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
         {
         }
 
-        public override Task BadStuff(Table context)
+        public override Table BadStuff(Table table, Player player)
         {
-            throw new System.NotImplementedException();
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
+            throw new NotImplementedException();
         }
     }
 }

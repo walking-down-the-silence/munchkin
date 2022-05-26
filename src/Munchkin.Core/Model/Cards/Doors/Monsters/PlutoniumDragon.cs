@@ -1,6 +1,6 @@
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
-using System.Threading.Tasks;
+using System;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
@@ -11,14 +11,17 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
         {
         }
 
-        public override Task BadStuff(Table state)
+        public override Table BadStuff(Table table, Player player)
         {
-            if (state.Players.Current.Level > 5)
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
+            if (player.Level > 5)
             {
-                state.KillPlayer(state.Players.Current);
+                table.KillPlayer(player);
             }
 
-            return Task.CompletedTask;
+            return table;
         }
     }
 }

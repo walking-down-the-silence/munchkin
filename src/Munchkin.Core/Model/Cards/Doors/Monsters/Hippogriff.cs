@@ -1,5 +1,5 @@
 ﻿using Munchkin.Core.Contracts.Cards;
-using System.Threading.Tasks;
+using System;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
@@ -11,8 +11,11 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
             //TODO: will not persue anyone with level 3 or below
         }
 
-        public override Task BadStuff(Table state)
+        public override Table BadStuff(Table table, Player player)
         {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
             throw new System.NotImplementedException();
         }
     }

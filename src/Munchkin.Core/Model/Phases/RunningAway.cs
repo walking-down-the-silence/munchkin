@@ -30,7 +30,7 @@ namespace Munchkin.Core.Model.Phases
         }
 
         /// <summary>
-        /// 
+        /// Applies the bad stuff from monster to a player.
         /// </summary>
         /// <param name="table">The table where the game takes place.</param>
         /// <param name="monster">The monster to take bad stuff from.</param>
@@ -43,7 +43,7 @@ namespace Munchkin.Core.Model.Phases
             ArgumentNullException.ThrowIfNull(taker, nameof(taker));
 
             if (!taker.IsDead())
-                monster.BadStuff(table);
+                monster.BadStuff(table, taker);
 
             return table;
         }

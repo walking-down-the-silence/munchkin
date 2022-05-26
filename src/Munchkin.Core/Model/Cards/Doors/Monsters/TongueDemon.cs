@@ -30,8 +30,11 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
             return base.Play(gameContext);
         }
 
-        public override Task BadStuff(Table gameContext)
+        public override Table BadStuff(Table table, Player player)
         {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
             throw new NotImplementedException();
         }
     }

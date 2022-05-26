@@ -1,6 +1,6 @@
 ﻿using Munchkin.Core.Contracts.Cards;
+using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
@@ -11,9 +11,12 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
         {
         }
 
-        public override Task BadStuff(Table context)
+        public override Table BadStuff(Table table, Player player)
         {
-            var races = context.Players.Current.Equipped
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
+            var races = table.Players.Current.Equipped
                 .OfType<RaceCard>()
                 .ToList();
 
@@ -23,10 +26,10 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
             }
             else
             {
-                races.FirstOrDefault()?.Discard(context);
+                races.FirstOrDefault()?.Discard(table);
             }
 
-            return Task.CompletedTask;
+            return table;
         }
     }
 }

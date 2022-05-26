@@ -1,5 +1,5 @@
 using Munchkin.Core.Contracts.Cards;
-using System.Threading.Tasks;
+using System;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
@@ -11,12 +11,13 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
             //TODO: lose level event if you escape
         }
 
-        public override Task BadStuff(Table state)
+        public override Table BadStuff(Table table, Player player)
         {
-            state.Players.Current.LevelDown();
-            state.Players.Current.LevelDown();
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
 
-            return Task.CompletedTask;
+            player.LevelDown(2);
+            return table;
         }
     }
 }

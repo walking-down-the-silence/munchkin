@@ -3,7 +3,7 @@ using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Model.Effects;
 using Munchkin.Core.Model.Restrictions;
-using System.Threading.Tasks;
+using System;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
@@ -18,10 +18,13 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
                     .New(new UsableByClericOnlyRestriction())));
         }
 
-        public override Task BadStuff(Table state)
+        public override Table BadStuff(Table table, Player player)
         {
-            state.Players.Current.LevelDown();
-            return Task.CompletedTask;
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
+            player.LevelDown();
+            return table;
         }
     }
 }

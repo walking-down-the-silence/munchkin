@@ -1,5 +1,5 @@
 using Munchkin.Core.Contracts.Cards;
-using System.Threading.Tasks;
+using System;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
@@ -9,24 +9,27 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
         {
         }
 
-        public override Task BadStuff(Table context)
+        public override Table BadStuff(Table table, Player player)
         {
-            foreach (var equippedCard in context.Players.Current.Equipped)
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
+            foreach (var equippedCard in table.Players.Current.Equipped)
             {
                 if (equippedCard is RaceCard || equippedCard is Halfbreed)
                 {
-                    equippedCard.Discard(context);
+                    equippedCard.Discard(table);
                 }
             }
 
-            context = context with { DiscardedDoorsCards = context.DiscardedDoorsCards.TakeFirst<RaceCard>(out var firstDiscardedRace) };
+            table = table with { DiscardedDoorsCards = table.DiscardedDoorsCards.TakeFirst<RaceCard>(out var firstDiscardedRace) };
             if (firstDiscardedRace != null)
             {
-                context.Players.Current.Equip(firstDiscardedRace);
+                table.Players.Current.Equip(firstDiscardedRace);
             }
 
             // TODO: resolve all other cards that don't match new race
-            return Task.CompletedTask;
+            return table;
         }
     }
 }

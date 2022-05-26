@@ -1,22 +1,22 @@
 ﻿using Munchkin.Core.Contracts.Cards;
 using System;
-using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
     public sealed class LoseALevel : CurseCard
     {
-        public LoseALevel() : 
+        public LoseALevel() :
             base(MunchkinDeluxeCards.Doors.LoseALevel1, "Loose A Level")
         {
         }
 
-        public override Task BadStuff(Table table)
+        public override Table BadStuff(Table table, Player player)
         {
             ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
 
-            table.Players.Current.LevelDown();
-            return Task.CompletedTask;
+            player.LevelDown();
+            return table;
         }
     }
 }

@@ -1,19 +1,22 @@
 using Munchkin.Core.Contracts.Cards;
+using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
     public sealed class LoseYourClass : CurseCard
     {
-        public LoseYourClass() : 
+        public LoseYourClass() :
             base(MunchkinDeluxeCards.Doors.LoseYourClass, "Lose Your Class")
         {
         }
 
-        public override Task BadStuff(Table context)
+        public override Table BadStuff(Table table, Player player)
         {
-            var classes = context.Players.Current.Equipped
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
+            var classes = player.Equipped
                 .OfType<ClassCard>()
                 .ToList();
 
@@ -23,10 +26,10 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
             }
             else
             {
-                classes.FirstOrDefault()?.Discard(context);
+                classes.FirstOrDefault()?.Discard(table);
             }
 
-            return Task.CompletedTask;
+            return table;
         }
     }
 }

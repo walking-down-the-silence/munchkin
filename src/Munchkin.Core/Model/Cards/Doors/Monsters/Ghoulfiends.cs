@@ -1,6 +1,6 @@
 ﻿using Munchkin.Core.Contracts.Cards;
+using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
@@ -9,18 +9,16 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
         public Ghoulfiends() :
             base(MunchkinDeluxeCards.Doors.Ghoulfiends, "Ghoulfiends", 8, 1, 2, 0, false)
         {
-            //TODO: fight with your level only
         }
 
-        public override Task BadStuff(Table state)
+        public override Table BadStuff(Table table, Player player)
         {
-            int minPlayerLevel = state.Players.Min(x => x.Level);
-            while (state.Players.Current.Level > minPlayerLevel)
-            {
-                state.Players.Current.LevelDown();
-            }
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
 
-            return Task.CompletedTask;
+            int minPlayerLevel = table.Players.Min(x => x.Level);
+            player.LevelDown(player.Level - minPlayerLevel);
+            return table;
         }
     }
 }

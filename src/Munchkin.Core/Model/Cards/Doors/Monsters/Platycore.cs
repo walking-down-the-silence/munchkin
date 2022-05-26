@@ -4,6 +4,7 @@ using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Effects;
 using Munchkin.Core.Model.Restrictions;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,21 +29,12 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
             return base.Play(context);
         }
 
-        public async override Task BadStuff(Table state)
+        public override Table BadStuff(Table table, Player player)
         {
-            //var request = new PlayerDiscardHandOrLoose2LevelsRequest(state.Players.Current, state);
-            //var response = await state.RequestSink.Send(request);
-            //var action = await response.Task;
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
 
-            //if (action == DiscardHandOrLoose2LevelsActions.DiscardHand)
-            //{
-            //    state.DiscardPlayersHand(state.Players.Current);
-            //}
-            //else
-            //{
-            //    state.Players.Current.LevelDown();
-            //    state.Players.Current.LevelDown();
-            //}
+            throw new NotImplementedException();
         }
     }
 }

@@ -3,13 +3,13 @@ using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Model.Effects;
 using Munchkin.Core.Model.Restrictions;
-using System.Threading.Tasks;
+using System;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class Leperchaun : MonsterCard
     {
-        public Leperchaun() : 
+        public Leperchaun() :
             base(MunchkinDeluxeCards.Doors.Leperchaun, "Leperchaun", 4, 1, 2, 0, false)
         {
             AddEffect(Effect
@@ -18,17 +18,13 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
                   .New(new UsableByElfOnlyRestriction())));
         }
 
-        public async override Task BadStuff(Table state)
+        public override Table BadStuff(Table table, Player player)
         {
-            //var cardSelectedByLeftPlayer = await new PlayerSelectSingleCardRequest(state.Players.PeekNext(), state, state.Players.Current.Equipped)
-            //    .SendAsync(state);
-            //state.Players.Current.Discard(cardSelectedByLeftPlayer);
-            //state.DiscardedDoorsCards.Put(cardSelectedByLeftPlayer as DoorsCard);
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
 
-            //var cardSelectedByRightPlayer = await new PlayerSelectSingleCardRequest(state.Players.PeekPrevious(), state, state.Players.Current.Equipped)
-            //    .SendAsync(state);
-            //state.Players.Current.Discard(cardSelectedByRightPlayer);
-            //state.DiscardedDoorsCards.Put(cardSelectedByRightPlayer as DoorsCard);
+            throw new NotImplementedException();
+
         }
     }
 }

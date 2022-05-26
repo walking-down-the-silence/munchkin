@@ -1,7 +1,7 @@
 ﻿using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
+using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
@@ -11,10 +11,13 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
         {
         }
 
-        public override Task BadStuff(Table table)
+        public override Table BadStuff(Table table, Player player)
         {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
             // TODO: Clarify in Errata if class card should be discarded or cards that act as a class as well
-            table.Players.Current.Equipped
+            player.Equipped
                 .Where(x => x is ClassCard || x is SuperMunchkin)
                 .ForEach(x => x.Discard(table));
 
@@ -24,9 +27,9 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
             };
 
             if (classCard != null)
-                table.Players.Current.Equip(classCard);
+                player.Equip(classCard);
 
-            return Task.CompletedTask;
+            return table;
         }
     }
 }

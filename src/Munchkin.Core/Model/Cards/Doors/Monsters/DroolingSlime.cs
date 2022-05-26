@@ -5,8 +5,8 @@ using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Effects;
 using Munchkin.Core.Model.Restrictions;
+using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
@@ -21,21 +21,24 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
                     .New(new UsableByElfOnlyRestriction())));
         }
 
-        public override Task BadStuff(Table state)
+        public override Table BadStuff(Table table, Player player)
         {
-            var equippedFootgears = state.Players.Current.Equipped.OfType<WearingCard>()
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
+            var equippedFootgears = player.Equipped.OfType<WearingCard>()
                 .Where(x => x.WearingType == EWearingType.Footgear);
 
             if (equippedFootgears.Any())
             {
-                equippedFootgears.ForEach(card => card.Discard(state));
+                equippedFootgears.ForEach(card => card.Discard(table));
             }
             else
             {
-                state.Players.Current.LevelDown();
+                player.LevelDown();
             }
 
-            return Task.CompletedTask;
+            return table;
         }
     }
 }

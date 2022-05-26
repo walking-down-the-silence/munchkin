@@ -4,7 +4,7 @@ using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Effects;
 using Munchkin.Core.Model.Restrictions;
-using System.Threading.Tasks;
+using System;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
@@ -19,21 +19,26 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
                     .New(new UsableByDwarfOnlyRestriction())));
         }
 
-        public override async Task BadStuff(Table state)
+        public override Table BadStuff(Table table, Player player)
         {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
             var diceRollResult = Dice.Roll();
 
             if (diceRollResult <= 2)
             {
-                state.KillPlayer(state.Players.Current);
+                table.KillPlayer(player);
             }
             else
             {
                 for (int i = 0; i < diceRollResult; i++)
                 {
-                    state.Players.Current.LevelDown();
+                    player.LevelDown();
                 }
             }
+
+            return table;
         }
     }
 }

@@ -4,6 +4,6 @@ namespace Munchkin.Core.Contracts
 {
     public interface ITakeBadStuff
     {
-        Table TakeBadStuff(Table table, Player player);
+        Table BadStuff(Table table, Player player);
     }
 }

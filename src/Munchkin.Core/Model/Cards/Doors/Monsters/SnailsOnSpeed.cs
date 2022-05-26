@@ -1,5 +1,5 @@
 using Munchkin.Core.Contracts.Cards;
-using System.Threading.Tasks;
+using System;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
@@ -10,39 +10,12 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
         {
         }
 
-        public async override Task BadStuff(Table state)
+        public override Table BadStuff(Table table, Player player)
         {
-            // TODO: double check this cards logic
-            //var diceRollResult = Dice.Roll();
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
 
-            //var action = await new LoseItemsOrCardsInHandRequest(state.Players.Current, state)
-            //    .SendAsync(state);
-
-            //if (action == LoseItemsOrCardsInHandActions.LoseItems)
-            //{
-            //    var itemCards = state.Players.Current.Equipped.OfType<ItemCard>().ToList();
-
-            //    if (itemCards.Any())
-            //    {
-            //        var cardsToDiscard = await new PlayerSelectMultipleCardsRequest(state.Players.Current, state, itemCards, diceRollResult)
-            //            .SendAsync(state);
-
-            //        cardsToDiscard.ForEach(card => card.Discard(state));
-            //    }
-            //}
-            //else
-            //{
-            //    var handCards = state.Players.Current.YourHand.ToList();
-
-            //    if (handCards.Any())
-            //    {
-
-            //        var cardsToDiscard = await new PlayerSelectMultipleCardsRequest(state.Players.Current, state, handCards, diceRollResult)
-            //           .SendAsync(state);
-
-            //        cardsToDiscard.ForEach(card => card.Discard(state));
-            //    }
-            //}
+            throw new NotImplementedException();
         }
     }
 }

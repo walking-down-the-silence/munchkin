@@ -2,7 +2,6 @@
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model.Attributes;
 using System;
-using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
@@ -15,14 +14,15 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
             AddAttribute(new WearingTypeAttribute(EWearingType.Headgear));
         }
 
-        public override Task BadStuff(Table table)
+        public override Table BadStuff(Table table, Player player)
         {
             ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
 
             Owner.Equip(this);
             table.DungeonCards.Remove(this);
 
-            return Task.CompletedTask;
+            return table;
         }
     }
 }

@@ -2,6 +2,7 @@ using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Cards.Doors.Curses;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,12 +15,12 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
         {
         }
 
-        public override Task Play(Table state)
+        public override Task Play(Table table)
         {
-            bool isFemale = state.Players.Current.Gender == EGender.Female
-                            && !state.Players.Current.Equipped.OfType<ChangeSex>().Any()
-                            || state.Players.Current.Gender == EGender.Male
-                            && state.Players.Current.Equipped.OfType<ChangeSex>().Any();
+            bool isFemale = table.Players.Current.Gender == EGender.Female
+                            && !table.Players.Current.Equipped.OfType<ChangeSex>().Any()
+                            || table.Players.Current.Gender == EGender.Male
+                            && table.Players.Current.Equipped.OfType<ChangeSex>().Any();
             if (isFemale)
             {
                 // TODO: implement +1 Treasure reward when isFemale
@@ -27,36 +28,37 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
             }
             else
             {
-                base.Play(state);
+                base.Play(table);
             }
 
-            BoundCards.ForEach(card => card.Play(state));
+            BoundCards.ForEach(card => card.Play(table));
 
             return Task.CompletedTask;
         }
 
-        public override Task BadStuff(Table state)
+        public override Table BadStuff(Table table, Player player)
         {
-            bool hasClasses = state.Players.Current.Equipped.OfType<ClassCard>().Any();
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+
+            bool hasClasses = player.Equipped.OfType<ClassCard>().Any();
 
             if (hasClasses)
             {
-                var classes = state.Players.Current.Equipped.OfType<ClassCard>();
+                var classes = player.Equipped.OfType<ClassCard>();
 
                 foreach (var classCard in classes)
                 {
-                    state.Players.Current.Discard(classCard);
-                    state.DiscardedDoorsCards.Put(classCard);
+                    player.Discard(classCard);
+                    table.DiscardedDoorsCards.Put(classCard);
                 }
             }
             else
             {
-                state.Players.Current.LevelDown();
-                state.Players.Current.LevelDown();
-                state.Players.Current.LevelDown();
+                player.LevelDown(3);
             }
 
-            return Task.CompletedTask;
+            return table;
         }
     }
 }

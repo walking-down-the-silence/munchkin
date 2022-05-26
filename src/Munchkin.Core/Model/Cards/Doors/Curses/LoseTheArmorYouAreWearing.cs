@@ -2,7 +2,6 @@ using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
@@ -13,16 +12,17 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
         {
         }
 
-        public override Task BadStuff(Table table)
+        public override Table BadStuff(Table table, Player player)
         {
             ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
 
-            table.Players.Current.Equipped
+            player.Equipped
                 .OfType<WearingCard>()
                 .FirstOrDefault(x => x.WearingType == EWearingType.Armor)
                 ?.Discard(table);
 
-            return Task.CompletedTask;
+            return table;
         }
     }
 }

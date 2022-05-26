@@ -51,7 +51,7 @@ namespace Munchkin.Core.Model.Phases
             ArgumentNullException.ThrowIfNull(table, nameof(table));
             ArgumentNullException.ThrowIfNull(curse, nameof(curse));
 
-            curse.BadStuff(table);
+            curse.BadStuff(table, table.Players.Current);
 
             if (curse.OneShot)
                 table.Discard(curse);

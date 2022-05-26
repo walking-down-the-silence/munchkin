@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Core.Contracts.Cards
 {
-    public abstract class MonsterCard : DoorsCard
+    public abstract class MonsterCard : DoorsCard, ITakeBadStuff
     {
-        protected MonsterCard(string code, string title, int level, int rewardLevels, int rewardTreasures, int runAwayBonus, bool isUndead) : 
+        protected MonsterCard(string code, string title, int level, int rewardLevels, int rewardTreasures, int runAwayBonus, bool isUndead) :
             base(code, title)
         {
             AddAttribute(new MonsterStrengthBonusAttribute(level));
@@ -39,6 +39,6 @@ namespace Munchkin.Core.Contracts.Cards
             return Task.CompletedTask;
         }
 
-        public abstract Task BadStuff(Table context);
+        public abstract Table BadStuff(Table table, Player player);
     }
 }

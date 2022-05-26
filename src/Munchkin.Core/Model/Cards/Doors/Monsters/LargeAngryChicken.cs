@@ -6,7 +6,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
     public sealed class LargeAngryChicken : MonsterCard
     {
-        public LargeAngryChicken() : 
+        public LargeAngryChicken() :
             base(MunchkinDeluxeCards.Doors.LargeAngryChicken, "Large Angry Chicken", 2, 1, 1, 0, false)
         {
         }
@@ -14,15 +14,16 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
         public override Task Play(Table state)
         {
             // TODO: Add logic "gain an extra level if you defeat it with fire or flame"
-
             throw new NotImplementedException();
         }
 
-        public override Task BadStuff(Table state)
+        public override Table BadStuff(Table table, Player player)
         {
-            state.Players.Current.LevelDown();
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
 
-            return Task.CompletedTask;
+            player.LevelDown();
+            return table;
         }
     }
 }

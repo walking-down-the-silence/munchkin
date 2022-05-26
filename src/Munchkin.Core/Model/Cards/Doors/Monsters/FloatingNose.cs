@@ -1,5 +1,5 @@
 using Munchkin.Core.Contracts.Cards;
-using System.Threading.Tasks;
+using System;
 
 namespace Munchkin.Core.Model.Cards.Doors.Monsters
 {
@@ -8,16 +8,15 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
         public FloatingNose() :
             base(MunchkinDeluxeCards.Doors.FloatingNose, "Floating Nose", 10, 1, 3, 0, false)
         {
-            //TODO: double check rules about fight it
         }
 
-        public override Task BadStuff(Table state)
+        public override Table BadStuff(Table table, Player player)
         {
-            state.Players.Current.LevelDown();
-            state.Players.Current.LevelDown();
-            state.Players.Current.LevelDown();
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
 
-            return Task.CompletedTask;
+            table.Players.Current.LevelDown(3);
+            return table;
         }
     }
 }
