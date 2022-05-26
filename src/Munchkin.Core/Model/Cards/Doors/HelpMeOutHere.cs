@@ -18,7 +18,7 @@ namespace Munchkin.Core.Model.Cards.Doors
         {
             ArgumentNullException.ThrowIfNull(table, nameof(table));
 
-            var combat = CombatStats.From(table);
+            var combat = Combat.From(table);
             var makesDiffernce = combat.IsLoosing() && combat.WillBeWinning(card.StrengthBonus);
 
             if (!makesDiffernce)

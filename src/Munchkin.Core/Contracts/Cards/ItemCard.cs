@@ -1,7 +1,7 @@
-using Munchkin.Core.Contracts.Events;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Attributes;
+using Munchkin.Core.Model.Cards.Events;
 using System.Linq;
 using System.Threading.Tasks;
 

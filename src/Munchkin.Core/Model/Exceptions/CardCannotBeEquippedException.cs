@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Munchkin.Core.Contracts.Exceptions
+namespace Munchkin.Core.Model.Exceptions
 {
     public class CardCannotBeEquippedException : Exception
     {

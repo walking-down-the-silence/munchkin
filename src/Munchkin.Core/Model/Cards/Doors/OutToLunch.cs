@@ -17,7 +17,7 @@ namespace Munchkin.Core.Model.Cards.Doors
         {
             ArgumentNullException.ThrowIfNull(table, nameof(table));
 
-            var combat = CombatStats.From(table);
+            var combat = Combat.From(table);
 
             table = combat.Monsters.Aggregate(table, (table, monster) => table.Discard(monster));
             table = table.TakeTreasure(out var treasure1);

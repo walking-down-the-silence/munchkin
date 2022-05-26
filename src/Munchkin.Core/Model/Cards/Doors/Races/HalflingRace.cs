@@ -1,5 +1,4 @@
 ﻿using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Contracts.Events;
 using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Cards.Events;
 using Munchkin.Core.Model.Exceptions;

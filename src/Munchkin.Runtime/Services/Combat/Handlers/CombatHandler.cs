@@ -8,20 +8,20 @@ using System.Threading.Tasks;
 
 namespace Munchkin.Runtime.Handlers
 {
-    public class CombatStatsHandler : IRequestHandler<CombatStatsQuery, CombatStats>
+    public class CombatHandler : IRequestHandler<CombatQuery, Combat>
     {
         private readonly ITableRepository _tableRepository;
 
-        public CombatStatsHandler(
+        public CombatHandler(
             ITableRepository tableRepository)
         {
             _tableRepository = tableRepository ?? throw new ArgumentNullException(nameof(tableRepository));
         }
 
-        public async Task<CombatStats> Handle(CombatStatsQuery request, CancellationToken cancellationToken)
+        public async Task<Combat> Handle(CombatQuery request, CancellationToken cancellationToken)
         {
             var table = await _tableRepository.GetTableByIdAsync(request.TableId);
-            return CombatStats.From(table);
+            return Combat.From(table);
         }
     }
 }

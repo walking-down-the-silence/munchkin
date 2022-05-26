@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
-using Munchkin.Core.Contracts.Exceptions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Cards.Doors.Classes;
 using Munchkin.Core.Model.Cards.Treasures.Permanent;
+using Munchkin.Core.Model.Exceptions;
 using Xunit;
 
 namespace Munchkin.Core.Tests.Model.Cards.Treasures

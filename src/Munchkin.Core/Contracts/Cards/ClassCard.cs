@@ -1,7 +1,7 @@
-﻿using Munchkin.Core.Contracts.Exceptions;
-using Munchkin.Core.Extensions;
+﻿using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Attributes;
+using Munchkin.Core.Model.Exceptions;
 using System;
 using System.Linq;
 

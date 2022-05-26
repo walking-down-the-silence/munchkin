@@ -1,6 +1,7 @@
-﻿using Munchkin.Core.Model.Attributes;
+﻿using Munchkin.Core.Contracts.Events;
+using Munchkin.Core.Model.Attributes;
 
-namespace Munchkin.Core.Contracts.Events
+namespace Munchkin.Core.Model.Cards.Events
 {
     public sealed class PlayerCardSoldEvent : EventSupportingAttributes
     {

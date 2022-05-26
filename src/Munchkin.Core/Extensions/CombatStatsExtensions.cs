@@ -3,33 +3,29 @@ using System;
 
 namespace Munchkin.Core.Extensions
 {
-    public static class CombatStatsExtensions
+    public static class CombatExtensions
     {
-        public static bool IsWinning(this CombatStats combat)
+        public static bool IsWinning(this Combat combat)
         {
             ArgumentNullException.ThrowIfNull(combat);
-
             return combat.PlayersStrength > combat.MonsterStrength;
         }
 
-        public static bool WillBeWinning(this CombatStats combat, int strength)
+        public static bool WillBeWinning(this Combat combat, int strength)
         {
             ArgumentNullException.ThrowIfNull(combat);
-
             return combat.PlayersStrength + strength > combat.MonsterStrength;
         }
 
-        public static bool IsLoosing(this CombatStats combat)
+        public static bool IsLoosing(this Combat combat)
         {
             ArgumentNullException.ThrowIfNull(combat);
-
             return combat.PlayersStrength < combat.MonsterStrength;
         }
 
-        public static bool WillBeLoosing(this CombatStats combat, int strength)
+        public static bool WillBeLoosing(this Combat combat, int strength)
         {
             ArgumentNullException.ThrowIfNull(combat);
-
             return combat.PlayersStrength - strength < combat.MonsterStrength;
         }
     }
