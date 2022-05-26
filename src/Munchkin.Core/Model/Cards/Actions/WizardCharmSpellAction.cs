@@ -1,40 +1,48 @@
 using Munchkin.Core.Contracts.Actions;
+using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Model.Cards.Events;
+using Munchkin.Core.Model.Exceptions;
+using Munchkin.Extensions.Threading;
 using System;
 using System.Threading.Tasks;
 using static Munchkin.Core.Model.Cards.MunchkinDeluxeCards;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal record WizardCharmSpellAction() :
-        DynamicAction(WizardClass.CharmSpell, "Charm Spell", "Flee Monster From Combat"),
-        IRenewableAction<Table>
+    public record WizardCharmSpellAction(Player Owner) :
+        DynamicAction(WizardClass.CharmSpell, "Charm Spell", "Flee Monster From Combat")
     {
-        private bool _wasExecuted = false;
-
-        public bool Reset(Table state)
-        {
-            _wasExecuted = false;
-            return true;
-        }
+        public MonsterCard Monster { get; }
 
         protected override bool OnCanExecute(Table table)
         {
-            return !_wasExecuted && table.Players.Current.YourHand.Count >= 3;
+            return Monster is not null
+                && Owner.YourHand.Count >= 3;
         }
 
         protected override Task<Table> OnExecuteAsync(Table table)
         {
-            //var selectCardFromHandRequest = new PlayerSelectSingleCardRequest(table.Players.Current, table, table.Players.Current.YourHand);
-            //await state.RequestSink.Send(selectCardFromHandRequest).ContinueWith(x => x.Result.Discard(state));
-            //await state.RequestSink.Send(selectCardFromHandRequest).ContinueWith(x => x.Result.Discard(state));
-            //await state.RequestSink.Send(selectCardFromHandRequest).ContinueWith(x => x.Result.Discard(state));
+            return CharmSpell(table, Monster).Unit();
+        }
 
-            // TODO: check if current stage actually is a combat
-            // TODO: do not actually discard, but remove reward levels and leave the treasures until combat is resolved
-            //var selectMonsterInPlayRequest = new PlayerSelectSingleCardRequest(table.Players.Current, table, table.Players.Current.YourHand);
-            //await state.RequestSink.Send(selectMonsterInPlayRequest).ContinueWith(x => x.Result.Discard(state));
+        public Table CharmSpell(Table table, MonsterCard monster)
+        {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(monster, nameof(monster));
 
-            throw new NotImplementedException();
+            if (Owner.YourHand.Count < 3)
+                throw new PlayerCannotPerformActionException("Player cannot use 'Charm Spell' ability and discard the hand, because there is not enough cards in hand (at least 3 required).");
+
+            var rewardTreasuredBonusEvent = new CombatRewardTreasuresBonusEvent(monster.RewardTreasures);
+            table = table.WithActionEvent(rewardTreasuredBonusEvent);
+
+            var charmSpellEvent = new WizardCharmSpellActionEvent(Owner.Nickname, monster.Code);
+            table = table.WithActionEvent(charmSpellEvent);
+
+            Owner.DiscardHand();
+            table = table.Discard(monster);
+
+            return table;
         }
     }
 }

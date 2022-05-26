@@ -1,27 +1,52 @@
 ﻿using Munchkin.Core.Contracts.Actions;
+using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Model.Cards.Events;
+using Munchkin.Core.Model.Exceptions;
+using Munchkin.Extensions.Threading;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using static Munchkin.Core.Model.Cards.MunchkinDeluxeCards;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal record WarriorBerserkingAction() :
-        MultiShotAction(WarriorClass.Berserking, "Berserking", "Bonus (+1)", 3)
+    public record WarriorBerserkingAction(Player Owner) :
+        DynamicAction(WarriorClass.Berserking, "Berserking", "Bonus (+1)")
     {
-        protected override bool OnCanExecute(Table table) => ExecutionsLeft > 0;
+        public Card DiscardCard { get; }
+
+        protected override bool OnCanExecute(Table table)
+        {
+            return DiscardCard is not null
+                && Owner == DiscardCard.Owner
+                && table.ActionLog.OfType<WarriorBerserkingBonus1Event>().Count() < 3;
+        }
 
         protected override Task<Table> OnExecuteAsync(Table table)
         {
-            throw new NotImplementedException();
-            //Shots--;
-            //var playerCards = Player.Equipped
-            //    .Concat(Player.YourHand)
-            //    .Concat(Player.Backpack);
+            return Berserking(table, DiscardCard).Unit();
+        }
 
-            //var response = state.RequestSink.Request<Card>(Player, Player, playerCards);
-            //var card = await response.GetResult();
-            //Player.Discard(card);
-            //await state.Dungeon.PlayACard(card);
+        public Table Berserking(Table table, Card discardCard)
+        {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(discardCard, nameof(discardCard));
+
+            if (Owner != discardCard.Owner)
+                throw new PlayerDoesNotOwnTheCardException();
+
+            if (table.ActionLog.OfType<WarriorBerserkingBonus1Event>().Count() >= 3)
+                throw new PlayerCannotPerformActionException("Player cannot use 'Berserking' ability, because it was used maximum times (3 times per turn).");
+
+            table.Discard(discardCard);
+
+            var playerStrengthEvent = new PlayerStrengthBonusChangedEvent(Owner.Nickname, 1);
+            table = table.WithActionEvent(playerStrengthEvent);
+
+            var berserkingEvent = new WarriorBerserkingBonus1Event(Owner.Nickname, discardCard.Code);
+            table = table.WithActionEvent(berserkingEvent);
+
+            return table;
         }
     }
 }

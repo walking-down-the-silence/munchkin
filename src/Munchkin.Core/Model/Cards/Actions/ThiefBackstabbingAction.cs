@@ -1,42 +1,52 @@
 using Munchkin.Core.Contracts.Actions;
+using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Model.Cards.Events;
+using Munchkin.Core.Model.Exceptions;
+using Munchkin.Extensions.Threading;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using static Munchkin.Core.Model.Cards.MunchkinDeluxeCards;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal record ThiefBackstabbingAction() :
+    public record ThiefBackstabbingAction(Player Owner) :
         DynamicAction(ThiefClass.Backstabbing, "Backstabbing", "Stab (-2)")
     {
+        public Card DiscardCard { get; }
+
         protected override bool OnCanExecute(Table table)
         {
-            throw new NotImplementedException();
+            return DiscardCard is not null
+                && Owner == DiscardCard.Owner
+                && table.ActionLog.OfType<ThiefBackstabbingActionEvent>().Count() < 2;
         }
 
         protected override Task<Table> OnExecuteAsync(Table table)
         {
-            throw new NotImplementedException();
-            //var playerCards = Player.Equipped
-            //    .Concat(Player.YourHand)
-            //    .Concat(Player.Backpack);
+            return Backstabbing(table, DiscardCard).Unit();
+        }
 
-            //var response = gameContext.RequestSink.Request<Card>(Player, Player, playerCards);
-            //var card = await response.GetResult();
-            //Player.Discard(card);
+        public Table Backstabbing(Table table, Card discardCard)
+        {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(discardCard, nameof(discardCard));
 
-            //var diceRoll = Dice.Roll;
-            //// TODO: include dice roll subtraction from curses
+            if (table.ActionLog.OfType<ThiefBackstabbingActionEvent>().Count() >= 2)
+                throw new PlayerCannotPerformActionException("Player cannot use 'Backstabbing' ability, because it was used maximum times (maximum 1 per each player in combat).");
 
-            //if (diceRoll > 3)
-            //{
-            //    // TODO: discard as -2 strength
-            //    await gameContext.Dungeon.PlayACard(card);
-            //}
-            //else
-            //{
-            //    // TODO: simply discard
-            //    await gameContext.Dungeon.PlayACard(card);
-            //}
+            if (Owner != discardCard.Owner)
+                throw new PlayerDoesNotOwnTheCardException();
+
+            table.Discard(discardCard);
+
+            var playerStrengthEvent = new PlayerStrengthBonusChangedEvent(Owner.Nickname, -2);
+            table = table.WithActionEvent(playerStrengthEvent);
+
+            var berserkingEvent = new ThiefBackstabbingActionEvent(Owner.Nickname, discardCard.Code);
+            table = table.WithActionEvent(berserkingEvent);
+
+            return table;
         }
     }
 }

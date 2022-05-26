@@ -1,38 +1,65 @@
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Actions;
+using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Model.Cards.Events;
+using Munchkin.Core.Model.Exceptions;
+using Munchkin.Extensions.Threading;
 using System;
 using System.Threading.Tasks;
 using static Munchkin.Core.Model.Cards.MunchkinDeluxeCards;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal record ThiefTheftAction() :
+    public record ThiefTheftAction(Player Owner) :
         DynamicAction(ThiefClass.Theft, "Theft", "Try To Steal A Card")
     {
+        public Card DiscardCard { get; }
+
+        public ItemCard TheftCard { get; }
+
         protected override bool OnCanExecute(Table table)
         {
-            throw new NotImplementedException();
+            return DiscardCard is not null
+                && TheftCard is not null
+                && Owner == DiscardCard.Owner
+                && TheftCard.ItemSize != EItemSize.Small;
         }
 
         protected override Task<Table> OnExecuteAsync(Table table)
         {
-            throw new NotImplementedException();
-            // TODO: if stabbing failed, can player try and stab once more?
-            //Shots--;
+            return Theft(table, DiscardCard, TheftCard).Unit();
+        }
 
-            //var playerSelectionRequest = state.RequestSink.Request<Player>(Player, Player, state.Players);
-            //var selectedPlayer = await playerSelectionRequest.GetResult();
-            //var stealableCards = selectedPlayer.Equipped.Concat(Player.Backpack);
+        public Table Theft(Table table, Card discardCard, ItemCard theftCard)
+        {
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(discardCard, nameof(discardCard));
+            ArgumentNullException.ThrowIfNull(theftCard, nameof(theftCard));
 
-            //var diceRoll = Dice.Roll;
-            //// TODO: include dice roll subtraction from curses
+            if (Owner != discardCard.Owner)
+                throw new PlayerDoesNotOwnTheCardException();
 
-            //if (diceRoll > 3)
-            //{
-            //    var response = state.RequestSink.Request<Card>(Player, Player, stealableCards);
-            //    var card = await response.GetResult();
-            //    selectedPlayer.Discard(card);
-            //    Player.TakeInHand(card);
-            //}
+            if (theftCard.ItemSize != EItemSize.Small)
+                throw new PlayerCannotPerformActionException("Player cannot use 'Theft' ability and steal an item (only small items can be stolen).");
+
+            var diceRollResult = Dice.Roll();
+            var playerDiceRolledEvent = new PlayerDiceRolledEvent(Owner.Nickname, diceRollResult);
+            table = table.WithActionEvent(playerDiceRolledEvent);
+
+            var berserkingEvent = new ThiefTheftActionEvent(Owner.Nickname, discardCard.Code);
+            table = table.WithActionEvent(berserkingEvent);
+
+            if (diceRollResult >= 4)
+            {
+                table.Discard(discardCard);
+                Owner.TakeInHand(theftCard);
+            }
+            else
+            {
+                Owner.LevelDown();
+            }
+
+            return table;
         }
     }
 }

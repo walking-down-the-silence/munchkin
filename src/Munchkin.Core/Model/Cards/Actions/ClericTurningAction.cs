@@ -1,34 +1,50 @@
 ﻿using Munchkin.Core.Contracts.Actions;
+using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model.Cards.Events;
+using Munchkin.Core.Model.Exceptions;
+using Munchkin.Extensions.Threading;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using static Munchkin.Core.Model.Cards.MunchkinDeluxeCards;
 
 namespace Munchkin.Core.Model.Actions
 {
-    internal record ClericTurningAction() :
-        MultiShotAction(ClericClass.Turning, "Turning", "Bonus +3", 3),
-        IRenewableAction<Table>
+    public record ClericTurningAction(Player Owner) :
+        DynamicAction(ClericClass.Turning, "Turning", "Bonus +3")
     {
-        public bool Reset(Table state)
+        public Card DiscardCard { get; }
+
+        protected override bool OnCanExecute(Table table)
         {
-            throw new System.NotImplementedException();
+            return DiscardCard is not null
+                && Owner == DiscardCard.Owner
+                && table.ActionLog.OfType<ClericTurningActionEvent>().Count() < 3;
         }
 
-        protected override bool OnCanExecute(Table state)
+        protected override Task<Table> OnExecuteAsync(Table table)
         {
-            // TODO: check if current stage actually is a combat
-            return ExecutionsLeft > 0
-                //&& state.Dungeon.Combat.Monsters.Any(monster => monster.IsUndead)
-                && (state.Players.Current.Equipped.Any()
-                || state.Players.Current.Backpack.Any()
-                || state.Players.Current.YourHand.Any());
+            return TurningUndead(table, DiscardCard).Unit();
         }
 
-        protected override async Task<Table> OnExecuteAsync(Table table)
+        public Table TurningUndead(Table table, Card discardCard)
         {
-            var clericBonus3Event = new ClericTurningActionEvent(table.Players.Current.Nickname, string.Empty);
-            table = table.WithActionEvent(clericBonus3Event);
+            ArgumentNullException.ThrowIfNull(table, nameof(table));
+            ArgumentNullException.ThrowIfNull(discardCard, nameof(discardCard));
+
+            if (table.ActionLog.OfType<ClericTurningActionEvent>().Count() >= 3)
+                throw new PlayerCannotPerformActionException("Player cannot use 'Turning' ability, because it was used maximum times (3 times per turn).");
+
+            if (Owner != discardCard.Owner)
+                throw new PlayerDoesNotOwnTheCardException();
+
+            table = table.Discard(discardCard);
+
+            var playerStrengthEvent = new PlayerStrengthBonusChangedEvent(Owner.Nickname, 3);
+            table = table.WithActionEvent(playerStrengthEvent);
+
+            var turningEvent = new ClericTurningActionEvent(Owner.Nickname, discardCard.Code);
+            table = table.WithActionEvent(turningEvent);
 
             return table;
         }
