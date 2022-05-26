@@ -1,5 +1,6 @@
 ﻿using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Extensions;
+using Munchkin.Core.Model.Attributes;
 using Munchkin.Core.Model.Phases.Events;
 using System;
 using System.Linq;
@@ -26,9 +27,11 @@ namespace Munchkin.Core.Model.Phases
             var rewardTreasures = monsters.Sum(monster => monster.RewardTreasures);
             var rewardLevels = monsters.Sum(monster => monster.RewardLevels);
 
-            // TODO: Check if the helping player receives the levels
             combatStats.FightingPlayer.LevelUp(rewardLevels);
-            combatStats.HelpingPlayer?.LevelUp(rewardLevels);
+
+            // NOTE: Only Elves go up a level when helping in combat.
+            if (combatStats.HelpingPlayer?.HasActiveAttribute<ElfAttribute>() ?? false)
+                combatStats.HelpingPlayer?.LevelUp(monsters.Count());
 
             // TODO: think of a way to distribute treasures based on help agreement
             table = table with { TreasureCardDeck = table.TreasureCardDeck.TakeRange(rewardTreasures, out var treasures) };
@@ -57,7 +60,7 @@ namespace Munchkin.Core.Model.Phases
                     new RunningAwayFromMonsterEvent(combatStats.FightingPlayer.Nickname, monster.GetHashCode().ToString()),
                     new RunningAwayFromMonsterEvent(combatStats.HelpingPlayer.Nickname, monster.GetHashCode().ToString())
                 })
-                .Aggregate(table.ActionLog, (actionLog, item) => { actionLog.Add(item); return actionLog; });
+                .Aggregate(table, (result, item) => result.WithActionEvent(item));
 
             return table;
         }
@@ -75,7 +78,7 @@ namespace Munchkin.Core.Model.Phases
             ArgumentNullException.ThrowIfNull(targetPlayer, nameof(targetPlayer));
 
             var askingForHelpEvent = new AskingForHelpPlayerEvent(targetPlayer.Nickname);
-            table.ActionLog.Add(askingForHelpEvent);
+            table = table.WithActionEvent(askingForHelpEvent);
 
             return table;
         }
@@ -92,7 +95,7 @@ namespace Munchkin.Core.Model.Phases
             ArgumentNullException.ThrowIfNull(askedPlayer, nameof(askedPlayer));
 
             var askingForHelpEvent = new AskingForHelpAcceptedEvent(askedPlayer.Nickname);
-            table.ActionLog.Add(askingForHelpEvent);
+            table = table.WithActionEvent(askingForHelpEvent);
 
             return table;
         }
@@ -110,7 +113,7 @@ namespace Munchkin.Core.Model.Phases
             ArgumentNullException.ThrowIfNull(askedPlayer, nameof(askedPlayer));
 
             var askingForHelpEvent = new AskingForHelpRejectedEvent(askedPlayer.Nickname);
-            table.ActionLog.Add(askingForHelpEvent);
+            table = table.WithActionEvent(askingForHelpEvent);
 
             return table;
         }

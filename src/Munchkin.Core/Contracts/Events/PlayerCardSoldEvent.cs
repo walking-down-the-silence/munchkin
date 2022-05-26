@@ -1,5 +1,4 @@
-﻿using Munchkin.Core.Extensions;
-using Munchkin.Core.Model.Attributes;
+﻿using Munchkin.Core.Model.Attributes;
 
 namespace Munchkin.Core.Contracts.Events
 {
@@ -16,7 +15,5 @@ namespace Munchkin.Core.Contracts.Events
         public string PlayerNickname { get; }
 
         public string CardId { get; }
-
-        public int GoldPieces => this.GetAttribute<GoldPiecesAttribute>().Gold;
     }
 }

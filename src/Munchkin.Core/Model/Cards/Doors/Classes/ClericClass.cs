@@ -44,7 +44,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
             Owner.TakeInHand(card);
 
             var ressurectEvent = new ClericRessurectActionEvent(Owner.Nickname, discardCard.Code, card.Code);
-            table.ActionLog.Add(ressurectEvent);
+            table = table.WithActionEvent(ressurectEvent);
 
             return table;
         }
@@ -61,7 +61,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
             Owner.TakeInHand(card);
 
             var ressurectEvent = new ClericRessurectActionEvent(Owner.Nickname, discardCard.Code, card.Code);
-            table.ActionLog.Add(ressurectEvent);
+            table = table.WithActionEvent(ressurectEvent);
 
             return table;
         }
@@ -80,10 +80,10 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
             table = table.Discard(discardCard);
 
             var playerStrengthEvent = new PlayerStrengthBonusChangedEvent(Owner.Nickname, 3);
-            table.ActionLog.Add(playerStrengthEvent);
+            table = table.WithActionEvent(playerStrengthEvent);
 
             var turningEvent = new ClericTurningActionEvent(Owner.Nickname, discardCard.Code);
-            table.ActionLog.Add(turningEvent);
+            table = table.WithActionEvent(turningEvent);
 
             return table;
         }

@@ -20,12 +20,9 @@ namespace Munchkin.Core.Model.Actions
 
         protected override async Task<Table> OnExecuteAsync(Table table)
         {
-            table = await base.OnExecuteAsync(table);
-
             var clericCardRevivedEvent = new ClericTurningActionEvent(table.Players.Current.Nickname, string.Empty);
-            table.ActionLog.Add(clericCardRevivedEvent);
+            table = table.WithActionEvent(clericCardRevivedEvent);
 
-            // TODO: think how to pass the respective deck to take the card from it
             return table;
         }
     }

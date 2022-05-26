@@ -13,7 +13,7 @@ namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 
         public override Task Play(Table table)
         {
-            if (!Owner.WillBecomeWinner(table.WinningLevel))
+            if (!Owner.WillBeWinning(table.WinningLevel))
             {
                 Owner.LevelUp();
             }

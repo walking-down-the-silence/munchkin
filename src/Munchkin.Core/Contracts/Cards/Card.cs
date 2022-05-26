@@ -11,7 +11,7 @@ namespace Munchkin.Core.Contracts.Cards
     /// <summary>
     /// The base card type that describes the behaviour.
     /// </summary>
-    public abstract class Card : ISupportAttributes
+    public abstract class Card : ISupportAttributes, IDiscardable
     {
         private readonly List<Card> _boundCards = new();
         private readonly List<IConditionalEffect<Table>> _effects = new();
@@ -100,6 +100,7 @@ namespace Munchkin.Core.Contracts.Cards
         /// <param name="table"> Game table that contains everything in the game. </param>
         public virtual void Discard(Table table)
         {
+            Owner?.Discard(this);
             Owner = null;
             BoundTo = null;
 
@@ -123,13 +124,13 @@ namespace Munchkin.Core.Contracts.Cards
         /// Add the property to the card.
         /// </summary>
         /// <param name="property"> The concrete property instance. </param>
-        protected void AddAttribute(Attributes.Attribute property) => _attributes.Add(property);
+        protected void AddAttribute(IAttribute property) => _attributes.Add(property);
 
         /// <summary>
         /// Gets the concrete property of type <see cref="T"/>
         /// </summary>
         /// <typeparam name="T"> The <see cref="T"/> type of property. </typeparam>
         /// <returns> The concrete property instance. </returns>
-        protected T GetAttribute<T>() where T : Attributes.Attribute => _attributes.OfType<T>().FirstOrDefault();
+        protected T GetAttribute<T>() where T : IAttribute => _attributes.OfType<T>().FirstOrDefault();
     }
 }

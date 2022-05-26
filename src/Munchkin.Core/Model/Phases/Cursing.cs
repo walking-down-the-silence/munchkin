@@ -18,7 +18,7 @@ namespace Munchkin.Core.Model.Phases
         /// <param name="table">The table where the game takes place.</param>
         /// <param name="card">The card that should resolve the curse.</param>
         /// <returns>Returns an updated instance of the table.</returns>
-        /// <exception cref="CurseCannotBeCancelledWithTheChosenCardException">Thrown if the card cannot resolve curses.</exception>
+        /// <exception cref="CurseCannotBeCancelledException">Thrown if the card cannot resolve curses.</exception>
         public static Table Resolve(Table table, CurseCard curse, Card card)
         {
             ArgumentNullException.ThrowIfNull(table, nameof(table));
@@ -31,11 +31,10 @@ namespace Munchkin.Core.Model.Phases
             // NOTE: remove from player's cards and add it to the temporary pile,
             // before the step is resolved completely
             if (!card.HasAttribute<ResolveCurseAttribute>())
-                throw new CurseCannotBeCancelledWithTheChosenCardException();
+                throw new CurseCannotBeCancelledException();
 
             var curseResolvedEvent = new PlayerCurseResolvedEvent(table.Players.Current.Nickname, curse.Code, card.Code);
-            table.ActionLog.Add(curseResolvedEvent);
-
+            table = table.WithActionEvent(curseResolvedEvent);
             table.Discard(card);
 
             return table;
@@ -58,7 +57,7 @@ namespace Munchkin.Core.Model.Phases
                 table.Discard(curse);
 
             var curseBadStuffEvent = new PlayerCurseBadStuffTakenEvent(table.Players.Current.Nickname, curse.Code);
-            table.ActionLog.Add(curseBadStuffEvent);
+            table = table.WithActionEvent(curseBadStuffEvent);
 
             return table;
         }

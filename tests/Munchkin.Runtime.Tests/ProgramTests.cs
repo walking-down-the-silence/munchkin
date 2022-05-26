@@ -1,12 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
-using Munchkin.Core.Model.Cards;
-using Munchkin.Core.Model.Cards.Doors.Classes;
-using Munchkin.Core.Model.Cards.Treasures.OneShot;
-using Munchkin.Core.Model.Cards.Treasures.Permanent;
 using Munchkin.Core.Model.Exceptions;
 using Munchkin.Core.Model.Expansions;
 using Munchkin.Primitives.Abstractions;
@@ -218,7 +213,7 @@ namespace Munchkin.Runtime.Tests
             var cannotCancelCurseExeption = await Record.ExceptionAsync(() => curseService.ResolveAsync(table.GetUniqueId(), Doors.ChangeClass, Treasures.CloakOfObscurity));
 
             cannotCancelCurseExeption.Should().NotBeNull();
-            cannotCancelCurseExeption.Should().BeOfType<CurseCannotBeCancelledWithTheChosenCardException>();
+            cannotCancelCurseExeption.Should().BeOfType<CurseCannotBeCancelledException>();
 
             table = await curseService.ResolveAsync(table.GetUniqueId(), Doors.ChangeClass, Treasures.WishingRing1);
             table = await tableService.CursePlayerAsync(table.GetUniqueId(), PlayerElonMuskNickname, Doors.ChickenOnYourHead);

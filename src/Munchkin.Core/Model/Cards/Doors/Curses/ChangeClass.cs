@@ -1,31 +1,31 @@
 ﻿using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Extensions;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
 {
     public sealed class ChangeClass : CurseCard
     {
-        public ChangeClass() : base(MunchkinDeluxeCards.Doors.ChangeClass , "Change Class")
+        public ChangeClass() : base(MunchkinDeluxeCards.Doors.ChangeClass, "Change Class")
         {
         }
 
-        public override Task BadStuff(Table context)
+        public override Task BadStuff(Table table)
         {
-            foreach (var equippedCard in context.Players.Current.Equipped)
-            {
-                if (equippedCard is ClassCard || equippedCard is SuperMunchkin)
-                {
-                    equippedCard.Discard(context);
-                }
-            }
+            // TODO: Clarify in Errata if class card should be discarded or cards that act as a class as well
+            table.Players.Current.Equipped
+                .Where(x => x is ClassCard || x is SuperMunchkin)
+                .ForEach(x => x.Discard(table));
 
-            context = context with { DiscardedDoorsCards = context.DiscardedDoorsCards.TakeFirst<ClassCard>(out var firstDiscardedClass) };
-            if (firstDiscardedClass != null)
+            table = table with
             {
-                context.Players.Current.Equip(firstDiscardedClass);
-            }
+                DiscardedDoorsCards = table.DiscardedDoorsCards.TakeFirst<ClassCard>(out var classCard)
+            };
 
-            // TODO: resolve all other cards that don't match the new class
+            if (classCard != null)
+                table.Players.Current.Equip(classCard);
+
             return Task.CompletedTask;
         }
     }

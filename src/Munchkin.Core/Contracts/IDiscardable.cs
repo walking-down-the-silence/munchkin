@@ -4,6 +4,6 @@ namespace Munchkin.Core.Contracts
 {
     public interface IDiscardable
     {
-        void Discard(Table context);
+        void Discard(Table table);
     }
 }

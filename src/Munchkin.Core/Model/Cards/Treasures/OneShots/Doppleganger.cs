@@ -22,7 +22,7 @@ namespace Munchkin.Core.Model.Cards.Treasures.OneShot
 
             // take all strength properties from cards used by player
             var oneShotProperties = BoundTo.BoundCards
-                .NotOfType<Doppleganger>()
+                .ExceptType<Doppleganger>()
                 .SelectMany(x => x.Attributes)
                 .OfType<StrengthBonusAttribute>();
 

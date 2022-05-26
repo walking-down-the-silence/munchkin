@@ -44,10 +44,10 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
             table.Discard(discardCard);
 
             var playerStrengthEvent = new PlayerStrengthBonusChangedEvent(Owner.Nickname, -2);
-            table.ActionLog.Add(playerStrengthEvent);
+            table = table.WithActionEvent(playerStrengthEvent);
 
             var berserkingEvent = new ThiefBackstabbingActionEvent(Owner.Nickname, discardCard.Code);
-            table.ActionLog.Add(berserkingEvent);
+            table = table.WithActionEvent(berserkingEvent);
 
             return table;
         }
@@ -66,10 +66,10 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
 
             var diceRollResult = Dice.Roll();
             var playerDiceRolledEvent = new PlayerDiceRolledEvent(Owner.Nickname, diceRollResult);
-            table.ActionLog.Add(playerDiceRolledEvent);
+            table = table.WithActionEvent(playerDiceRolledEvent);
 
             var berserkingEvent = new ThiefTheftActionEvent(Owner.Nickname, discardCard.Code);
-            table.ActionLog.Add(berserkingEvent);
+            table = table.WithActionEvent(berserkingEvent);
 
             if (diceRollResult >= 4)
             {

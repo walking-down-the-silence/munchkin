@@ -1,4 +1,5 @@
 using Munchkin.Core.Contracts.Cards;
+using Munchkin.Core.Model.Attributes;
 
 namespace Munchkin.Core.Model.Cards.Doors
 {
@@ -7,6 +8,7 @@ namespace Munchkin.Core.Model.Cards.Doors
         public Cheat() :
             base(MunchkinDeluxeCards.Doors.Cheat, "Cheat")
         {
+            AddAttribute(new CheatAttribute());
         }
     }
 }

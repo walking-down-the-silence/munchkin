@@ -213,11 +213,11 @@ namespace Munchkin.Core.Model
             var playerCards = Enumerable.Empty<Card>()
                 .Concat(YourHand)
                 .Concat(Equipped
-                    .NotOfType<ClassCard>()
-                    .NotOfType<RaceCard>()
-                    .NotOfType<CurseCard>()
-                    .NotOfType<Halfbreed>()
-                    .NotOfType<SuperMunchkin>())
+                    .ExceptType<ClassCard>()
+                    .ExceptType<RaceCard>()
+                    .ExceptType<CurseCard>()
+                    .ExceptType<Halfbreed>()
+                    .ExceptType<SuperMunchkin>())
                 .Concat(Backpack)
                 .ToList();
 

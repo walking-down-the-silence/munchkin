@@ -11,14 +11,17 @@ namespace Munchkin.Core.Model.Cards.Treasures.OneShot
         {
         }
 
-        public override Task Play(Table gameContext)
+        public override Task Play(Table table)
         {
-            var playerWithhirelingCard = gameContext.Players.FirstOrDefault(x => x.Equipped.OfType<Hireling>().Any());
+            var playerWithhirelingCard = table.Players.FirstOrDefault(x => x.Equipped.OfType<Hireling>().Any());
             var hirelingCard = playerWithhirelingCard?.Equipped.FirstOrDefault(x => x is Hireling);
+            
             if (hirelingCard != null)
             {
-                hirelingCard.Discard(gameContext);
-                return base.Play(gameContext);
+                table = table.Discard(hirelingCard);
+                Owner?.LevelUp();
+
+                return base.Play(table);
             }
 
             return Task.CompletedTask;

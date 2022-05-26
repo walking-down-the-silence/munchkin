@@ -20,7 +20,7 @@ namespace Munchkin.Core.Model
     public sealed record Table
     {
         private readonly IShuffleAlgorithm<Card> _shuffleAlgorithm;
-        private readonly List<IEvent> _actionLog = new();
+        private ImmutableList<IEvent> _actionLog = ImmutableList<IEvent>.Empty;
         private ImmutableList<IEvent> _eventLog = ImmutableList<IEvent>.Empty;
         private ImmutableDictionary<string, ExpansionOption> _availableExpansions;
         private ImmutableDictionary<string, ExpansionOption> _selectedExpansions;
@@ -116,7 +116,7 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Gets the series of events that happened as the result of any action performed.
         /// </summary>
-        public ICollection<IEvent> ActionLog => _actionLog;
+        public IReadOnlyCollection<IEvent> ActionLog => _actionLog;
 
         /// <summary>
         /// Request sink that is used for player interaction when a selection or decision is needed.
@@ -125,7 +125,7 @@ namespace Munchkin.Core.Model
 
         #endregion
 
-        #region Setting The Preferences
+        #region Table Options Actions
 
         /// <summary>
         /// Sets the target level required to win the game.
@@ -143,7 +143,7 @@ namespace Munchkin.Core.Model
         public Table WithRequestSink(IMediator requestSink)
         {
             ArgumentNullException.ThrowIfNull(requestSink);
-            
+
             return this with { RequestSink = requestSink };
         }
 
@@ -200,9 +200,20 @@ namespace Munchkin.Core.Model
             return table;
         }
 
+        /// <summary>
+        /// Add the action event to the event log for future reference.
+        /// </summary>
+        /// <param name="eventData">The object that holds the event data.</param>
+        /// <returns></returns>
+        public Table WithActionEvent(IEvent eventData)
+        {
+            ArgumentNullException.ThrowIfNull(eventData, nameof(eventData));
+            return this with { _actionLog = _actionLog.Add(eventData) };
+        }
+
         #endregion
 
-        #region Working With Cards
+        #region Card Decks Actions
 
         public Card FindCard(Func<Card, bool> filter)
         {
@@ -246,12 +257,10 @@ namespace Munchkin.Core.Model
 
             card.Owner?.Discard(card);
 
-            var table = this with { DungeonCards = DungeonCards.Remove(card) };
-
-            table = card switch
+            var table = card switch
             {
-                TreasureCard treasure => table with { DiscardedTreasureCards = DiscardedTreasureCards.Put(treasure) },
-                DoorsCard door => table with { DiscardedDoorsCards = DiscardedDoorsCards.Put(door) },
+                TreasureCard treasure => DiscardTreasure(this, treasure),
+                DoorsCard door => DiscardDoor(this, door),
                 _ => throw new ArgumentException("The card should either be of type Door or Treasure.", nameof(card))
             };
 
@@ -260,7 +269,7 @@ namespace Munchkin.Core.Model
 
         #endregion
 
-        #region Including Expansions
+        #region Expansion Actions
 
         /// <summary>
         /// Marks the expansion as included into the game, before the game actually begins.
@@ -302,7 +311,7 @@ namespace Munchkin.Core.Model
 
         #endregion
 
-        #region Joining The Table
+        #region Joining The Table Actions
 
         /// <summary>
         /// Add the player to the table/game.
@@ -344,5 +353,23 @@ namespace Munchkin.Core.Model
         }
 
         #endregion
+
+        private static Table DiscardDoor(Table table, DoorsCard card)
+        {
+            return table with
+            {
+                DungeonCards = table.DungeonCards.Remove(card),
+                DiscardedDoorsCards = table.DiscardedDoorsCards.Put(card)
+            };
+        }
+
+        private static Table DiscardTreasure(Table table, TreasureCard card)
+        {
+            return table with
+            {
+                DungeonCards = table.DungeonCards.Remove(card),
+                DiscardedTreasureCards = table.DiscardedTreasureCards.Put(card)
+            };
+        }
     }
 }

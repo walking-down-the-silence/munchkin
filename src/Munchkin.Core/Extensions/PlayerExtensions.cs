@@ -1,4 +1,5 @@
 ﻿using Munchkin.Core.Contracts;
+using Munchkin.Core.Contracts.Attributes;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Model;
 using Munchkin.Core.Model.Attributes;
@@ -29,13 +30,13 @@ namespace Munchkin.Core.Extensions
             return player.Life == EPlayerLifeState.Revived;
         }
 
-        public static bool IsWinner(this Player player, int winningLevel)
+        public static bool IsWinning(this Player player, int winningLevel)
         {
             ArgumentNullException.ThrowIfNull(player, nameof(player));
             return player.Level >= winningLevel;
         }
 
-        public static bool WillBecomeWinner(this Player player, int winningLevel)
+        public static bool WillBeWinning(this Player player, int winningLevel)
         {
             ArgumentNullException.ThrowIfNull(player, nameof(player));
             return player.Level + 1 >= winningLevel;
@@ -59,6 +60,13 @@ namespace Munchkin.Core.Extensions
             return player.YourHand.OfType<T>().Any();
         }
 
+        public static bool HasActiveAttribute<TAttribute>(this Player player)
+            where TAttribute : IAttribute
+        {
+            ArgumentNullException.ThrowIfNull(player, nameof(player));
+            return player.Equipped.Any(x => x.HasAttribute<TAttribute>());
+        }
+
         public static IReadOnlyCollection<Card> AllCards(this Player player)
         {
             ArgumentNullException.ThrowIfNull(player, nameof(player));
@@ -78,11 +86,11 @@ namespace Munchkin.Core.Extensions
             var playerCards = Enumerable.Empty<Card>()
                 .Concat(player.YourHand)
                 .Concat(player.Equipped
-                    .NotOfType<ClassCard>()
-                    .NotOfType<RaceCard>()
-                    .NotOfType<CurseCard>()
-                    .NotOfType<Halfbreed>()
-                    .NotOfType<SuperMunchkin>())
+                    .ExceptType<ClassCard>()
+                    .ExceptType<RaceCard>()
+                    .ExceptType<CurseCard>()
+                    .ExceptType<Halfbreed>()
+                    .ExceptType<SuperMunchkin>())
                 .Concat(player.Backpack)
                 .ToList();
 

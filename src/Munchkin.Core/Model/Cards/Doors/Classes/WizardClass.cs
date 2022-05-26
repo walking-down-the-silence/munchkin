@@ -38,13 +38,13 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
                 throw new PlayerCannotPerformActionException("Player cannot use 'Charm Spell' ability and discard the hand, because there is not enough cards in hand (at least 3 required).");
 
             var rewardTreasuredBonusEvent = new CombatRewardTreasuresBonusEvent(monster.RewardTreasures);
-            table.ActionLog.Add(rewardTreasuredBonusEvent);
+            table = table.WithActionEvent(rewardTreasuredBonusEvent);
 
             var charmSpellEvent = new WizardCharmSpellActionEvent(Owner.Nickname, monster.Code);
-            table.ActionLog.Add(charmSpellEvent);
+            table = table.WithActionEvent(charmSpellEvent);
 
             Owner.DiscardHand();
-            table.Discard(monster);
+            table = table.Discard(monster);
 
             return table;
         }
@@ -61,10 +61,10 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
                 throw new PlayerCannotPerformActionException("Player cannot use 'Flight Spell' ability, because it was used maximum times (3 per turn).");
 
             var runAwayBonus = new CombatRunAwayBonusEvent(Owner.Nickname, 1);
-            table.ActionLog.Add(runAwayBonus);
+            table = table.WithActionEvent(runAwayBonus);
 
             var flightSpellEvent = new WizardFlightSpellActionEvent(Owner.Nickname, discardCard.Code);
-            table.ActionLog.Add(flightSpellEvent);
+            table = table.WithActionEvent(flightSpellEvent);
 
             return table;
         }

@@ -41,10 +41,10 @@ namespace Munchkin.Core.Model.Cards.Doors.Classes
             table.Discard(discardCard);
 
             var playerStrengthEvent = new PlayerStrengthBonusChangedEvent(Owner.Nickname, 1);
-            table.ActionLog.Add(playerStrengthEvent);
+            table = table.WithActionEvent(playerStrengthEvent);
 
             var berserkingEvent = new WarriorBerserkingBonus1Event(Owner.Nickname, discardCard.Code);
-            table.ActionLog.Add(berserkingEvent);
+            table = table.WithActionEvent(berserkingEvent);
 
             return table;
         }

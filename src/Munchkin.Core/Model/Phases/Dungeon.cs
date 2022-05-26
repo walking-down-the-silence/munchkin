@@ -24,7 +24,7 @@ namespace Munchkin.Core.Model.Phases
             table = table.TakeDoor(out var doors);
 
             var kickOpenedTheDoorEvent = new KickOpenedTheDoorEvent(table.Players.Current.Nickname, doors.Code);
-            table.ActionLog.Add(kickOpenedTheDoorEvent);
+            table = table.WithActionEvent(kickOpenedTheDoorEvent);
 
             table = doors switch
             {
@@ -50,7 +50,7 @@ namespace Munchkin.Core.Model.Phases
             table.Players.Current.TakeInHand(doors);
 
             var playerTookInHandEvent = new PlayerTookInHandEvent(table.Players.Current.Nickname, doors.Code);
-            table.ActionLog.Add(playerTookInHandEvent);
+            table = table.WithActionEvent(playerTookInHandEvent);
 
             return table;
         }
@@ -96,7 +96,7 @@ namespace Munchkin.Core.Model.Phases
             table = table.Play(curse);
 
             var playerCursedEvent = new PlayerCursedEvent(player.Nickname, curse.Code);
-            table.ActionLog.Add(playerCursedEvent);
+            table = table.WithActionEvent(playerCursedEvent);
 
             return table;
         }
@@ -108,8 +108,8 @@ namespace Munchkin.Core.Model.Phases
 
             table = table.Play(monster);
 
-            var combatEvent = new CombatStartedEvent(table.Players.Current.Nickname, monster.Code);
-            table.ActionLog.Add(combatEvent);
+            var combatEvent = new CombatMosterAddedEvent(table.Players.Current.Nickname, monster.Code);
+            table = table.WithActionEvent(combatEvent);
 
             return table;
         }
@@ -124,7 +124,7 @@ namespace Munchkin.Core.Model.Phases
             table.Players.Current.TakeInHand(card);
 
             var playerHandEvent = new PlayerTookInHandEvent(table.Players.Current.Nickname, card.Code);
-            table.ActionLog.Add(playerHandEvent);
+            table = table.WithActionEvent(playerHandEvent);
 
             return table;
         }

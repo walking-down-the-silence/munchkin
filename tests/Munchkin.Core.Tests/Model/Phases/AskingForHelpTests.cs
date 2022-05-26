@@ -28,10 +28,11 @@ namespace Munchkin.Core.Tests.Model.Phases
             var event3 = new AskingForHelpPlayerEvent(player3.Nickname);
             var event4 = new AskingForHelpAcceptedEvent(player3.Nickname);
 
-            table.ActionLog.Add(event1);
-            table.ActionLog.Add(event2);
-            table.ActionLog.Add(event3);
-            table.ActionLog.Add(event4);
+            table = table
+                .WithActionEvent(event1)
+                .WithActionEvent(event2)
+                .WithActionEvent(event3)
+                .WithActionEvent(event4);
 
             var askingForHelp = AskingForHelp.From(table);
 

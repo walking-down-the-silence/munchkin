@@ -2,9 +2,9 @@
 
 namespace Munchkin.Core.Model.Exceptions
 {
-    public class CurseCannotBeCancelledWithTheChosenCardException : Exception
+    public class CurseCannotBeCancelledException : Exception
     {
-        public CurseCannotBeCancelledWithTheChosenCardException() :
+        public CurseCannotBeCancelledException() :
             base("The chosen card does not have the ability to cancel curses.")
         {
         }

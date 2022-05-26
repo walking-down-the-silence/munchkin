@@ -35,12 +35,8 @@ namespace Munchkin.Core.Model.Phases
             giver.Discard(card);
             taker.PutInBackpack(card);
 
-            var giveAwayEvent = new CharityGivenAwayEvent(
-                giver.Nickname,
-                taker.Nickname,
-                card.GetHashCode().ToString());
-
-            table.ActionLog.Add(giveAwayEvent);
+            var giveAwayEvent = new CharityGivenAwayEvent(giver.Nickname, taker.Nickname, card.Code);
+            table = table.WithActionEvent(giveAwayEvent);
 
             return table;
         }

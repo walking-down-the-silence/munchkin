@@ -75,8 +75,9 @@ namespace Munchkin.Core.Tests.Model.Phases
             player1.TakeInHand(treasure1);
             player1.TakeInHand(treasure2);
 
-            table.ActionLog.Add(new AskingForHelpPlayerEvent(PlayerFrankSinatraNickname));
-            table.ActionLog.Add(new AskingForHelpAcceptedEvent(PlayerFrankSinatraNickname));
+            table = table
+                .WithActionEvent(new AskingForHelpPlayerEvent(PlayerFrankSinatraNickname))
+                .WithActionEvent(new AskingForHelpAcceptedEvent(PlayerFrankSinatraNickname));
 
             table = table.Play(treasure1);
             table = table.Play(treasure2);

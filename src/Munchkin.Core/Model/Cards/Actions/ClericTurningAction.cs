@@ -12,7 +12,6 @@ namespace Munchkin.Core.Model.Actions
     {
         public bool Reset(Table state)
         {
-            // TODO: reset the execution count
             throw new System.NotImplementedException();
         }
 
@@ -28,10 +27,8 @@ namespace Munchkin.Core.Model.Actions
 
         protected override async Task<Table> OnExecuteAsync(Table table)
         {
-            table = await base.OnExecuteAsync(table);
-
             var clericBonus3Event = new ClericTurningActionEvent(table.Players.Current.Nickname, string.Empty);
-            table.ActionLog.Add(clericBonus3Event);
+            table = table.WithActionEvent(clericBonus3Event);
 
             return table;
         }

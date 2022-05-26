@@ -1,6 +1,7 @@
 ﻿using Munchkin.Core.Contracts.Exceptions;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model;
+using Munchkin.Core.Model.Attributes;
 using System;
 using System.Linq;
 
@@ -19,8 +20,9 @@ namespace Munchkin.Core.Contracts.Cards
             ArgumentNullException.ThrowIfNull(player, nameof(player));
 
             var classesEquipped = player.Equipped.OfType<RaceCard>().Count();
+            var equippedWithCheat = BoundTo != null && BoundTo.HasAttribute<CheatAttribute>();
 
-            if (classesEquipped >= player.GetMaximumRacesEquipped())
+            if (!equippedWithCheat && classesEquipped >= player.GetMaximumRacesEquipped())
                 throw new CardCannotBeEquippedException("Player already has maximum races equipped.");
 
             player.Equip(this);

@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <Folder Include="Contracts\" />
+    <Folder Include="Model\Cards\Doors\Curses\" />
   </ItemGroup>
 
 </Project>

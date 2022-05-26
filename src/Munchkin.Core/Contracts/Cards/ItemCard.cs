@@ -26,17 +26,20 @@ namespace Munchkin.Core.Contracts.Cards
 
         public EItemSize ItemSize => GetAttribute<ItemSizeAttribute>().ItemSize;
 
-        public override Task Play(Table context)
+        public override Task Play(Table table)
         {
-            Effects.Where(effect => effect.Satisfies(context)).ForEach(effect => effect.Apply(context));
+            Effects.Where(effect => effect.Satisfies(table)).ForEach(effect => effect.Apply(table));
 
             return Task.CompletedTask;
         }
 
-        public virtual void Sell(Table state)
+        public virtual Table Sell(Table table)
         {
             var cardSoldEvent = new PlayerCardSoldEvent(Owner.Nickname, Code, GoldPieces);
-            state.ActionLog.Add(cardSoldEvent);
+            table = table.WithActionEvent(cardSoldEvent);
+            table = table.Discard(this);
+
+            return table;
         }
     }
 }

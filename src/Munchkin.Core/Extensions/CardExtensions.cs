@@ -7,7 +7,7 @@ namespace Munchkin.Core.Extensions
 {
     public static class CardExtensions
     {
-        public static IEnumerable<Card> NotOfType<TExclude>(this IEnumerable<Card> cards)
+        public static IEnumerable<Card> ExceptType<TExclude>(this IEnumerable<Card> cards)
         {
             return cards.Where(card => card is not TExclude);
         }

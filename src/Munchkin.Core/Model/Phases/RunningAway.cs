@@ -24,7 +24,7 @@ namespace Munchkin.Core.Model.Phases
             ArgumentNullException.ThrowIfNull(player, nameof(player));
 
             var diceRollEvent = new RunningAwayFromMonsterDiceRollEvent(player.Nickname, monster.Code, Dice.Roll());
-            table.ActionLog.Add(diceRollEvent);
+            table = table.WithActionEvent(diceRollEvent);
 
             return table;
         }
