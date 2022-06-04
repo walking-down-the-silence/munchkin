@@ -1,4 +1,4 @@
-﻿using Munchkin.Core.Contracts.Events;
+﻿using Munchkin.Core.Contracts;
 using System;
 
 namespace Munchkin.Core.Model.Cards.Events

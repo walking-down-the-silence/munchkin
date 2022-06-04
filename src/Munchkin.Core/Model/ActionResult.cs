@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using Munchkin.Core.Contracts.Actions;
+using System.Collections.Immutable;
 
 namespace Munchkin.Core.Model
 {
@@ -8,11 +9,11 @@ namespace Munchkin.Core.Model
     /// <typeparam name="TResult">The type of result returned after doing an action.</typeparam>
     /// <param name="Result">The actual result of the action.</param>
     /// <param name="AvailableActions">A collection of action availabe to a player based on current state.</param>
-    public record ActionResult<TResult>(TResult Result, ImmutableArray<string> AvailableActions);
+    public record ActionResult<TResult>(TResult Result, ImmutableArray<IAction<Table>> AvailableActions);
 
     public static class ActionResult
     {
-        public static ActionResult<TResult> Create<TResult>(TResult Result, ImmutableArray<string> AvailableActions) =>
-            new(Result, AvailableActions);
+        public static ActionResult<TResult> Create<TResult>(TResult result, ImmutableArray<IAction<Table>> actions) =>
+            new(result, actions);
     }
 }

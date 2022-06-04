@@ -39,7 +39,7 @@ namespace Munchkin.Core.Model
         /// <summary>
         /// Gets the players gender.
         /// </summary>
-        public EGender Gender { get; }
+        public EGender Gender { get; private set; }
 
         /// <summary>
         /// Gets the players current level.
@@ -101,6 +101,11 @@ namespace Munchkin.Core.Model
         /// Levels down the user  by couple levels (but not less that 1).
         /// </summary>
         public void LevelDown(int levels) => Interlocked.Exchange(ref _level, Math.Max(1, _level - levels));
+
+        /// <summary>
+        /// Changes the gender to the opposite one.
+        /// </summary>
+        public void ChangeSex() => Gender = Gender == EGender.Male ? EGender.Female : EGender.Male;
 
         /// <summary>
         /// Takes a card in hand as face-down.

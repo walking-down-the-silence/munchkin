@@ -1,4 +1,4 @@
-using Munchkin.Core.Contracts.Actions;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Model.Effects;

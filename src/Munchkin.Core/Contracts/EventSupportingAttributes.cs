@@ -1,8 +1,7 @@
-﻿using Munchkin.Core.Contracts.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Munchkin.Core.Contracts.Events
+namespace Munchkin.Core.Contracts
 {
     public abstract class EventSupportingAttributes : IEvent, ISupportAttributes
     {
@@ -27,6 +26,6 @@ namespace Munchkin.Core.Contracts.Events
         /// Add the property to the card.
         /// </summary>
         /// <param name="property"> The concrete property instance. </param>
-        protected void AddAttribute(Attributes.Attribute property) => _attributes.Add(property);
+        protected void AddAttribute(Attribute property) => _attributes.Add(property);
     }
 }

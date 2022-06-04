@@ -1,6 +1,6 @@
 ﻿using MediatR;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
-using Munchkin.Core.Contracts.Events;
 using Munchkin.Core.Extensions;
 using Munchkin.Core.Model.Expansions;
 using Munchkin.Extensions.Threading;

@@ -43,7 +43,7 @@ namespace Munchkin.Core.Model.Phases
             ArgumentNullException.ThrowIfNull(taker, nameof(taker));
 
             if (!taker.IsDead())
-                monster.BadStuff(table, taker);
+                table = monster.BadStuff(table, taker);
 
             return table;
         }

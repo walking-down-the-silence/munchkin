@@ -1,5 +1,6 @@
 using Munchkin.Core.Contracts.Cards;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
@@ -20,15 +21,22 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
                 .OfType<ClassCard>()
                 .ToList();
 
-            if (classes.Count > 1)
+            return classes.Count switch
             {
-                // select which one to discard
-            }
-            else
-            {
-                classes.FirstOrDefault()?.Discard(table);
-            }
+                > 1 => DiscardSelected(table, classes),
+                1   => DiscardSingle(table, classes),
+                < 1 => table
+            };
+        }
 
+        private static Table DiscardSingle(Table table, IReadOnlyCollection<ClassCard> classes)
+        {
+            return table.Discard(classes.FirstOrDefault());
+        }
+
+        private static Table DiscardSelected(Table table, IReadOnlyCollection<ClassCard> classes)
+        {
+            // TODO: Select which one to discard
             return table;
         }
     }

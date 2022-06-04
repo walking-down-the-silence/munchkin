@@ -19,6 +19,7 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
             ArgumentNullException.ThrowIfNull(table, nameof(table));
             ArgumentNullException.ThrowIfNull(player, nameof(player));
 
+            // TODO: Make sure to update table reference after removing
             Owner.Equip(this);
             table.DungeonCards.Remove(this);
 

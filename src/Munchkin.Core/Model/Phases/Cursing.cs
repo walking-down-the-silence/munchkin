@@ -33,9 +33,10 @@ namespace Munchkin.Core.Model.Phases
             if (!card.HasAttribute<ResolveCurseAttribute>())
                 throw new CurseCannotBeCancelledException();
 
+            table = table.Discard(card);
+
             var curseResolvedEvent = new PlayerCurseResolvedEvent(table.Players.Current.Nickname, curse.Code, card.Code);
             table = table.WithActionEvent(curseResolvedEvent);
-            table.Discard(card);
 
             return table;
         }
@@ -51,10 +52,10 @@ namespace Munchkin.Core.Model.Phases
             ArgumentNullException.ThrowIfNull(table, nameof(table));
             ArgumentNullException.ThrowIfNull(curse, nameof(curse));
 
-            curse.BadStuff(table, table.Players.Current);
+            table = curse.BadStuff(table, table.Players.Current);
 
             if (curse.OneShot)
-                table.Discard(curse);
+                table = table.Discard(curse);
 
             var curseBadStuffEvent = new PlayerCurseBadStuffTakenEvent(table.Players.Current.Nickname, curse.Code);
             table = table.WithActionEvent(curseBadStuffEvent);

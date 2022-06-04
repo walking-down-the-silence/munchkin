@@ -23,7 +23,7 @@ namespace Munchkin.Core.Contracts.Actions
             return table;
         }
 
-        protected abstract bool OnCanExecute(Table table);
+        protected virtual bool OnCanExecute(Table table) => true;
 
         protected virtual Task<Table> OnBeforeExecuteAsync(Table table) => Task.FromResult(table);
 

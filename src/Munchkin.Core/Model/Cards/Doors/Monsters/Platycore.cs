@@ -1,4 +1,4 @@
-using Munchkin.Core.Contracts.Actions;
+using Munchkin.Core.Contracts;
 using Munchkin.Core.Contracts.Cards;
 using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Extensions;
@@ -21,12 +21,12 @@ namespace Munchkin.Core.Model.Cards.Doors.Monsters
                     .New(new UsableByWizardOnlyRestriction())));
         }
 
-        public override Task Play(Table context)
+        public override Task Play(Table table)
         {
             // apply dynamic effects if conditions are met
-            Effects.Where(effect => effect.Satisfies(context)).ForEach(effect => effect.Apply(context));
+            Effects.Where(effect => effect.Satisfies(table)).ForEach(effect => effect.Apply(table));
 
-            return base.Play(context);
+            return base.Play(table);
         }
 
         public override Table BadStuff(Table table, Player player)

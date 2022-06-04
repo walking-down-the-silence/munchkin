@@ -16,18 +16,16 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
             ArgumentNullException.ThrowIfNull(table, nameof(table));
             ArgumentNullException.ThrowIfNull(player, nameof(player));
 
-            // TODO: Clarify in Errata if class card should be discarded or cards that act as a class as well
             player.Equipped
                 .Where(x => x is ClassCard || x is SuperMunchkin)
                 .ForEach(x => x.Discard(table));
 
-            table = table with
-            {
-                DiscardedDoorsCards = table.DiscardedDoorsCards.TakeFirst<ClassCard>(out var classCard)
-            };
+            table = table with { DiscardedDoorsCards = table.DiscardedDoorsCards.TakeFirst<ClassCard>(out var classCard) };
 
-            if (classCard != null)
-                player.Equip(classCard);
+            player.Equip(classCard);
+            player.Equipped
+                .Where(x => !x.Restrictions.Any(x => x.Satisfies(table)))
+                .ForEach(x => player.PutInBackpack(x));
 
             return table;
         }

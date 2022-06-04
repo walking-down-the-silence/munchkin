@@ -1,9 +1,9 @@
-﻿namespace Munchkin.Core.Contracts.Attributes
+﻿namespace Munchkin.Core.Contracts
 {
     /// <summary>
-    /// Defines the attribute and how it can be used.
+    /// Defines the restriction to how the card can be used.
     /// </summary>
-    public interface IAttribute
+    public interface IRestriction
     {
         /// <summary>
         /// Get the human readable title of the attribute.

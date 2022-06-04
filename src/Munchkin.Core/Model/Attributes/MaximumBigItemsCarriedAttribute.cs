@@ -1,4 +1,4 @@
-﻿using Munchkin.Core.Contracts.Attributes;
+﻿using Munchkin.Core.Contracts;
 
 namespace Munchkin.Core.Model.Attributes
 {

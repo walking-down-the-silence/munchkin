@@ -77,21 +77,21 @@ namespace Munchkin.Core.Model.Phases
         {
             ArgumentNullException.ThrowIfNull(table, nameof(table));
 
-            var combatStats = Combat.From(table);
+            var combat = Combat.From(table);
 
             var monsters = table.DungeonCards.OfType<MonsterCard>();
             var rewardTreasures = monsters.Sum(monster => monster.RewardTreasures);
             var rewardLevels = monsters.Sum(monster => monster.RewardLevels);
 
-            combatStats.FightingPlayer.LevelUp(rewardLevels);
+            combat.FightingPlayer.LevelUp(rewardLevels);
 
             // NOTE: Only Elves go up a level when helping in combat.
-            if (combatStats.HelpingPlayer?.HasActiveAttribute<ElfAttribute>() ?? false)
-                combatStats.HelpingPlayer?.LevelUp(monsters.Count());
+            if (combat.HelpingPlayer?.HasActiveAttribute<ElfAttribute>() ?? false)
+                combat.HelpingPlayer?.LevelUp(monsters.Count());
 
             // TODO: think of a way to distribute treasures based on help agreement
             table = table with { TreasureCardDeck = table.TreasureCardDeck.TakeRange(rewardTreasures, out var treasures) };
-            treasures.ForEach(card => combatStats.FightingPlayer.TakeInHand(card));
+            treasures.ForEach(card => combat.FightingPlayer.TakeInHand(card));
 
             return table;
         }
@@ -105,16 +105,16 @@ namespace Munchkin.Core.Model.Phases
         {
             ArgumentNullException.ThrowIfNull(table, nameof(table));
 
-            var combatStats = Combat.From(table);
+            var combat = Combat.From(table);
 
             // TODO: table instance should be updated
             // TODO: should be called for all monsters per each player (fighting and helping)
-            _ = table.DungeonCards
+            table = table.DungeonCards
                 .OfType<MonsterCard>()
                 .SelectMany(monster => new[]
                 {
-                    new RunningAwayFromMonsterEvent(combatStats.FightingPlayer.Nickname, monster.GetHashCode().ToString()),
-                    new RunningAwayFromMonsterEvent(combatStats.HelpingPlayer.Nickname, monster.GetHashCode().ToString())
+                    new RunningAwayFromMonsterEvent(combat.FightingPlayer.Nickname, monster.GetHashCode().ToString()),
+                    new RunningAwayFromMonsterEvent(combat.HelpingPlayer.Nickname, monster.GetHashCode().ToString())
                 })
                 .Aggregate(table, (result, item) => result.WithActionEvent(item));
 

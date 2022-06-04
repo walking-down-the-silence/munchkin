@@ -1,5 +1,6 @@
 ﻿using Munchkin.Core.Contracts.Cards;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Munchkin.Core.Model.Cards.Doors.Curses
@@ -16,19 +17,26 @@ namespace Munchkin.Core.Model.Cards.Doors.Curses
             ArgumentNullException.ThrowIfNull(table, nameof(table));
             ArgumentNullException.ThrowIfNull(player, nameof(player));
 
-            var races = table.Players.Current.Equipped
+            var races = player.Equipped
                 .OfType<RaceCard>()
                 .ToList();
 
-            if (races.Count > 1)
+            return races.Count switch
             {
-                // select which one to discard
-            }
-            else
-            {
-                races.FirstOrDefault()?.Discard(table);
-            }
+                > 1 => DiscardSelected(table, races),
+                1 => DiscardSingle(table, races),
+                < 1 => table
+            };
+        }
 
+        private static Table DiscardSingle(Table table, IReadOnlyCollection<RaceCard> races)
+        {
+            return table.Discard(races.FirstOrDefault());
+        }
+
+        private static Table DiscardSelected(Table table, IReadOnlyCollection<RaceCard> races)
+        {
+            // TODO: Select which one to discard
             return table;
         }
     }

@@ -1,4 +1,4 @@
-﻿using Munchkin.Core.Contracts.Events;
+﻿using Munchkin.Core.Contracts;
 
 namespace Munchkin.Core.Model.Phases.Events
 {

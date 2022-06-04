@@ -1,5 +1,4 @@
 ﻿using Munchkin.Core.Contracts;
-using Munchkin.Core.Contracts.Attributes;
 using Munchkin.Core.Model.Attributes;
 using System;
 using System.Linq;

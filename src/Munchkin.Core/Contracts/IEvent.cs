@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Munchkin.Core.Contracts.Events
+namespace Munchkin.Core.Contracts
 {
     public interface IEvent
     {

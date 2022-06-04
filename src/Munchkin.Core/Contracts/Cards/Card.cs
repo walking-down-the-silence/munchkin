@@ -1,5 +1,4 @@
-﻿using Munchkin.Core.Contracts.Attributes;
-using Munchkin.Core.Contracts.Rules;
+﻿using Munchkin.Core.Contracts.Rules;
 using Munchkin.Core.Model;
 using System;
 using System.Collections.Generic;

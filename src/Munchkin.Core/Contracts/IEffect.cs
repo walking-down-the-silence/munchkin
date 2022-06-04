@@ -1,4 +1,4 @@
-﻿namespace Munchkin.Core.Contracts.Actions
+﻿namespace Munchkin.Core.Contracts
 {
     /// <summary>
     /// An effect that changes the state when applied.
