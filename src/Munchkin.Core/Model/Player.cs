@@ -80,6 +80,9 @@ namespace Munchkin.Core.Model
         public override string ToString() => $"{Nickname}, Level {Level}, {Life}";
 
         /// <inheritdoc />
+        public override bool Equals(object obj) => Equals(obj as Player);
+
+        /// <inheritdoc />
         public bool Equals(Player other) => string.Equals(Nickname, other?.Nickname, StringComparison.OrdinalIgnoreCase);
 
         /// <summary>

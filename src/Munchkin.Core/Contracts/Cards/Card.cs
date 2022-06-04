@@ -11,6 +11,7 @@ namespace Munchkin.Core.Contracts.Cards
     /// The base card type that describes the behaviour.
     /// </summary>
     public abstract class Card :
+        IEquatable<Card>,
         IDiscardable,
         IPlayable,
         ISupportAttributes
@@ -64,7 +65,13 @@ namespace Munchkin.Core.Contracts.Cards
         public IReadOnlyCollection<IAttribute> Attributes => _attributes.AsReadOnly();
 
         /// <inheritdoc />
-        public override string ToString() => $"{Title}, owned by: {(Owner is null ? "None" : Owner.Nickname)}";
+        public override string ToString() => $"{Title}, owned by: {(Owner is null ? "Nobody" : Owner.Nickname)}";
+
+        /// <inheritdoc />
+        public override bool Equals(object obj) => Equals(obj as Card);
+
+        /// <inheritdoc />
+        public bool Equals(Card other) => string.Equals(Code, other?.Code, StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// Binds the card to the current one to be played along with it.
